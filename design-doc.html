@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PORTPAL Design Doc — From Shift Tracker to Dispatch Oracle</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f1117; --surface: #161922; --surface-2: #1e2130; --surface-3: #262a3d;
+    --border: #2a2e42; --text: #e4e7f1; --text-muted: #8b90a8; --text-dim: #5c6180;
+    --accent: #818cf8; --accent-bg: rgba(129,140,248,0.08); --accent-border: rgba(129,140,248,0.2);
+    --green: #34d399; --green-bg: rgba(52,211,153,0.08); --green-border: rgba(52,211,153,0.2);
+    --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08); --amber-border: rgba(251,191,36,0.2);
+    --red: #ff4d6a; --red-bg: rgba(255,77,106,0.08);
+    --blue: #60a5fa; --blue-bg: rgba(96,165,250,0.08); --blue-border: rgba(96,165,250,0.2);
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 48px 32px; }
+
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 56px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+  .hero-badge { display: inline-block; padding: 4px 16px; border-radius: 20px; background: var(--accent-bg); border: 1px solid var(--accent-border); color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
+  .hero h1 { font-size: 42px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 12px; }
+  .hero h1 span { background: linear-gradient(135deg, #818cf8, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-sub { font-size: 16px; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+  .hero-meta { display: flex; justify-content: center; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+  .hero-meta-item { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+  .hero-meta-item strong { color: var(--text-muted); }
+
+  /* Section */
+  .section { margin-bottom: 48px; }
+  .section h2 { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .section h2 .num { width: 28px; height: 28px; background: var(--accent-bg); border: 1px solid var(--accent-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
+  .section h3 { font-size: 15px; font-weight: 700; margin: 20px 0 10px; color: var(--accent); }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 16px; }
+  .card p, .section > p { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+  .card p:last-child, .section > p:last-child { margin-bottom: 0; }
+  .card strong { color: var(--text); }
+
+  /* Stats row */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+  .stat-val { font-size: 28px; font-weight: 900; letter-spacing: -1px; color: var(--text); line-height: 1; }
+  .stat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-top: 6px; }
+  .stat.accent .stat-val { color: var(--accent); }
+  .stat.green .stat-val { color: var(--green); }
+  .stat.amber .stat-val { color: var(--amber); }
+
+  /* Premise list */
+  .premise { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .premise:last-child { border-bottom: none; }
+  .premise-check { width: 24px; height: 24px; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: var(--green); font-size: 13px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+  .premise-text { font-size: 14px; color: var(--text-muted); }
+  .premise-text strong { color: var(--text); }
+
+  /* Approach cards */
+  .approach { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 16px; position: relative; }
+  .approach.recommended { border-color: var(--green-border); background: linear-gradient(135deg, var(--surface) 0%, rgba(52,211,153,0.03) 100%); }
+  .approach.recommended::before { content: 'RECOMMENDED'; position: absolute; top: 16px; right: 16px; padding: 3px 10px; border-radius: 6px; background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green); font-size: 9px; font-weight: 800; letter-spacing: 1px; }
+  .approach h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+  .approach .meta-row { display: flex; gap: 16px; margin-bottom: 12px; }
+  .approach .meta-tag { padding: 3px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+  .effort-s { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .effort-m { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .effort-l { background: var(--red-bg); color: var(--red); border: 1px solid rgba(255,77,106,0.2); }
+  .risk-low { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .risk-med { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .approach p { font-size: 13px; color: var(--text-muted); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before { content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 24px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-dot { position: absolute; left: -32px; top: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--accent); }
+  .tl-item.done .tl-dot { background: var(--green); border-color: var(--green); color: white; }
+  .tl-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .tl-desc { font-size: 12px; color: var(--text-dim); }
+  .tl-effort { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); margin-top: 4px; }
+
+  /* Questions */
+  .question { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .question:last-child { border-bottom: none; }
+  .q-icon { color: var(--amber); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .q-text { font-size: 13px; color: var(--text-muted); }
+
+  /* Assignment box */
+  .assignment { background: linear-gradient(135deg, rgba(129,140,248,0.06) 0%, rgba(96,165,250,0.06) 100%); border: 1px solid var(--accent-border); border-radius: 14px; padding: 28px; margin-bottom: 32px; }
+  .assignment h2 { color: var(--accent); margin-bottom: 16px; }
+  .assignment ol { padding-left: 20px; }
+  .assignment li { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
+  .assignment li strong { color: var(--text); }
+  .assignment .warning { margin-top: 16px; padding: 12px 16px; background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 10px; font-size: 12px; color: var(--amber); font-weight: 600; }
+
+  /* Observations */
+  .obs { padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .obs:last-child { border-bottom: none; }
+  .obs-quote { font-size: 14px; color: var(--text); font-style: italic; margin-bottom: 6px; }
+  .obs-note { font-size: 12px; color: var(--text-dim); }
+
+  /* Footer */
+  .footer { text-align: center; padding: 32px 0; color: var(--text-dim); font-size: 11px; border-top: 1px solid var(--border); margin-top: 32px; }
+
+  @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } .wrap { padding: 24px 16px; } .hero h1 { font-size: 28px; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .section, .stats, .hero, .assignment { animation: fadeUp 0.5s ease-out both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">Design Document &mdash; /office-hours</div>
+    <h1>From Shift Tracker to<br><span>Dispatch Oracle</span></h1>
+    <div class="hero-sub">PORTPAL isn't a tracking app. It's an intelligence layer that helps longshoremen make better decisions &mdash; starting with "should I go to dispatch today?"</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><strong>Status:</strong> DRAFT</div>
+      <div class="hero-meta-item"><strong>Mode:</strong> Startup</div>
+      <div class="hero-meta-item"><strong>Branch:</strong> master</div>
+      <div class="hero-meta-item"><strong>Date:</strong> Mar 19, 2026</div>
+    </div>
+  </div>
+
+  <!-- Key Numbers -->
+  <div class="stats">
+    <div class="stat accent"><div class="stat-val">957</div><div class="stat-label">Active Users</div></div>
+    <div class="stat green"><div class="stat-val">73K</div><div class="stat-label">Shifts Tracked</div></div>
+    <div class="stat amber"><div class="stat-val">$41M</div><div class="stat-label">Pay Tracked</div></div>
+    <div class="stat"><div class="stat-val">67.9%</div><div class="stat-label">30-Day Retention</div></div>
+  </div>
+
+  <!-- Problem -->
+  <div class="section">
+    <h2><span class="num">1</span> Problem Statement</h2>
+    <div class="card">
+      <p>BC longshoremen track shifts manually in spreadsheets and notes apps. Pay errors are <strong>common</strong> &mdash; workers eat the losses because verifying 990+ rate combinations is too hard without tooling.</p>
+      <p>But the bigger problem: casual workers drive <strong>1-2 hours</strong> to the dispatch hall every day with no guarantee of getting work. When jobs are slow, that's time and gas money &mdash; gone. There's no tool that tells them whether it's worth making the trip.</p>
+    </div>
+  </div>
+
+  <!-- Demand Evidence -->
+  <div class="section">
+    <h2><span class="num">2</span> Demand Evidence</h2>
+    <div class="card">
+      <p><strong>957 users</strong> logging shifts without being asked to pay. That's organic demand.</p>
+      <p><strong>Pay errors are common, workers eat them.</strong> The status quo is spreadsheets and trust &mdash; nobody has the records to challenge discrepancies.</p>
+      <p><strong>62.5% 90-day retention</strong> on a free app with no push notifications, no gamification loop, no AI features. Users come back because the core problem is real.</p>
+      <p><strong>Magic number:</strong> Users who log 10+ shifts in month 1 retain at 69.9%. The product hooks when it becomes habit.</p>
+    </div>
+  </div>
+
+  <!-- Premises -->
+  <div class="section">
+    <h2><span class="num">3</span> Approved Premises</h2>
+    <div class="card">
+      <div class="premise">
+        <div class="premise-check">&#10003;</div>
+        <div class="premise-text"><strong>Free tier stays free forever.</strong> Shift tracking, rate calculations, and basic stats are the acquisition funnel, not the product.</div>
+      </div>
+      <div class="premise">
+        <div class="premise-check">&#10003;</div>
+        <div class="premise-text"><strong>The paid product is an AI intelligence layer</strong> that helps workers make future decisions &mdash; not just record past shifts.</div>
+      </div>
+      <div class="premise">
+        <div class="premise-check">&#10003;</div>
+        <div class="premise-text"><strong>Dispatch prediction is the single most valuable feature</strong> &mdash; it saves real time and money daily, not just at payday.</div>
+      </div>
+      <div class="premise">
+        <div class="premise-check">&#10003;</div>
+        <div class="premise-text"><strong>Must analyze 73K existing shifts before building.</strong> There are user behavior patterns in that data that will tell you what to build and what to skip.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approaches -->
+  <div class="section">
+    <h2><span class="num">4</span> Approaches Considered</h2>
+
+    <div class="approach">
+      <h3>A: "Dispatch Oracle" &mdash; Narrowest Wedge</h3>
+      <div class="meta-row">
+        <span class="meta-tag effort-m">Effort: M</span>
+        <span class="meta-tag risk-med">Risk: Medium</span>
+      </div>
+      <p>Build dispatch prediction only. Scrape job board data, combine with user-reported outcomes, ship a daily "should I go?" notification. Single feature, single value prop.</p>
+    </div>
+
+    <div class="approach">
+      <h3>B: "Intelligence Suite" &mdash; Full AI Layer</h3>
+      <div class="meta-row">
+        <span class="meta-tag effort-l">Effort: L</span>
+        <span class="meta-tag risk-med">Risk: Med-High</span>
+      </div>
+      <p>Build everything at once: dispatch predictions + seniority tracking + AI chat + pension forecasting. More value, but can't A/B test which feature converts.</p>
+    </div>
+
+    <div class="approach recommended">
+      <h3>C then A: "Data First, Then Oracle"</h3>
+      <div class="meta-row">
+        <span class="meta-tag effort-s">Effort: S+M</span>
+        <span class="meta-tag risk-low">Risk: Low</span>
+      </div>
+      <p>Mine the 73K shifts for behavioral insights first (2 days CC), then build the Dispatch Oracle with confidence that you're building the right thing. Evidence-based, de-risked, focused.</p>
+    </div>
+  </div>
+
+  <!-- Implementation Timeline -->
+  <div class="section">
+    <h2><span class="num">5</span> Implementation Plan</h2>
+    <div class="card">
+      <h3>Phase 1: Data First (CC: ~2 days)</h3>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot">1</div><div class="tl-title">Behavioral analysis of 73K shifts</div><div class="tl-desc">When do users open the app? Power user vs casual patterns. Feature correlation with retention.</div><div class="tl-effort">~4 hours CC</div></div>
+        <div class="tl-item"><div class="tl-dot">2</div><div class="tl-title">Scrape ILWU 500 dispatch data</div><div class="tl-desc">Understand what's publicly available from the job board. Map data format and update frequency.</div><div class="tl-effort">~2 hours CC</div></div>
+        <div class="tl-item"><div class="tl-dot">3</div><div class="tl-title">Build data pipeline foundation</div><div class="tl-desc">Supabase tables for job counts, dispatch outcomes, prediction history. Analytics instrumentation.</div><div class="tl-effort">~6 hours CC</div></div>
+      </div>
+
+      <h3 style="margin-top: 28px;">Phase 2: Dispatch Oracle (CC: ~1 week)</h3>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot">4</div><div class="tl-title">Daily job count scraping + storage</div><div class="tl-desc">Automated scraping of dispatch board. Historical pattern analysis by day of week, season, terminal.</div><div class="tl-effort">~4 hours CC</div></div>
+        <div class="tl-item"><div class="tl-dot">5</div><div class="tl-title">User-reported dispatch outcomes</div><div class="tl-desc">"Did you get work today?" flow after dispatch. Builds training data for the prediction model.</div><div class="tl-effort">~4 hours CC</div></div>
+        <div class="tl-item"><div class="tl-dot">6</div><div class="tl-title">Prediction model</div><div class="tl-desc">Job count trends + day of week + season + user seniority level → % chance of dispatch.</div><div class="tl-effort">~8 hours CC</div></div>
+        <div class="tl-item"><div class="tl-dot">7</div><div class="tl-title">Daily push notification</div><div class="tl-desc">"72% chance of getting dispatched today &mdash; go" or "18% chance &mdash; stay home, save the commute."</div><div class="tl-effort">~4 hours CC</div></div>
+        <div class="tl-item"><div class="tl-dot">8</div><div class="tl-title">Paywall + reverse trial</div><div class="tl-desc">30 days Pro free, then $99/year. Free users see "predictions available" teaser.</div><div class="tl-effort">~6 hours CC</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Open Questions -->
+  <div class="section">
+    <h2><span class="num">6</span> Open Questions</h2>
+    <div class="card">
+      <div class="question"><div class="q-icon">?</div><div class="q-text">What data is publicly available from ILWU Local 500's dispatch system? Can we scrape it legally?</div></div>
+      <div class="question"><div class="q-icon">?</div><div class="q-text">How accurate do predictions need to be before workers trust them? 70%? 80%?</div></div>
+      <div class="question"><div class="q-icon">?</div><div class="q-text">Should the prediction factor in the worker's specific seniority/board position?</div></div>
+      <div class="question"><div class="q-icon">?</div><div class="q-text">What does the seniority advancement data look like when it comes from the union?</div></div>
+      <div class="question"><div class="q-icon">?</div><div class="q-text">Legal considerations around scraping union data for commercial use?</div></div>
+    </div>
+  </div>
+
+  <!-- Success Criteria -->
+  <div class="section">
+    <h2><span class="num">7</span> Success Criteria</h2>
+    <div class="stats">
+      <div class="stat green"><div class="stat-val">3+</div><div class="stat-label">Insights from Data</div></div>
+      <div class="stat accent"><div class="stat-val">&gt;70%</div><div class="stat-label">Prediction Accuracy</div></div>
+      <div class="stat amber"><div class="stat-val">5%</div><div class="stat-label">Free → Pro Conversion</div></div>
+      <div class="stat"><div class="stat-val">2+</div><div class="stat-label">Commutes Saved / Mo</div></div>
+    </div>
+  </div>
+
+  <!-- Assignment -->
+  <div class="assignment">
+    <h2>&#9889; The Assignment &mdash; This Week</h2>
+    <ol>
+      <li><strong>Export your 73K shifts from Supabase</strong> and answer: what time of day do workers log shifts? Morning = before work, evening = after. This tells you when they're in the app.</li>
+      <li><strong>Map the distribution of shifts per user.</strong> Are you 80/20? Who are the power users? What do they do differently?</li>
+      <li><strong>Go to ilwu500.org</strong> (or wherever dispatch info is posted) and manually check what data is available about daily job counts. Screenshot it. That's your prediction input.</li>
+    </ol>
+    <div class="warning">&#9888; Don't build anything until you've done this. Building before understanding is the most expensive mistake in product development.</div>
+  </div>
+
+  <!-- What I Noticed -->
+  <div class="section">
+    <h2><span class="num">8</span> What I Noticed About How You Think</h2>
+    <div class="card">
+      <div class="obs">
+        <div class="obs-quote">"We save them a commute &mdash; that's like an hour to two hours every time."</div>
+        <div class="obs-note">You didn't pitch a feature. You described a real consequence in someone's day. That's founder thinking.</div>
+      </div>
+      <div class="obs">
+        <div class="obs-quote">When asked about the wedge, you pushed back. Pay stub comparison wasn't the answer.</div>
+        <div class="obs-note">You had a different mental model of where the value lives. That's conviction, not agreeableness.</div>
+      </div>
+      <div class="obs">
+        <div class="obs-quote">"I haven't looked closely enough" at the 73K shifts.</div>
+        <div class="obs-note">That honesty is worth more than any feature idea. Founders who lie to themselves about how well they know their users build the wrong thing.</div>
+      </div>
+      <div class="obs">
+        <div class="obs-quote">You described five paid features but instinctively agreed when reframed around dispatch prediction.</div>
+        <div class="obs-note">You can hold both the vision and the wedge simultaneously. That's good product instinct.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  PORTPAL Design Document &mdash; Generated by gstack /office-hours &middot; Mar 19, 2026 &middot; Status: DRAFT
+</div>
+</body>
+</html>

@@ -1,5 +1,160 @@
 # PORTPAL - Shift Tracking App for Longshoremen
 
+## gstack Sprint Status
+
+| Phase | Skill | Status | Date |
+|-------|-------|--------|------|
+| **Review** | `/review` | DONE — 12 findings (3 critical fixed) | Mar 19, 2026 |
+| **Think** | `/office-hours` | DONE — Design doc: "From Shift Tracker to Dispatch Oracle" | Mar 19, 2026 |
+| **Build** | Prediction model | IN PROGRESS — v1 statistical model built, v2 button simulator WIP | Mar 19, 2026 |
+| **Build** | DOA scraper | DONE — `doa-scraper.ts` captures supply side, Task Scheduler pending | Mar 19, 2026 |
+| **Design** | `/design-consultation` | PENDING | — |
+| **QA** | `/qa` | BLOCKED — browse binary not starting on Windows | — |
+| **Ship** | `/ship` | NOT STARTED | — |
+
+**Active Rules:** Boil the Lake (completeness principle), timezone-safe dates (`s.date.slice(0,10)` never `new Date(dateStr)`), OT formula = `(Base × 1.5) + Differential`, defense-in-depth on all mutations.
+
+---
+
+## Dispatch Prediction System (Dispatch Oracle)
+
+### How Dispatch Actually Works — The Button System
+
+Dispatch uses a **rotating button (circular token)** per job category per shift. The button is the plate number of the last worker dispatched for that category.
+
+**Core mechanics:**
+1. Each job category (Dock Gantry, Lift Truck, FEL, RTG, Tractor Trailer, etc.) has its own button per shift (Day, Night, 1AM)
+2. The button number = plate position of last worker dispatched
+3. Next dispatch starts at button+1 and walks forward through the board
+4. When the button reaches the end of the board (~430), it **wraps to plate 1**
+5. Only workers who are **plugged in** (physically showed up at dispatch hall and swiped their card) AND have the matching rating get picked
+6. Workers who didn't plug in are invisible — the button skips them entirely
+7. A worker can be picked up by **ANY button they're rated for — whichever reaches them first**
+8. Many workers don't plug in on any given day — this is why buttons scan huge portions of the board but only ~20% actually get dispatched
+7. Jobs dispatch **in order** — fixed sequence determines which buttons run first:
+   - **Trades first** (Mechanic, Electrician, Millwright, Surplus, etc.)
+   - **Dock Gantry / Topside** (specialized crane operators)
+   - **Machine categories** (Lift Truck, FEL, Bulldozer, Komatsu, RTG)
+   - Various others in between (Wheat, Railroad, Coastwise, Warehouse, etc.)
+   - **Labour / HOLD last** (catch-all general work)
+8. Once a worker is grabbed by an earlier button, they're unavailable for later buttons
+
+**Dispatch windows (buttons move in shift-specific waves):**
+- **Day buttons** move between 6:30-9:00 AM (day dispatch at ~6:45 AM)
+- **Night + 1AM buttons** move between 3:00-6:00 PM (afternoon/graveyard dispatch)
+- Day buttons do NOT move in the afternoon; Night/1AM buttons do NOT move in the morning
+
+**Button categories (3 types, captured hourly):**
+- **Union buttons** — TOPSIDE, GANG, HOLD, WHEAT SPECIALTY, WHEAT MACHINE, COASTWISE, WAREHOUSE, DOCK, RAILROAD, MACHINE, TRADES. These are the job category buttons that walk through the union boards.
+- **Casual buttons** — Per casual board (A, B, C, T, R) with job-specific buttons (Day, Night, 1AM, Tractor Trailer, RTG, Head Checking, etc.). These are the SAME dispatch mechanism applied per board — e.g., "Casual A Board - RTG" is the RTG button walking through board A specifically.
+- **Telephone buttons** — Telephone dispatch
+
+**Simulation logic:** Run buttons in dispatch order. For each button, walk each board in seniority order (A first, then B, C, T, R, 00). Claimed workers are removed from all subsequent buttons.
+
+**Board dispatch order:** A board dispatches first (highest seniority), then B, C, T, 00, R. Each board has independent button positions per job category.
+
+**User matching:** Workers currently enter board letter only during onboarding (no plate number). Workers know their reg number but won't give it (privacy). Match to scraped roster by name + dispatch slip uploads. Future: auto-detect plate position from slip data or ask for approximate position ("are you in the top half or bottom half of your board?").
+
+**Prediction output:** Workers care about TWO things: (1) am I working tomorrow yes/no, and (2) WHICH job will I get. The prediction should show both — dispatch probability AND likely job category.
+
+**Button data is end-state only:** We see the final plate position after dispatch completes, not each individual step. The delta between snapshots = total workers consumed.
+
+**Plug-in system (critical for accuracy):**
+- Workers must **call in the night before** to confirm they're coming
+- Then **physically plug in** (swipe card) at the dispatch hall in the morning
+- Workers who don't plug in are invisible to all buttons — skipped entirely
+- No plug-in data available from scrapes (API doesn't expose it)
+- **Prediction timing:** Notification should arrive the EVENING BEFORE — the real decision is "should I call in tonight?", not "should I go tomorrow morning?"
+
+**Individual behavior tracking (in-app):**
+- If a user logged a shift → they plugged in AND got dispatched
+- If they report "plugged in, no job" → they showed up but weren't reached by any button
+- If they report "didn't plug in" → stayed home
+- This data feeds both the prediction model AND the points/streak gamification
+- Even days they DON'T work should be tracked — "I stayed home" is valuable data
+
+**Declaration of availability (DOA — NOW SCRAPING):**
+- URL: `mybcmea.bcmea.com/doa-forecast` (auth via account 48064)
+- API: `/api/doa-forecast` (summary) + `/api/doa-forecast/{dispatch}/{date}/stats` (per-job breakdown)
+- Scraper: `doa-scraper.ts` + `run-doa-scraper.bat` in scraper project (`C:\Users\veete\OneDrive\Desktop\claude_local\portpal\files\`)
+- Schedule: 9 PM (post call-in) + 6 AM (pre-dispatch) — Task Scheduler setup PENDING
+- Data: `data/doa-forecast/YYYY-MM-DD/doa_STAMP.json` with screenshots
+- Per-shift summary: `jobRequired`, `totalEmployees`, `totalEmployeesEligible`
+- Per-job detail (via View Forecast): `jobsRequired`, `totalAvailable`, `matchedAvailable`, `short` per terminal
+- Example (Mar 20 Day): 191 jobs, 294 eligible. TT: 173 avail for 33 needed. Dock Gantry: 0 avail for 7 needed (short -7)
+
+**Prediction formula (v2 with availability data):**
+- Jobs available for shift (from work-info) ÷ Workers declared available (from availability scrape) = base dispatch rate
+- Adjust by board (A gets dispatched first → higher rate) and historical patterns
+- Evening notification: "Tomorrow 0800: 180 jobs posted, ~300 workers declared. Board B: ~45% chance."
+
+**Inferring plug-in from scrape data:**
+- When a button passes a worker's plate and they DON'T appear as dispatched, either:
+  - They weren't plugged in (didn't show up), OR
+  - They don't have the rating for that button's job category
+- Cross-reference with scraped ratings to determine which — if they HAVE the rating but weren't dispatched, they likely weren't plugged in
+- Over time, builds individual attendance patterns per worker
+
+**Plate stability:** Positions are mostly stable but can move around. Scraped data stays accurate for weeks/months. Re-scrape periodically to catch changes.
+
+**Dispatch fills completely per category:** Each job category fills ALL available jobs across ALL boards (A→B→C→T→00→R) before moving to the next category in the dispatch order.
+
+**Buttons that don't move** = no demand for that job category on that shift today (e.g., Red Dog, Coastwise, Compressor often stay frozen).
+
+**Wrap-around examples (Mar 19, 2026):**
+- Casual A Head Checking: 73 → 457 (wrapped past end of board)
+- Warehouse Day: 331 → 43 (wrapped around)
+
+### Prediction Model Architecture
+
+The dispatch is **deterministic, not probabilistic**. Given button position + job demand + worker ratings, you can simulate exactly who gets called.
+
+**Prediction question:** "Starting from button+1, walk forward through the board counting rated workers — does it reach my plate before jobs are filled?"
+
+**Combine across all categories:** Worker gets dispatched if ANY button for a job they're rated for reaches their plate position.
+
+### Data Pipeline (16 automated scrapers on Windows Task Scheduler)
+
+All scraper code and data at: `C:\Users\veete\OneDrive\Desktop\claude_local\portpal\files\`
+
+| Data | Source | Frequency | Used For |
+|------|--------|-----------|----------|
+| Button positions | hourly-monitor (union/casual/telephone) | Hourly | Current dispatch state |
+| Board rosters | boards/ (pre/post dispatch) | 6x daily | Worker positions + who got called |
+| Worker ratings | worker-details/all-worker-ratings.json | One-time (1,708 workers) | Rating match for simulation |
+| Job demand | work-info/ + work-info-snapshots/ | 6x daily | How many jobs per category |
+| Vessel forecast | vessel-forecast/ | Hourly | 3-shift-ahead gang predictions |
+| External (weather, port, DP World) | external/ | Every 2h | Context signals |
+| ILWU 502 greaseboard | ilwu502/ | Hourly | Delta/FSD exact job counts |
+| Rating codes | rating-codes.json | Static (33 codes decoded) | Map board letters to job types |
+
+### Prediction Roadmap
+
+**v1 (NOW) — Board-level predictions:**
+- Input: board letter + shift + current button positions + vessel forecast demand
+- Output: "X% of Board B dispatched for Day shift. High demand — 7 DK gangs." + which job categories are active
+- No plate number needed
+
+**v2 — Plate-level precision (after collecting plate position):**
+- Add plate number collection via in-app nudge after 1 week of usage ("Want more accurate predictions? Tell us your plate position")
+- Smart plate detection: show user where recent buttons landed and ask "are you before or after this position?" to narrow down their plate without asking for exact number
+- Can also auto-detect plate from dispatch slip uploads or name matching against scraped roster
+- Input: board + plate + ratings + button positions + demand
+- Output: "Lift Truck button will reach ~plate 180 on B board. You're at 165. You're getting dispatched for Lift Truck."
+
+**v3 — Rating-aware simulation:**
+- Match user to scraped worker profile (1,708 workers with full ratings)
+- Simulate exact dispatch sequence: run each button category in order, claim workers, predict which specific job the user lands
+- "You'll get dispatched as RTG on the Day shift at Deltaport"
+
+### Proven Correlations
+- **Gangs on greaseboard = active cranes per shift** (not total cranes)
+- **~11 workers per container gang**, containers drive 20x more demand than bulk
+- **Button delta (pre→post dispatch) = exact workers consumed** for that job category
+- **Vessel ETA from DP World/GCT gives 2-4 week advance notice** of demand
+
+---
+
 ## Project Overview
 
 PORTPAL is a shift-tracking and pay verification app for BC port workers (longshoremen). The app helps workers:
@@ -864,7 +1019,10 @@ URL: http://localhost:5173/command-center
 - TAM: $12.6M ARR
 - Target Conversion: 35%
 - Price: $99/year
-- Latest APK: v1.2.0 (Mar 8, 2026)
+- Latest APK in users' hands: v1.2.0 (last successful EAS build)
+- Current codebase: v1.3.1 (unshipped — last build Mar 8 ERRORED on Gradle)
+- EAS account: veetesh (Expo), portpalapp (GitHub active)
+- Build profile: "preview" (APK, internal distribution)
 
 ---
 

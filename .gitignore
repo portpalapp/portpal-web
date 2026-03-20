@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.local
+*.env
+.expo/
+dist/
+build/
+*.apk
+*.aab
+*.ipa
+.DS_Store
+Thumbs.db
+*.log
+/prediction/model.json
+/prediction/model-v2.json

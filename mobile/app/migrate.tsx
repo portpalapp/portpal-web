@@ -81,7 +81,7 @@ export default function MigrateScreen() {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
         password: tempPassword,
-        options: { data: { name: bubbleUser.email } },
+        options: { data: { name: (bubbleUser as any).email } },
       });
 
       if (signUpError) {
@@ -100,7 +100,7 @@ export default function MigrateScreen() {
 
       // Link the Bubble user to the new Supabase Auth user
       if (signUpData.user) {
-        await supabase.rpc('link_bubble_user', {
+        await (supabase.rpc as any)('link_bubble_user', {
           p_email: email.trim(),
           p_supabase_uid: signUpData.user.id,
         });
@@ -135,7 +135,7 @@ export default function MigrateScreen() {
 
     setVerifyLoading(true);
     try {
-      const { data, error } = await supabase.rpc('verify_bubble_identity', {
+      const { data, error } = await (supabase.rpc as any)('verify_bubble_identity', {
         p_first_name: firstName.trim(),
         p_last_name: lastName.trim(),
         p_union_local: unionLocal,
@@ -147,7 +147,7 @@ export default function MigrateScreen() {
         return;
       }
 
-      if (!data || data.length === 0) {
+      if (!data || (data as any).length === 0) {
         Alert.alert(
           'No match found',
           'We could not find a PORTPAL account matching that name and union local. Please double-check your information.'
@@ -202,8 +202,8 @@ export default function MigrateScreen() {
 
       // Update the bubble user's email and link to Supabase Auth
       if (signUpData.user) {
-        await supabase.rpc('update_bubble_user_email', {
-          p_bubble_id: matchedUser.bubble_id,
+        await (supabase.rpc as any)('update_bubble_user_email', {
+          p_bubble_id: (matchedUser as any).bubble_id,
           p_new_email: newEmail.trim(),
           p_supabase_uid: signUpData.user.id,
         });
