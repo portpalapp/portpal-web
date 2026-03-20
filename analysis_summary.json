@@ -1,0 +1,92 @@
+{
+  "total_shifts": 71712,
+  "unique_users": 752,
+  "total_earnings": 41039006.64,
+  "unique_jobs": 42,
+  "unique_combos": 994,
+  "top_jobs": [
+    [
+      "LABOUR",
+      19201
+    ],
+    [
+      "TRACTOR TRAILER",
+      16921
+    ],
+    [
+      "RUBBER TIRE GANTRY",
+      4725
+    ],
+    [
+      "HEAD CHECKER",
+      3536
+    ],
+    [
+      "LIFT TRUCK",
+      2658
+    ],
+    [
+      "BULK OPERATOR",
+      1905
+    ],
+    [
+      "HD MECHANIC",
+      1862
+    ],
+    [
+      "ELECTRICIAN",
+      1744
+    ],
+    [
+      "LIQUID BULK",
+      1709
+    ],
+    [
+      "TRAINING",
+      1685
+    ]
+  ],
+  "top_locations": [
+    [
+      "CENTENNIAL",
+      23828
+    ],
+    [
+      "VANTERM",
+      15226
+    ],
+    [
+      "LYNNTERM",
+      7120
+    ],
+    [
+      "NEPTUNE",
+      6177
+    ],
+    [
+      "VAN WHARVES",
+      4418
+    ],
+    [
+      "CANADA PLACE",
+      3769
+    ],
+    [
+      "DELTAPORT",
+      1555
+    ],
+    [
+      "PORT MOODY",
+      1469
+    ],
+    [
+      "SQUAMISH",
+      1115
+    ],
+    [
+      "UNIVAR",
+      902
+    ]
+  ],
+  "power_users_count": 307
+}

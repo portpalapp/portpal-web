@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTPAL Design Brief</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+    .mood-card { aspect-ratio: 1; object-fit: cover; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // User Persona Data
+    const userPersona = {
+      primary: {
+        name: "The Casual Worker",
+        age: "25-45",
+        traits: [
+          "Works irregular, unpredictable hours",
+          "Dispatched to different terminals daily",
+          "Physically demanding job - on feet all day",
+          "Checks phone during breaks, after shifts",
+          "Values respect and being treated fairly",
+          "Skeptical of apps that overpromise",
+          "Trusts word-of-mouth from coworkers",
+          "Proud of their work and union membership"
+        ],
+        painPoints: [
+          "Never sure if paycheck is accurate",
+          "Hard to track hours across multiple locations",
+          "Complex pay rules nobody fully understands",
+          "Feels like small amounts might be missing",
+          "Paper tracking is tedious and easy to lose"
+        ],
+        wants: [
+          "Peace of mind about pay accuracy",
+          "Simple tool that respects their time",
+          "Feels professional, not gimmicky",
+          "Works quickly - they're busy"
+        ]
+      }
+    };
+
+    const psychologyInsights = [
+      {
+        insight: "Pride in the Work",
+        description: "Longshoremen are proud of their physically demanding, essential work. They keep global trade moving. Designs should reflect dignity and importance, not portray them as victims.",
+        doThis: "Show strength, competence, professionalism",
+        notThis: "Don't be patronizing or show them as helpless"
+      },
+      {
+        insight: "Trust is Earned",
+        description: "This is a tight-knit community. They've seen apps come and go. Flashy promises trigger skepticism. Authenticity and straightforwardness win.",
+        doThis: "Clean, professional, no-nonsense",
+        notThis: "Avoid hype words like 'revolutionary' or 'amazing'"
+      },
+      {
+        insight: "Blue Collar Aesthetic",
+        description: "They work with their hands around heavy machinery, shipping containers, cranes. Industrial, maritime, and utility vibes resonate more than corporate polish.",
+        doThis: "Industrial colors, bold typography, functional design",
+        notThis: "Avoid looking like a fintech startup or generic SaaS"
+      },
+      {
+        insight: "Time is Precious",
+        description: "After a 9-hour shift of physical labor, they want things quick and easy. Every extra tap or confusing screen is friction.",
+        doThis: "Show the app being fast, simple, one-handed use",
+        notThis: "Don't show complex dashboards or overwhelming data"
+      },
+      {
+        insight: "Community & Brotherhood",
+        description: "Union solidarity is real. They look out for each other. Referrals and recommendations from fellow workers matter more than any ad.",
+        doThis: "Subtle nods to community, shared experience",
+        notThis: "Don't make it feel individualistic or competitive"
+      }
+    ];
+
+    const visualDirection = {
+      colors: [
+        { name: "Deep Navy", hex: "#0f3460", usage: "Primary - trust, stability, maritime" },
+        { name: "Industrial Steel", hex: "#4a5568", usage: "Secondary - strength, durability" },
+        { name: "Safety Orange", hex: "#f97316", usage: "Accent - visibility, action, port equipment" },
+        { name: "Crane Yellow", hex: "#eab308", usage: "Highlight - alerts, important info" },
+        { name: "Ocean Teal", hex: "#0d9488", usage: "Success states, positive confirmations" },
+        { name: "Container Red", hex: "#dc2626", usage: "Errors, warnings (sparingly)" }
+      ],
+      typography: [
+        "Bold, condensed headlines - industrial feel",
+        "Clean sans-serif body text - easy to read quickly",
+        "Larger font sizes - tired eyes after long shifts",
+        "High contrast - readability in bright sunlight or dim conditions"
+      ],
+      imagery: [
+        "Real port environments - cranes, containers, ships",
+        "Dawn/dusk lighting - shift changes, golden hour",
+        "Hands on equipment - authenticity, work",
+        "Silhouettes against industrial backdrops",
+        "Clean, minimal app screenshots - not cluttered"
+      ]
+    };
+
+    const designTrends = [
+      {
+        trend: "Glassmorphism + Dark Mode",
+        description: "Frosted glass effects on dark backgrounds. Popular in finance/utility apps. Feels premium without being flashy.",
+        relevance: "Works well for a professional tool that handles money"
+      },
+      {
+        trend: "Bold, Oversized Typography",
+        description: "Hero text that makes a statement. Single powerful words or short phrases. Less is more.",
+        relevance: "Cuts through noise, easy to read, confident"
+      },
+      {
+        trend: "Authentic Photography",
+        description: "Real environments, real lighting, imperfect but genuine. Moving away from stock photo polish.",
+        relevance: "Longshoremen will spot fake/staged images instantly"
+      },
+      {
+        trend: "Micro-interactions",
+        description: "Subtle animations that provide feedback. Satisfying confirmations when actions complete.",
+        relevance: "Makes the app feel responsive and modern"
+      },
+      {
+        trend: "Bento Grid Layouts",
+        description: "Asymmetric grid layouts with mixed content sizes. Popular for feature showcases.",
+        relevance: "Good for showing app screens with context"
+      },
+      {
+        trend: "3D Elements (Subtle)",
+        description: "Floating devices, slight depth, realistic shadows. Not over-the-top 3D renders.",
+        relevance: "Makes app screenshots pop without looking gimmicky"
+      }
+    ];
+
+    const contentIdeas = [
+      {
+        type: "App Store Screenshots",
+        specs: "1290 x 2796px (iPhone) / 1440 x 3120px (Android)",
+        ideas: [
+          "Hero: Phone showing simple shift entry with 'Log in seconds' headline",
+          "Feature: Pay calculation happening in real-time",
+          "Feature: Calendar view with shifts color-coded",
+          "Trust: 'Built by longshoremen, for longshoremen'",
+          "Final: Simple CTA, clean app icon"
+        ]
+      },
+      {
+        type: "Social Media (TikTok/Reels)",
+        specs: "1080 x 1920px vertical",
+        ideas: [
+          "Quick demo: Logging a shift in 10 seconds",
+          "Problem/solution: Confusing pay stub vs. clear breakdown",
+          "Relatable: 'POV: You finally know if your check is right'",
+          "Testimonial style: Clean text on port background"
+        ]
+      },
+      {
+        type: "Website Hero",
+        specs: "1920 x 1080px or responsive",
+        ideas: [
+          "Split screen: port imagery + floating phone with app",
+          "Full-bleed port photo with overlay text",
+          "Minimal: Large typography + single app screen"
+        ]
+      },
+      {
+        type: "Promotional Graphics",
+        specs: "Various sizes",
+        ideas: [
+          "Feature cards for each main function",
+          "Before/after: Paper notes vs. app",
+          "Quote cards with user testimonials",
+          "Icon set for features"
+        ]
+      }
+    ];
+
+    const messagingGuidance = {
+      toneOfVoice: [
+        "Straightforward - say what you mean, no fluff",
+        "Confident - we know this problem, we solved it",
+        "Respectful - treat users as smart professionals",
+        "Practical - focus on utility, not emotion"
+      ],
+      goodHeadlines: [
+        "Your shifts. Your pay. Verified.",
+        "Never miss a dollar you earned.",
+        "Built for how you actually work.",
+        "Know your pay is right.",
+        "Log shifts. Verify pay. Done."
+      ],
+      avoid: [
+        "Get paid what you DESERVE! (too aggressive)",
+        "Make MORE money! (we don't increase their pay)",
+        "The REVOLUTIONARY app (overpromising)",
+        "FINALLY an app that... (cliché)",
+        "Join 10,000 workers! (social proof can backfire if skeptical)"
+      ]
+    };
+
+    const deliverables = [
+      { item: "App Store Screenshot Set", count: "5-6 screens", priority: "High" },
+      { item: "Social Media Templates", count: "3-4 formats", priority: "High" },
+      { item: "App Icon Concepts", count: "2-3 options", priority: "Medium" },
+      { item: "Website Hero Section", count: "1-2 concepts", priority: "Medium" },
+      { item: "Feature Icon Set", count: "6-8 icons", priority: "Low" },
+      { item: "Promotional Banner Set", count: "Various sizes", priority: "Low" }
+    ];
+
+    // Components
+    function Section({ title, subtitle, children }) {
+      return (
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
+          {subtitle && <p className="text-gray-600 mb-6">{subtitle}</p>}
+          {children}
+        </div>
+      );
+    }
+
+    function Tab({ active, onClick, children }) {
+      return (
+        <button
+          onClick={onClick}
+          className={`px-5 py-3 font-medium rounded-xl transition-all ${
+            active
+              ? 'bg-gray-900 text-white shadow-lg'
+              : 'bg-white text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          {children}
+        </button>
+      );
+    }
+
+    function ColorSwatch({ name, hex, usage }) {
+      return (
+        <div className="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm">
+          <div
+            className="w-16 h-16 rounded-xl shadow-inner flex-shrink-0"
+            style={{ backgroundColor: hex }}
+          />
+          <div>
+            <div className="font-bold text-gray-900">{name}</div>
+            <code className="text-sm text-gray-500">{hex}</code>
+            <div className="text-sm text-gray-600 mt-1">{usage}</div>
+          </div>
+        </div>
+      );
+    }
+
+    function InsightCard({ insight, description, doThis, notThis }) {
+      return (
+        <div className="bg-white rounded-2xl p-6 shadow-lg card-hover">
+          <h3 className="font-bold text-xl text-gray-900 mb-3">{insight}</h3>
+          <p className="text-gray-600 mb-4">{description}</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-green-50 rounded-xl p-4">
+              <div className="text-green-700 font-medium text-sm mb-1">DO THIS</div>
+              <div className="text-green-800 text-sm">{doThis}</div>
+            </div>
+            <div className="bg-red-50 rounded-xl p-4">
+              <div className="text-red-700 font-medium text-sm mb-1">NOT THIS</div>
+              <div className="text-red-800 text-sm">{notThis}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [activeTab, setActiveTab] = useState('product');
+
+      return (
+        <div className="min-h-screen">
+          {/* Header */}
+          <header className="gradient-bg text-white py-16 px-8">
+            <div className="max-w-5xl mx-auto">
+              <div className="inline-block bg-white/10 backdrop-blur rounded-full px-4 py-2 text-sm mb-6">
+                Design Brief
+              </div>
+              <h1 className="text-5xl font-black mb-4">PORTPAL</h1>
+              <p className="text-xl text-blue-200 max-w-2xl">
+                Shift tracking & pay verification for longshoremen.
+                This brief will help you understand the users and create designs that resonate.
+              </p>
+            </div>
+          </header>
+
+          {/* Navigation */}
+          <nav className="sticky top-0 bg-gray-100/80 backdrop-blur py-4 px-8 shadow-sm z-10">
+            <div className="max-w-5xl mx-auto flex gap-3 overflow-x-auto">
+              <Tab active={activeTab === 'product'} onClick={() => setActiveTab('product')}>The Product</Tab>
+              <Tab active={activeTab === 'users'} onClick={() => setActiveTab('users')}>The Users</Tab>
+              <Tab active={activeTab === 'psychology'} onClick={() => setActiveTab('psychology')}>Psychology</Tab>
+              <Tab active={activeTab === 'visual'} onClick={() => setActiveTab('visual')}>Visual Direction</Tab>
+              <Tab active={activeTab === 'trends'} onClick={() => setActiveTab('trends')}>Design Trends</Tab>
+              <Tab active={activeTab === 'deliverables'} onClick={() => setActiveTab('deliverables')}>Deliverables</Tab>
+            </div>
+          </nav>
+
+          {/* Content */}
+          <main className="max-w-5xl mx-auto px-8 py-12">
+
+            {activeTab === 'product' && (
+              <>
+                <Section title="What is PORTPAL?" subtitle="Understanding the product you're designing for">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
+                    <p className="text-xl text-gray-700 leading-relaxed mb-6">
+                      PORTPAL is a mobile app that helps <strong>longshoremen</strong> (port workers who load/unload ships)
+                      track their work shifts and verify their paychecks are accurate.
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="bg-gray-50 rounded-xl p-5">
+                        <div className="text-3xl mb-3">&#128221;</div>
+                        <h4 className="font-bold mb-2">Log Shifts</h4>
+                        <p className="text-gray-600 text-sm">Quick entry of what job they worked, where, and when. Takes seconds.</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-5">
+                        <div className="text-3xl mb-3">&#128178;</div>
+                        <h4 className="font-bold mb-2">Calculate Pay</h4>
+                        <p className="text-gray-600 text-sm">Automatically calculates expected pay using official union rates.</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-xl p-5">
+                        <div className="text-3xl mb-3">&#9989;</div>
+                        <h4 className="font-bold mb-2">Verify Accuracy</h4>
+                        <p className="text-gray-600 text-sm">Compare against actual paychecks to catch any discrepancies.</p>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Why is this Hard?" subtitle="The complexity that makes this app necessary">
+                  <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-8">
+                    <p className="text-amber-900 mb-6">
+                      Longshoremen pay is incredibly complex. There are 40+ job types, each paying differently.
+                      Day shifts pay less than night shifts. Weekends pay more. Some locations have longer hours.
+                      Rates change every April. It's a maze of rules.
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="font-bold text-amber-800 mb-2">Without PORTPAL</div>
+                        <ul className="text-sm text-amber-700 space-y-1">
+                          <li>&#8226; Mental math or paper tracking</li>
+                          <li>&#8226; Guessing if paycheck is right</li>
+                          <li>&#8226; Potentially missing money</li>
+                          <li>&#8226; Confusion, frustration</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="font-bold text-green-800 mb-2">With PORTPAL</div>
+                        <ul className="text-sm text-green-700 space-y-1">
+                          <li>&#8226; Log shift in 10 seconds</li>
+                          <li>&#8226; Instant, accurate calculation</li>
+                          <li>&#8226; Know exactly what to expect</li>
+                          <li>&#8226; Peace of mind</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="The Core Value Proposition">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-10 text-white text-center">
+                    <p className="text-blue-300 text-lg mb-4">The single most important thing to communicate:</p>
+                    <h3 className="text-4xl font-black mb-4">"Never miss a dollar you earned."</h3>
+                    <p className="text-gray-400 max-w-xl mx-auto">
+                      It's not about making more money. It's about making sure they get what they're already owed.
+                      Accuracy, not income increase.
+                    </p>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'users' && (
+              <>
+                <Section title="Who Uses PORTPAL?" subtitle="Understanding the primary user">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
+                    <div className="flex items-start gap-6 mb-6">
+                      <div className="w-20 h-20 bg-gray-800 rounded-2xl flex items-center justify-center text-4xl flex-shrink-0">
+                        &#128119;
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">{userPersona.primary.name}</h3>
+                        <p className="text-gray-500">{userPersona.primary.age} years old</p>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <h4 className="font-bold text-gray-700 mb-3">Who They Are</h4>
+                        <ul className="space-y-2">
+                          {userPersona.primary.traits.map((trait, i) => (
+                            <li key={i} className="flex items-start gap-2 text-gray-600">
+                              <span className="text-gray-400 mt-1">&#8226;</span>
+                              <span>{trait}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-red-700 mb-3">Their Pain Points</h4>
+                        <ul className="space-y-2">
+                          {userPersona.primary.painPoints.map((pain, i) => (
+                            <li key={i} className="flex items-start gap-2 text-gray-600">
+                              <span className="text-red-400 mt-1">&#10007;</span>
+                              <span>{pain}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="What They Want" subtitle="Design for these needs">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {userPersona.primary.wants.map((want, i) => (
+                      <div key={i} className="bg-green-50 rounded-2xl p-6 border-2 border-green-200">
+                        <div className="text-green-600 text-2xl mb-2">&#10003;</div>
+                        <p className="text-green-900 font-medium">{want}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="A Day in Their Life">
+                  <div className="bg-gray-900 rounded-2xl p-8 text-white">
+                    <div className="space-y-6">
+                      <div className="flex items-start gap-4">
+                        <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">5:30 AM</div>
+                        <p className="text-gray-300">Wake up, check dispatch app to see where they're working today</p>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">7:00 AM</div>
+                        <p className="text-gray-300">Arrive at terminal, start shift. Physical work - operating equipment, moving cargo</p>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">12:00 PM</div>
+                        <p className="text-gray-300">Lunch break. Check phone, might log morning shift details</p>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold">4:00 PM</div>
+                        <p className="text-gray-300">Shift ends. Tired. Quick glance at PORTPAL to log the day</p>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Payday</div>
+                        <p className="text-gray-300">Check paycheck against PORTPAL. Everything match? Great. Problem? Flag it.</p>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'psychology' && (
+              <>
+                <Section title="Understanding the Longshoreman Mindset" subtitle="Design psychology that resonates">
+                  <div className="grid gap-6">
+                    {psychologyInsights.map((item, i) => (
+                      <InsightCard key={i} {...item} />
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="Messaging Tone">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="bg-white rounded-2xl p-6 shadow-lg">
+                      <h4 className="font-bold text-gray-900 mb-4">Voice & Tone</h4>
+                      <ul className="space-y-3">
+                        {messagingGuidance.toneOfVoice.map((tone, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span className="text-blue-500 mt-1">&#9679;</span>
+                            <span className="text-gray-700">{tone}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <div className="bg-green-50 rounded-2xl p-6 mb-4">
+                        <h4 className="font-bold text-green-800 mb-3">Good Headlines</h4>
+                        <ul className="space-y-2">
+                          {messagingGuidance.goodHeadlines.map((h, i) => (
+                            <li key={i} className="text-green-700 font-medium">"{h}"</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="bg-red-50 rounded-2xl p-6">
+                        <h4 className="font-bold text-red-800 mb-3">Avoid</h4>
+                        <ul className="space-y-2">
+                          {messagingGuidance.avoid.map((a, i) => (
+                            <li key={i} className="text-red-700 text-sm">{a}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'visual' && (
+              <>
+                <Section title="Color Palette" subtitle="Industrial, maritime, trustworthy">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {visualDirection.colors.map((color, i) => (
+                      <ColorSwatch key={i} {...color} />
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="Typography Guidelines">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg">
+                    <ul className="space-y-4">
+                      {visualDirection.typography.map((tip, i) => (
+                        <li key={i} className="flex items-start gap-3">
+                          <div className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold flex-shrink-0">
+                            {i + 1}
+                          </div>
+                          <span className="text-gray-700 pt-1">{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Section>
+
+                <Section title="Imagery Direction" subtitle="What visuals to use">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-2xl p-6 shadow-lg">
+                      <h4 className="font-bold text-green-700 mb-4">Use These</h4>
+                      <ul className="space-y-3">
+                        {visualDirection.imagery.map((img, i) => (
+                          <li key={i} className="flex items-start gap-2 text-gray-700">
+                            <span className="text-green-500">&#10003;</span>
+                            <span>{img}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-white rounded-2xl p-6 shadow-lg">
+                      <h4 className="font-bold text-red-700 mb-4">Avoid These</h4>
+                      <ul className="space-y-3 text-gray-700">
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-500">&#10007;</span>
+                          <span>Generic stock photos of "workers"</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-500">&#10007;</span>
+                          <span>Overly polished, corporate imagery</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-500">&#10007;</span>
+                          <span>Happy people holding phones (cheesy)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-500">&#10007;</span>
+                          <span>Money imagery (falling coins, cash)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-red-500">&#10007;</span>
+                          <span>Graphs/charts (too corporate)</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Mood & Feel">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-gray-900 rounded-2xl p-6 text-center">
+                      <div className="text-4xl mb-2">&#9875;</div>
+                      <div className="text-white font-medium">Maritime</div>
+                      <div className="text-gray-500 text-sm">Ocean, ships, anchors</div>
+                    </div>
+                    <div className="bg-gray-700 rounded-2xl p-6 text-center">
+                      <div className="text-4xl mb-2">&#9881;</div>
+                      <div className="text-white font-medium">Industrial</div>
+                      <div className="text-gray-400 text-sm">Steel, machinery, grit</div>
+                    </div>
+                    <div className="bg-gray-600 rounded-2xl p-6 text-center">
+                      <div className="text-4xl mb-2">&#128170;</div>
+                      <div className="text-white font-medium">Strong</div>
+                      <div className="text-gray-400 text-sm">Reliable, solid, bold</div>
+                    </div>
+                    <div className="bg-gray-500 rounded-2xl p-6 text-center">
+                      <div className="text-4xl mb-2">&#9201;</div>
+                      <div className="text-white font-medium">Efficient</div>
+                      <div className="text-gray-300 text-sm">Fast, no-nonsense</div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'trends' && (
+              <>
+                <Section title="Current Design Trends" subtitle="What's working in 2026">
+                  <div className="grid gap-6">
+                    {designTrends.map((trend, i) => (
+                      <div key={i} className="bg-white rounded-2xl p-6 shadow-lg card-hover">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <h3 className="font-bold text-xl text-gray-900 mb-2">{trend.trend}</h3>
+                            <p className="text-gray-600 mb-3">{trend.description}</p>
+                            <div className="bg-blue-50 text-blue-800 px-3 py-2 rounded-lg inline-block text-sm">
+                              <strong>For PORTPAL:</strong> {trend.relevance}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="What's Viral Right Now" subtitle="App Store & social media patterns">
+                  <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl p-8 text-white">
+                    <h3 className="font-bold text-2xl mb-6">Patterns in Top-Performing App Marketing</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-white/10 backdrop-blur rounded-xl p-5">
+                        <h4 className="font-bold mb-3">App Store Screenshots</h4>
+                        <ul className="space-y-2 text-sm text-white/90">
+                          <li>&#8226; First screenshot = strongest hook (5 words or less)</li>
+                          <li>&#8226; Phone mockups with real content, not lorem ipsum</li>
+                          <li>&#8226; Consistent color story across all screens</li>
+                          <li>&#8226; Benefit-focused headlines, not feature lists</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur rounded-xl p-5">
+                        <h4 className="font-bold mb-3">TikTok/Reels</h4>
+                        <ul className="space-y-2 text-sm text-white/90">
+                          <li>&#8226; Hook in first 1-2 seconds</li>
+                          <li>&#8226; Problem agitation then solution</li>
+                          <li>&#8226; Raw/authentic over polished</li>
+                          <li>&#8226; Satisfying UI interactions</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur rounded-xl p-5">
+                        <h4 className="font-bold mb-3">Landing Pages</h4>
+                        <ul className="space-y-2 text-sm text-white/90">
+                          <li>&#8226; Hero = one clear message + visual</li>
+                          <li>&#8226; Social proof below fold (if used sparingly)</li>
+                          <li>&#8226; Feature sections with bento grids</li>
+                          <li>&#8226; CTA visible without scrolling</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur rounded-xl p-5">
+                        <h4 className="font-bold mb-3">General Patterns</h4>
+                        <ul className="space-y-2 text-sm text-white/90">
+                          <li>&#8226; Dark mode variants perform well</li>
+                          <li>&#8226; Gradient backgrounds (subtle)</li>
+                          <li>&#8226; Oversized typography</li>
+                          <li>&#8226; Minimal text, maximum visual</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'deliverables' && (
+              <>
+                <Section title="What We Need" subtitle="Prioritized list of deliverables">
+                  <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-900 text-white">
+                        <tr>
+                          <th className="px-6 py-4 text-left">Deliverable</th>
+                          <th className="px-6 py-4 text-center">Quantity</th>
+                          <th className="px-6 py-4 text-center">Priority</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {deliverables.map((d, i) => (
+                          <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                            <td className="px-6 py-4 font-medium">{d.item}</td>
+                            <td className="px-6 py-4 text-center text-gray-600">{d.count}</td>
+                            <td className="px-6 py-4 text-center">
+                              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                d.priority === 'High' ? 'bg-red-100 text-red-800' :
+                                d.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {d.priority}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Section>
+
+                <Section title="Content Ideas by Format">
+                  <div className="space-y-6">
+                    {contentIdeas.map((content, i) => (
+                      <div key={i} className="bg-white rounded-2xl p-6 shadow-lg">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-bold text-xl">{content.type}</h3>
+                          <code className="bg-gray-100 px-3 py-1 rounded text-sm text-gray-600">{content.specs}</code>
+                        </div>
+                        <ul className="space-y-2">
+                          {content.ideas.map((idea, j) => (
+                            <li key={j} className="flex items-start gap-2 text-gray-700">
+                              <span className="text-blue-500 mt-1">&#9679;</span>
+                              <span>{idea}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="Final Checklist">
+                  <div className="bg-gray-900 text-white rounded-2xl p-8">
+                    <h3 className="font-bold text-xl mb-6">Before Submitting, Ask Yourself:</h3>
+                    <div className="space-y-4">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" className="mt-1.5 w-5 h-5" />
+                        <span>Does it feel authentic to a longshoreman's world?</span>
+                      </label>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" className="mt-1.5 w-5 h-5" />
+                        <span>Is the message clear in 3 seconds or less?</span>
+                      </label>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" className="mt-1.5 w-5 h-5" />
+                        <span>Would a skeptical worker trust this, or roll their eyes?</span>
+                      </label>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" className="mt-1.5 w-5 h-5" />
+                        <span>Is it focused on accuracy/verification (not making more money)?</span>
+                      </label>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" className="mt-1.5 w-5 h-5" />
+                        <span>Does the visual style feel industrial/maritime, not corporate?</span>
+                      </label>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" className="mt-1.5 w-5 h-5" />
+                        <span>Is it modern and clean without being trendy or gimmicky?</span>
+                      </label>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-gray-900 text-white py-10 px-8">
+            <div className="max-w-5xl mx-auto text-center">
+              <h2 className="text-2xl font-bold mb-4">PORTPAL Design Brief</h2>
+              <p className="text-gray-400 max-w-xl mx-auto">
+                Create designs that respect the user, communicate clearly, and feel authentic to the longshoreman community.
+              </p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

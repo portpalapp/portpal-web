@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTPAL Marketing Brief</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%); }
+    .card-hover { transition: transform 0.2s, box-shadow 0.2s; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // Data
+    const metrics = {
+      currentUsers: 752,
+      totalShifts: 71712,
+      totalPayTracked: 41039007,
+      thirtyDayRetention: 67.9,
+      ninetyDayRetention: 62.5,
+      oneAndDone: 9.0,
+      magicNumber: { shifts: 10, retention: 69.9 }
+    };
+
+    const marketData = {
+      bcMarket: 7200,
+      local500: 2740,
+      local502: 3000,
+      northAmerica: 127000,
+      tam: 12570000,
+      price: 99,
+      conversionTarget: 35
+    };
+
+    const expansionPlan = [
+      { year: 1, markets: "BC (All Locals)", workers: 7200, arr: 52000 },
+      { year: 2, markets: "+ PNW (Seattle/Tacoma)", workers: 14200, arr: 97000 },
+      { year: 3, markets: "+ California (LA/SF)", workers: 28200, arr: 166000 },
+      { year: 4, markets: "+ Hawaii/Montreal", workers: 36000, arr: 215000 },
+      { year: 5, markets: "+ ILA East Coast", workers: 61000, arr: 312000 }
+    ];
+
+    const bcLocals = [
+      { code: "502", location: "New Westminster", workers: 3000, note: "LARGEST - Expansion Target" },
+      { code: "500", location: "Vancouver", workers: 2740, note: "Current User Base" },
+      { code: "505", location: "Prince Rupert", workers: 750, note: "Northern BC" },
+      { code: "508", location: "Chemainus/Nanaimo", workers: 400, note: "Vancouver Island" },
+      { code: "514", location: "Burnaby", workers: 300, note: "Foremen" },
+      { code: "517", location: "Vancouver", workers: 200, note: "Warehouse/Clerical" }
+    ];
+
+    const keyMessages = [
+      { wrong: "Show earnings/income numbers", right: "Focus on accuracy & complexity solved" },
+      { wrong: "Target full-time workers only", right: "Prioritize CASUALS (irregular hours, more pain)" },
+      { wrong: "'Get paid what you deserve'", right: "'Never miss a dollar you earned'" },
+      { wrong: "Generic union worker imagery", right: "Authentic port/terminal visuals" }
+    ];
+
+    const pricingModel = {
+      trial: { duration: 30, ccRequired: false },
+      free: ["Shift logging", "Rate calculator", "Basic dashboard", "1 AI question/week"],
+      pro: ["Pay stub upload & OCR", "AI reconciliation", "Predictions", "Templates", "Export", "Unlimited AI"],
+      price: 99,
+      conversionTarget: 35
+    };
+
+    // Components
+    function MetricCard({ label, value, subtext, color = "blue" }) {
+      const colors = {
+        blue: "from-blue-500 to-blue-600",
+        green: "from-green-500 to-green-600",
+        purple: "from-purple-500 to-purple-600",
+        orange: "from-orange-500 to-orange-600"
+      };
+      return (
+        <div className={`bg-gradient-to-br ${colors[color]} rounded-xl p-6 text-white card-hover`}>
+          <div className="text-3xl font-bold">{value}</div>
+          <div className="text-white/90 font-medium mt-1">{label}</div>
+          {subtext && <div className="text-white/70 text-sm mt-2">{subtext}</div>}
+        </div>
+      );
+    }
+
+    function Section({ title, children, className = "" }) {
+      return (
+        <div className={`mb-12 ${className}`}>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-blue-500 inline-block">{title}</h2>
+          {children}
+        </div>
+      );
+    }
+
+    function Tab({ active, onClick, children }) {
+      return (
+        <button
+          onClick={onClick}
+          className={`px-6 py-3 font-medium rounded-lg transition-all ${
+            active
+              ? 'bg-blue-600 text-white shadow-lg'
+              : 'bg-white text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          {children}
+        </button>
+      );
+    }
+
+    function App() {
+      const [activeTab, setActiveTab] = useState('overview');
+
+      return (
+        <div className="min-h-screen">
+          {/* Header */}
+          <header className="gradient-bg text-white py-12 px-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">
+                  <span role="img" aria-label="anchor">&#9875;</span>
+                </div>
+                <h1 className="text-4xl font-bold">PORTPAL</h1>
+              </div>
+              <p className="text-xl text-blue-200 mb-2">Marketing Brief - February 2026</p>
+              <p className="text-blue-300">Shift tracking & pay verification for longshoremen</p>
+            </div>
+          </header>
+
+          {/* Navigation */}
+          <nav className="sticky top-0 bg-gray-100 py-4 px-8 shadow-sm z-10">
+            <div className="max-w-6xl mx-auto flex gap-3 overflow-x-auto">
+              <Tab active={activeTab === 'overview'} onClick={() => setActiveTab('overview')}>Overview</Tab>
+              <Tab active={activeTab === 'market'} onClick={() => setActiveTab('market')}>Market Size</Tab>
+              <Tab active={activeTab === 'expansion'} onClick={() => setActiveTab('expansion')}>Expansion</Tab>
+              <Tab active={activeTab === 'messaging'} onClick={() => setActiveTab('messaging')}>Messaging</Tab>
+              <Tab active={activeTab === 'pricing'} onClick={() => setActiveTab('pricing')}>Pricing</Tab>
+              <Tab active={activeTab === 'action'} onClick={() => setActiveTab('action')}>Action Items</Tab>
+            </div>
+          </nav>
+
+          {/* Content */}
+          <main className="max-w-6xl mx-auto px-8 py-12">
+
+            {activeTab === 'overview' && (
+              <>
+                <Section title="Current Traction">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <MetricCard label="Active Users" value={metrics.currentUsers.toLocaleString()} color="blue" />
+                    <MetricCard label="Shifts Tracked" value={metrics.totalShifts.toLocaleString()} color="green" />
+                    <MetricCard label="Pay Tracked" value={`$${(metrics.totalPayTracked/1000000).toFixed(1)}M`} color="purple" />
+                    <MetricCard label="30-Day Retention" value={`${metrics.thirtyDayRetention}%`} color="orange" />
+                  </div>
+                </Section>
+
+                <Section title="The Problem We Solve">
+                  <div className="bg-white rounded-xl p-8 shadow-lg">
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <h3 className="font-bold text-lg text-red-600 mb-4">Pain Points</h3>
+                        <ul className="space-y-3">
+                          <li className="flex items-start gap-3">
+                            <span className="text-red-500 mt-1">&#10007;</span>
+                            <span>Complex pay rules: day/night/graveyard shifts, 40+ job types, location variations</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <span className="text-red-500 mt-1">&#10007;</span>
+                            <span>Pay stubs are confusing - hard to verify accuracy</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <span className="text-red-500 mt-1">&#10007;</span>
+                            <span>Casuals work irregular hours across multiple terminals</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <span className="text-red-500 mt-1">&#10007;</span>
+                            <span>Manual tracking = missed discrepancies = lost money</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg text-green-600 mb-4">PORTPAL Solution</h3>
+                        <ul className="space-y-3">
+                          <li className="flex items-start gap-3">
+                            <span className="text-green-500 mt-1">&#10003;</span>
+                            <span>Log shifts in seconds with smart defaults</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <span className="text-green-500 mt-1">&#10003;</span>
+                            <span>Auto-calculate pay using official BCMEA rates</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <span className="text-green-500 mt-1">&#10003;</span>
+                            <span>Upload pay stubs - AI flags discrepancies</span>
+                          </li>
+                          <li className="flex items-start gap-3">
+                            <span className="text-green-500 mt-1">&#10003;</span>
+                            <span>Track seniority hours for casuals</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Magic Number Discovery">
+                  <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-8 text-white">
+                    <div className="text-center">
+                      <div className="text-6xl font-bold mb-2">10+</div>
+                      <div className="text-xl text-purple-200 mb-4">shifts in first month</div>
+                      <div className="text-3xl font-bold text-yellow-300">{metrics.magicNumber.retention}% retention</div>
+                      <p className="mt-4 text-purple-200">Users who hit this threshold are significantly more likely to become long-term users</p>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'market' && (
+              <>
+                <Section title="Total Addressable Market">
+                  <div className="bg-white rounded-xl p-8 shadow-lg mb-8">
+                    <div className="text-center mb-8">
+                      <div className="text-5xl font-bold text-blue-600">{marketData.northAmerica.toLocaleString()}</div>
+                      <div className="text-xl text-gray-600">Longshoremen in North America</div>
+                      <div className="text-3xl font-bold text-green-600 mt-2">${(marketData.tam/1000000).toFixed(1)}M ARR potential</div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-blue-50 rounded-lg p-6">
+                        <h4 className="font-bold text-blue-800 mb-2">ILWU (West Coast)</h4>
+                        <div className="text-3xl font-bold text-blue-600">42,000</div>
+                        <p className="text-gray-600">BC, WA, OR, CA, HI, AK</p>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-6">
+                        <h4 className="font-bold text-green-800 mb-2">ILA (East Coast + Gulf)</h4>
+                        <div className="text-3xl font-bold text-green-600">85,000</div>
+                        <p className="text-gray-600">NY/NJ, Southeast, Gulf, Great Lakes</p>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="BC Market (Current Focus)">
+                  <div className="bg-yellow-50 border-2 border-yellow-400 rounded-xl p-6 mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">&#9888;</span>
+                      <div>
+                        <strong className="text-yellow-800">IMPORTANT CORRECTION:</strong>
+                        <span className="text-yellow-700 ml-2">BC market is 7,200 workers (not 3,000). Previous estimates only counted Local 500.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-800 text-white">
+                        <tr>
+                          <th className="px-6 py-4 text-left">Local</th>
+                          <th className="px-6 py-4 text-left">Location</th>
+                          <th className="px-6 py-4 text-right">Workers</th>
+                          <th className="px-6 py-4 text-left">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {bcLocals.map((local, i) => (
+                          <tr key={local.code} className={`${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${local.code === '502' ? 'bg-green-50' : ''}`}>
+                            <td className="px-6 py-4 font-bold">{local.code}</td>
+                            <td className="px-6 py-4">{local.location}</td>
+                            <td className="px-6 py-4 text-right font-mono">{local.workers.toLocaleString()}+</td>
+                            <td className="px-6 py-4">
+                              {local.code === '502' ? (
+                                <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm">{local.note}</span>
+                              ) : local.code === '500' ? (
+                                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">{local.note}</span>
+                              ) : (
+                                <span className="text-gray-600">{local.note}</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                        <tr className="bg-gray-800 text-white font-bold">
+                          <td className="px-6 py-4" colSpan="2">BC TOTAL</td>
+                          <td className="px-6 py-4 text-right font-mono">7,200</td>
+                          <td className="px-6 py-4"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </Section>
+
+                <Section title="Key Insight: Local 502">
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-8 text-white">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <h3 className="text-2xl font-bold mb-4">Local 502 is BIGGER than Local 500</h3>
+                        <ul className="space-y-2">
+                          <li>&#10003; 3,000+ workers (largest BC local)</li>
+                          <li>&#10003; Same metro area as Local 500</li>
+                          <li>&#10003; Similar pay structure (easy to support)</li>
+                          <li>&#10003; Natural word-of-mouth from current users</li>
+                        </ul>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-6xl font-bold">110%</div>
+                        <div className="text-green-200">More workers than our current market</div>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'expansion' && (
+              <>
+                <Section title="5-Year Expansion Roadmap (ILWU-First Strategy)">
+                  <div className="space-y-4">
+                    {expansionPlan.map((phase, i) => (
+                      <div key={phase.year} className={`bg-white rounded-xl p-6 shadow-lg border-l-4 ${i === 0 ? 'border-blue-600' : 'border-gray-300'}`}>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-6">
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold ${i === 0 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                              Y{phase.year}
+                            </div>
+                            <div>
+                              <div className="font-bold text-lg">{phase.markets}</div>
+                              <div className="text-gray-600">{phase.workers.toLocaleString()} cumulative workers</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-green-600">${(phase.arr/1000).toFixed(0)}K</div>
+                            <div className="text-gray-500 text-sm">ARR Target</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="Why ILWU-First?">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl p-6 shadow-lg card-hover">
+                      <div className="text-3xl mb-4">&#128260;</div>
+                      <h3 className="font-bold text-lg mb-2">80% Pay Engine Transfer</h3>
+                      <p className="text-gray-600">Same union = similar contracts. Most pay calculation logic works across all ILWU ports.</p>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg card-hover">
+                      <div className="text-3xl mb-4">&#128101;</div>
+                      <h3 className="font-bold text-lg mb-2">Union Relationships Cascade</h3>
+                      <p className="text-gray-600">Endorsement from one local helps with others. Union members trust peer recommendations.</p>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg card-hover">
+                      <div className="text-3xl mb-4">&#128205;</div>
+                      <h3 className="font-bold text-lg mb-2">Geographic Corridor</h3>
+                      <p className="text-gray-600">Natural path: BC &#8594; Seattle &#8594; Portland &#8594; SF &#8594; LA. Workers often know people at nearby ports.</p>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg card-hover">
+                      <div className="text-3xl mb-4">&#128176;</div>
+                      <h3 className="font-bold text-lg mb-2">Lower CAC</h3>
+                      <p className="text-gray-600">Tight-knit community. Referrals and word-of-mouth work better than paid ads.</p>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'messaging' && (
+              <>
+                <Section title="Messaging Strategy: Problem, Not Pay">
+                  <div className="bg-red-50 border-2 border-red-300 rounded-xl p-6 mb-8">
+                    <h3 className="font-bold text-red-800 text-lg mb-4">&#9888; Avoid These Approaches</h3>
+                    <ul className="space-y-2 text-red-700">
+                      <li>&#10007; Showing specific earnings/income numbers (triggers comparison, skepticism)</li>
+                      <li>&#10007; "Get rich" or "maximize earnings" language</li>
+                      <li>&#10007; Rage-bait about employers "stealing" money</li>
+                      <li>&#10007; Generic stock photos of workers</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-800 text-white">
+                        <tr>
+                          <th className="px-6 py-4 text-left text-red-400">&#10007; Wrong Approach</th>
+                          <th className="px-6 py-4 text-left text-green-400">&#10003; Right Approach</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {keyMessages.map((msg, i) => (
+                          <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                            <td className="px-6 py-4 text-red-600">{msg.wrong}</td>
+                            <td className="px-6 py-4 text-green-600 font-medium">{msg.right}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Section>
+
+                <Section title="Target Audience Priority">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl p-6 text-white">
+                      <div className="text-2xl mb-2">&#11088; PRIMARY</div>
+                      <h3 className="text-2xl font-bold mb-4">Casual Workers</h3>
+                      <ul className="space-y-2">
+                        <li>&#10003; Work irregular hours</li>
+                        <li>&#10003; Multiple terminals/jobs</li>
+                        <li>&#10003; Hardest to track pay</li>
+                        <li>&#10003; Need seniority tracking</li>
+                        <li>&#10003; Most motivated to verify</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-200">
+                      <div className="text-2xl mb-2 text-gray-400">SECONDARY</div>
+                      <h3 className="text-2xl font-bold mb-4 text-gray-700">Full-Time Members</h3>
+                      <ul className="space-y-2 text-gray-600">
+                        <li>&#10003; Consistent schedule</li>
+                        <li>&#10003; Still value verification</li>
+                        <li>&#10003; Track overtime/extras</li>
+                        <li>&#10003; Easier to predict pay</li>
+                      </ul>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Key Taglines">
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="bg-blue-600 rounded-xl p-6 text-white text-center">
+                      <div className="text-xl font-bold">"Never miss a dollar you earned"</div>
+                    </div>
+                    <div className="bg-purple-600 rounded-xl p-6 text-white text-center">
+                      <div className="text-xl font-bold">"Your shifts. Your pay. Verified."</div>
+                    </div>
+                    <div className="bg-green-600 rounded-xl p-6 text-white text-center">
+                      <div className="text-xl font-bold">"Built by longshoremen, for longshoremen"</div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'pricing' && (
+              <>
+                <Section title="Pricing Model: Reverse Trial + Soft Paywall">
+                  <div className="bg-white rounded-xl p-8 shadow-lg mb-8">
+                    <div className="flex items-center justify-center gap-4 mb-8">
+                      <div className="bg-blue-100 rounded-lg px-6 py-3">
+                        <span className="font-bold text-blue-800">30-Day Free Trial</span>
+                        <span className="text-blue-600 ml-2">(No CC Required)</span>
+                      </div>
+                      <div className="text-2xl">&#8594;</div>
+                      <div className="bg-gray-100 rounded-lg px-6 py-3">
+                        <span className="font-bold text-gray-800">Free Tier</span>
+                      </div>
+                      <div className="text-2xl">&#8594;</div>
+                      <div className="bg-green-100 rounded-lg px-6 py-3">
+                        <span className="font-bold text-green-800">Pro: $99/year</span>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="border-2 border-gray-200 rounded-xl p-6">
+                        <h3 className="font-bold text-xl mb-4">Free Tier</h3>
+                        <ul className="space-y-3">
+                          {pricingModel.free.map((feature, i) => (
+                            <li key={i} className="flex items-center gap-3">
+                              <span className="text-green-500">&#10003;</span>
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="border-2 border-green-500 rounded-xl p-6 bg-green-50">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-bold text-xl">Pro Tier</h3>
+                          <span className="bg-green-600 text-white px-3 py-1 rounded-full font-bold">$99/year</span>
+                        </div>
+                        <ul className="space-y-3">
+                          {pricingModel.pro.map((feature, i) => (
+                            <li key={i} className="flex items-center gap-3">
+                              <span className="text-green-600">&#10003;</span>
+                              <span className="font-medium">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Revenue Projections (BC Market)">
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-t-4 border-gray-400">
+                      <h4 className="font-bold text-gray-600 mb-2">Conservative</h4>
+                      <div className="text-3xl font-bold">$35K</div>
+                      <div className="text-gray-500">ARR</div>
+                      <div className="mt-4 text-sm text-gray-600">
+                        <div>1,000 users</div>
+                        <div>35% conversion = 350 paying</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-t-4 border-blue-600">
+                      <h4 className="font-bold text-blue-600 mb-2">Base Target</h4>
+                      <div className="text-3xl font-bold text-blue-600">$52K</div>
+                      <div className="text-gray-500">ARR</div>
+                      <div className="mt-4 text-sm text-gray-600">
+                        <div>1,500 users</div>
+                        <div>35% conversion = 525 paying</div>
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-t-4 border-green-500">
+                      <h4 className="font-bold text-green-600 mb-2">Optimistic</h4>
+                      <div className="text-3xl font-bold text-green-600">$87K</div>
+                      <div className="text-gray-500">ARR</div>
+                      <div className="mt-4 text-sm text-gray-600">
+                        <div>2,500 users</div>
+                        <div>35% conversion = 875 paying</div>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {activeTab === 'action' && (
+              <>
+                <Section title="Immediate Marketing Actions">
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-red-500">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-bold">HIGH PRIORITY</span>
+                        <h3 className="font-bold">Local 502 Expansion Campaign</h3>
+                      </div>
+                      <p className="text-gray-600">Create targeted campaign for New Westminster workers. Leverage existing Local 500 users as ambassadors.</p>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-orange-500">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="bg-orange-500 text-white px-2 py-1 rounded text-sm font-bold">MEDIUM</span>
+                        <h3 className="font-bold">Casual Worker Messaging</h3>
+                      </div>
+                      <p className="text-gray-600">Develop content specifically addressing casual worker pain points: seniority tracking, variable schedules, multiple terminals.</p>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-yellow-500">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="bg-yellow-500 text-white px-2 py-1 rounded text-sm font-bold">ONGOING</span>
+                        <h3 className="font-bold">First-Month Engagement</h3>
+                      </div>
+                      <p className="text-gray-600">Focus on getting users to 10+ shifts in first month. This is the magic number for retention.</p>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Key Documents to Reference">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-gray-100 rounded-xl p-6">
+                      <h4 className="font-bold mb-3">&#128196; Strategy Documents</h4>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>&#8226; <code>MASTER_METRICS.md</code> - Source of truth for all numbers</li>
+                        <li>&#8226; <code>marketing/EXPANSION_STRATEGY.md</code> - Full roadmap</li>
+                        <li>&#8226; <code>marketing/FREEMIUM_RESEARCH.md</code> - Pricing research</li>
+                        <li>&#8226; <code>marketing/RETENTION_ANALYSIS.md</code> - Cohort data</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-100 rounded-xl p-6">
+                      <h4 className="font-bold mb-3">&#128202; Data Files</h4>
+                      <ul className="space-y-2 text-gray-700">
+                        <li>&#8226; <code>marketing/cohort_retention_pct.csv</code></li>
+                        <li>&#8226; <code>marketing/user_stats_export.csv</code></li>
+                        <li>&#8226; <code>marketing/monthly_summary.csv</code></li>
+                      </ul>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Numbers to Memorize">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-blue-600 text-white rounded-xl p-4 text-center">
+                      <div className="text-2xl font-bold">7,200</div>
+                      <div className="text-blue-200 text-sm">BC Workers</div>
+                    </div>
+                    <div className="bg-green-600 text-white rounded-xl p-4 text-center">
+                      <div className="text-2xl font-bold">127K</div>
+                      <div className="text-green-200 text-sm">North America</div>
+                    </div>
+                    <div className="bg-purple-600 text-white rounded-xl p-4 text-center">
+                      <div className="text-2xl font-bold">$99</div>
+                      <div className="text-purple-200 text-sm">Pro Price</div>
+                    </div>
+                    <div className="bg-orange-600 text-white rounded-xl p-4 text-center">
+                      <div className="text-2xl font-bold">35%</div>
+                      <div className="text-orange-200 text-sm">Conversion Target</div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-gray-800 text-white py-8 px-8 mt-12">
+            <div className="max-w-6xl mx-auto text-center">
+              <p className="text-gray-400">PORTPAL Marketing Brief - February 2026</p>
+              <p className="text-gray-500 text-sm mt-2">For internal use only. See MASTER_METRICS.md for authoritative numbers.</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

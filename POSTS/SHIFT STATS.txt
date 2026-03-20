@@ -1,0 +1,44 @@
+﻿PortPal Community Update 🚢
+
+Hello brothers and sisters, 
+
+First, a huge thank you to all 200+ of you using PortPal. As a longshoreman myself, it's been pretty cool to make something useful and to hear about how much you guys enjoy using it!
+
+## Some Cool Stats from Our First Month
+- Over 2,500 shifts tracked
+- Most popular job: Tractor Driver at Centennial
+- Busiest location: Centennial
+- Most common shift: Day shift (42% of all shifts)
+
+## How We Use Your Data
+Your data privacy is crucial. Here's what you should know:
+- All data is encrypted and stored securely
+- We never share individual data with anyone
+- Statistics are only shown in aggregate
+- You own your data and can delete it anytime
+- I observe usage patterns to improve features and calculations
+
+
+## Help Make PortPal Better
+We're seeing great adoption among day shift tractor drivers, but we'd love to get more:
+- Graveyard shift workers
+- RTG operators
+- Checkers
+- First Aid attendants
+- Different terminals
+
+If you know colleagues in these roles, please share PortPal with them. More users means:
+- Better insights for everyone
+- More accurate calculations
+- New feature development
+- Stronger position for ensuring accurate pay
+
+## What's Next?
+Based on your feedback, we're working on:
+- Call back and quick shift entry templates
+- Better stats dashboard
+- Holiday qualification tracking
+- Pension hour tracking
+
+## Spread the Word
+If PortPal has helped you track your hours & earnings, please share it with your colleagues. Every new user helps us build a better tool for everyone.

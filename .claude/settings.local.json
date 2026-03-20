@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(npm create:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init -p)",
+      "Bash(where:*)",
+      "Bash(fnm install:*)",
+      "Bash(fnm use:*)",
+      "Bash(curl:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "WebSearch",
+      "Bash(timeout:*)",
+      "Bash(ls:*)",
+      "Bash(du:*)",
+      "Bash(powershell -Command \"\\(Get-ChildItem ''C:\\\\Users\\\\veete\\\\OneDrive\\\\Desktop\\\\claude_projects\\\\portpal\\\\marketing\\\\*.md'' | Measure-Object -Property Length -Sum\\).Sum / 1KB\")",
+      "WebFetch(domain:ilwulongshore.org)",
+      "WebFetch(domain:www.ilwu.org)",
+      "WebFetch(domain:www.ilwu.ca)",
+      "WebFetch(domain:www.iladistrict.com)"
+    ]
+  }
+}

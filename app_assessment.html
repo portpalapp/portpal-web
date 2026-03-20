@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PORTPAL App Assessment</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --border: #475569;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --accent: #3b82f6;
+    --purple: #8b5cf6;
+    --green: #22c55e;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --cyan: #06b6d4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .header {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 48px;
+  }
+  .header h1 {
+    font-size: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header p { color: var(--muted); margin-top: 6px; font-size: 15px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 48px 80px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .tab {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  h2 { font-size: 22px; margin: 40px 0 16px; color: var(--text); }
+  h2:first-child { margin-top: 0; }
+  h3 { font-size: 17px; margin: 28px 0 12px; color: var(--cyan); }
+  p, li { color: var(--muted); font-size: 15px; }
+  strong { color: var(--text); }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 8px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .scorecard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .score-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .score-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px; }
+  .score-grade { font-size: 36px; font-weight: 800; }
+  .score-detail { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .grade-a { color: var(--green); }
+  .grade-b { color: #4ade80; }
+  .grade-c { color: var(--orange); }
+  .grade-d { color: var(--red); }
+
+  .overall-score {
+    background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.12));
+    border: 2px solid rgba(59,130,246,0.3);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .overall-score .score-grade { font-size: 56px; }
+  .overall-score .score-label { font-size: 14px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0 20px; }
+  th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(71,85,105,0.3); color: var(--muted); }
+  td strong { color: var(--text); }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 5px; font-size: 12px; font-weight: 600; }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-orange { background: rgba(245,158,11,0.15); color: var(--orange); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: var(--accent); }
+  .badge-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
+
+  .insight {
+    background: rgba(59,130,246,0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .insight strong { color: var(--accent); }
+
+  .warning {
+    background: rgba(239,68,68,0.06);
+    border-left: 3px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .warning strong { color: var(--red); }
+
+  .opportunity {
+    background: rgba(34,197,94,0.06);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .opportunity strong { color: var(--green); }
+
+  .challenge-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 60px 1fr 200px;
+    gap: 20px;
+    align-items: start;
+  }
+  .challenge-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .challenge-meta { font-size: 12px; color: var(--muted); }
+  .challenge-meta strong { display: block; font-size: 13px; margin-bottom: 2px; }
+
+  .priority-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 768px) {
+    .scorecard { grid-template-columns: 1fr; }
+    .challenge-card { grid-template-columns: 1fr; }
+    .priority-grid { grid-template-columns: 1fr; }
+    .container { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>PORTPAL App Assessment</h1>
+  <p>Data-driven analysis of 752 users, 71,712 shifts &bull; Feb 2026</p>
+</div>
+
+<div class="container">
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('scorecard')">Scorecard</div>
+  <div class="tab" onclick="showTab('diagnosis')">Diagnosis</div>
+  <div class="tab" onclick="showTab('improve')">How to Improve</div>
+  <div class="tab" onclick="showTab('challenges')">Challenges & Retention</div>
+  <div class="tab" onclick="showTab('playbook')">90-Day Playbook</div>
+</div>
+
+<!-- ═══════════════════════════ SCORECARD ═══════════════════════════ -->
+<div id="scorecard" class="section active">
+
+<div class="overall-score">
+  <div class="score-label">Overall App Health Score</div>
+  <div class="score-grade grade-b">B</div>
+  <div class="score-detail" style="max-width:600px;margin:8px auto 0;color:var(--muted)">
+    Strong core engagement with a loyal user base, but significant first-week activation gap
+    and no re-engagement system for lapsing users. The foundation is excellent &mdash; the gaps are fixable.
+  </div>
+</div>
+
+<div class="scorecard">
+  <div class="score-item">
+    <div class="score-label">Retention (30-day)</div>
+    <div class="score-grade grade-a">A</div>
+    <div class="score-detail">67.9% &mdash; Exceptional for a niche tool.<br>Industry avg for utility apps: 25-35%</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">Power User Density</div>
+    <div class="score-grade grade-a">A+</div>
+    <div class="score-detail">40.8% of users have 100+ shifts.<br>This is remarkable. Most apps see 5-10%.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">Engagement Depth</div>
+    <div class="score-grade grade-a">A</div>
+    <div class="score-detail">14.5 shifts/mo for active users.<br>~3.6 sessions/week. Very sticky.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">Activation (First Week)</div>
+    <div class="score-grade grade-c">C</div>
+    <div class="score-detail">43% of all churn in first 7 days.<br>59% churn for 1-shift first week.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">Churn Rate</div>
+    <div class="score-grade grade-c">C+</div>
+    <div class="score-detail">42.6% overall churn (320 users).<br>56% of churn happens in month 1.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">Growth / Acquisition</div>
+    <div class="score-grade grade-c">C</div>
+    <div class="score-detail">Signups declined from 198 (Jan) to 41 (Jan '26).<br>No visible growth engine yet.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">One-and-Done Rate</div>
+    <div class="score-grade grade-b">B</div>
+    <div class="score-detail">9.0% (68 users) &mdash; Acceptable.<br>Industry norms: 15-30% for free apps.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">Re-engagement</div>
+    <div class="score-grade grade-d">D</div>
+    <div class="score-detail">No push notifications, no email nudges,<br>no win-back campaigns. Silent loss.</div>
+  </div>
+  <div class="score-item">
+    <div class="score-label">MAU Stability</div>
+    <div class="score-grade grade-a">A</div>
+    <div class="score-detail">MAU grew from 317 to 435 over 12 months<br>despite slowing acquisition. Pure retention.</div>
+  </div>
+</div>
+
+<h2>Benchmark Comparison</h2>
+<table>
+  <thead>
+    <tr><th>Metric</th><th>PORTPAL</th><th>Top Quartile (Niche SaaS)</th><th>Median (Utility Apps)</th><th>Grade</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>30-day retention</td><td><strong>67.9%</strong></td><td>60%+</td><td>25-35%</td><td><span class="badge badge-green">Above</span></td></tr>
+    <tr><td>90-day retention</td><td><strong>62.5%</strong></td><td>40%+</td><td>15-20%</td><td><span class="badge badge-green">Above</span></td></tr>
+    <tr><td>DAU/MAU stickiness</td><td><strong>~35%</strong></td><td>25%+</td><td>10-15%</td><td><span class="badge badge-green">Above</span></td></tr>
+    <tr><td>One-and-done rate</td><td><strong>9.0%</strong></td><td>&lt;10%</td><td>15-30%</td><td><span class="badge badge-green">Top quartile</span></td></tr>
+    <tr><td>Power user % (100+ actions)</td><td><strong>40.8%</strong></td><td>10-15%</td><td>3-5%</td><td><span class="badge badge-green">Exceptional</span></td></tr>
+    <tr><td>Overall churn</td><td><strong>42.6%</strong></td><td>&lt;30%</td><td>40-60%</td><td><span class="badge badge-orange">Median</span></td></tr>
+    <tr><td>First-week churn</td><td><strong>43% of all churn</strong></td><td>&lt;25%</td><td>40-50%</td><td><span class="badge badge-orange">Median</span></td></tr>
+    <tr><td>Reactivation campaigns</td><td><strong>None</strong></td><td>Automated sequences</td><td>Basic emails</td><td><span class="badge badge-red">Missing</span></td></tr>
+    <tr><td>Organic growth loops</td><td><strong>None</strong></td><td>Referral + viral</td><td>Some word-of-mouth</td><td><span class="badge badge-red">Missing</span></td></tr>
+  </tbody>
+</table>
+
+<div class="insight">
+  <strong>The paradox:</strong> PORTPAL has best-in-class engagement for users who stick, but loses almost half its users before they ever get hooked.
+  Your product is not the problem &mdash; your onboarding is. The 307 power users prove the app delivers massive value.
+  The 138 users who churned in week 1 likely never experienced that value.
+</div>
+
+</div>
+
+<!-- ═══════════════════════════ DIAGNOSIS ═══════════════════════════ -->
+<div id="diagnosis" class="section">
+
+<h2>Where You're Losing Users</h2>
+
+<div class="card">
+<h3>The First-Week Cliff (Problem #1)</h3>
+<table>
+  <thead><tr><th>When Users Churn</th><th>Count</th><th>% of All Churn</th><th>Cumulative</th></tr></thead>
+  <tbody>
+    <tr><td>Day 1 (never came back)</td><td><strong>66</strong></td><td>20.6%</td><td>20.6%</td></tr>
+    <tr><td>Days 2-7</td><td><strong>72</strong></td><td>22.5%</td><td>43.1%</td></tr>
+    <tr><td>Days 8-30</td><td><strong>42</strong></td><td>13.1%</td><td>56.2%</td></tr>
+    <tr><td>Months 2-3</td><td>36</td><td>11.2%</td><td>67.5%</td></tr>
+    <tr><td>Months 3-6</td><td>38</td><td>11.9%</td><td>79.4%</td></tr>
+    <tr><td>6+ months</td><td>66</td><td>20.6%</td><td>100%</td></tr>
+  </tbody>
+</table>
+
+<div class="warning">
+  <strong>138 users (43% of all churn) left within their first 7 days.</strong> They never got the "aha moment."
+  If you could convert just 30% of these, that's 41 more retained users from every cohort &mdash; a 13% reduction in total churn.
+</div>
+
+<p>The data is clear: <strong>if a user logs 3+ shifts in their first week, churn drops from 59% to 42%.</strong> If they hit 6+, it drops to 32%.</p>
+
+<table>
+  <thead><tr><th>First Week Shifts</th><th>Users</th><th>Churn Rate</th><th>Delta</th></tr></thead>
+  <tbody>
+    <tr><td>1 shift</td><td>156</td><td><span class="badge badge-red">59.0%</span></td><td>Baseline</td></tr>
+    <tr><td>2 shifts</td><td>93</td><td><span class="badge badge-orange">51.6%</span></td><td>-7.4pp</td></tr>
+    <tr><td>3 shifts</td><td>83</td><td><span class="badge badge-orange">42.2%</span></td><td>-16.8pp</td></tr>
+    <tr><td>4-5 shifts</td><td>170</td><td><span class="badge badge-orange">37.6%</span></td><td>-21.4pp</td></tr>
+    <tr><td>6-10 shifts</td><td>248</td><td><span class="badge badge-green">32.3%</span></td><td>-26.7pp</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="card">
+<h3>The Silent Churners (Problem #2)</h3>
+<p>66 users churned <strong>after 6+ months</strong> of active use, averaging <strong>101.8 shifts each</strong> before going silent.
+These aren't tire-kickers. They were engaged users who left with no intervention. Their shifts_per_active_week was 3.55 &mdash; close to the active average of 4.0.</p>
+
+<div class="warning">
+  <strong>You have zero re-engagement infrastructure.</strong> No push notifications. No "we miss you" emails.
+  No nudges when someone breaks their streak. These 66 power-level churners represent ~6,720 lost shifts and significant
+  lost revenue potential. Even bringing back 20% would recover 13 high-value users.
+</div>
+</div>
+
+<div class="card">
+<h3>The Job-Type Signal (Problem #3)</h3>
+<p>First job logged is a strong predictor of retention, and you're not using this signal:</p>
+<table>
+  <thead><tr><th>First Job</th><th>Users</th><th>Churn Rate</th><th>Signal</th></tr></thead>
+  <tbody>
+    <tr><td>No job selected</td><td>10</td><td><span class="badge badge-red">80.0%</span></td><td>Incomplete onboarding</td></tr>
+    <tr><td>HD MECHANIC</td><td>39</td><td><span class="badge badge-red">64.1%</span></td><td>Trade workers &mdash; different workflow?</td></tr>
+    <tr><td>BULK OPERATOR</td><td>16</td><td><span class="badge badge-red">68.8%</span></td><td>Niche role &mdash; may not see enough value</td></tr>
+    <tr><td>TRAINING</td><td>21</td><td><span class="badge badge-green">19.0%</span></td><td>New workers tracking hours &mdash; highly motivated</td></tr>
+    <tr><td>LIFT TRUCK</td><td>24</td><td><span class="badge badge-green">25.0%</span></td><td>Equipment operators stick</td></tr>
+    <tr><td>TRACTOR TRAILER</td><td>161</td><td><span class="badge badge-blue">35.4%</span></td><td>Your core audience, good retention</td></tr>
+  </tbody>
+</table>
+
+<div class="insight">
+  <strong>Users who start with TRAINING churn at just 19%.</strong> These are likely new/casual workers who need to track hours for seniority &mdash;
+  they have the strongest motivation to keep logging. Your marketing should heavily target new casuals.
+</div>
+</div>
+
+<div class="card">
+<h3>46 Users About to Churn Right Now (Problem #4)</h3>
+<p>Among your 432 "active" users, <strong>46 (10.6%) haven't logged a shift in 14-30 days</strong> despite averaging 62-93 total shifts.
+These are established users going quiet. You have a window of about 2 weeks to pull them back before they cross the churn threshold.</p>
+</div>
+
+<div class="card">
+<h3>Cohort Quality is Declining (Problem #5)</h3>
+<table>
+  <thead><tr><th>Cohort</th><th>Size</th><th>Churn %</th><th>Power User %</th><th>Quality</th></tr></thead>
+  <tbody>
+    <tr><td>Dec 2024</td><td>129</td><td>29.5%</td><td>66.7%</td><td><span class="badge badge-green">Founding users &mdash; excellent</span></td></tr>
+    <tr><td>Jan 2025</td><td>198</td><td>51.5%</td><td>53.5%</td><td><span class="badge badge-orange">Growth wave &mdash; lower quality</span></td></tr>
+    <tr><td>Feb-Mar 2025</td><td>83</td><td>60.2%</td><td>37.3%</td><td><span class="badge badge-red">Worst cohorts</span></td></tr>
+    <tr><td>Apr-Jun 2025</td><td>135</td><td>50.4%</td><td>40.0%</td><td><span class="badge badge-orange">Stabilizing</span></td></tr>
+    <tr><td>Jul-Sep 2025</td><td>88</td><td>43.2%</td><td>22.7%</td><td><span class="badge badge-orange">Lower power % (less time)</span></td></tr>
+  </tbody>
+</table>
+<p>The Dec 2024 founding cohort is your gold standard. Later cohorts are acquiring less-committed users.
+This suggests either (a) early adopters were self-selected enthusiasts, or (b) your acquisition channels shifted toward lower-intent users.</p>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════ HOW TO IMPROVE ═══════════════════════════ -->
+<div id="improve" class="section">
+
+<h2>Priority Improvements (Data-Driven)</h2>
+
+<div class="card">
+<h3>1. Guided First-Week Onboarding</h3>
+<p><strong>Impact: HIGH | Effort: MEDIUM</strong></p>
+<p>The single highest-leverage change you can make. The data shows:</p>
+<ul>
+  <li>1 shift in week 1 = 59% churn. 3 shifts = 42%. 6 shifts = 32%.</li>
+  <li>If a user comes back after day 1, churn drops from <strong>89% to 38%</strong></li>
+  <li>Power users averaged 5 first-week shifts vs. 3.6 for churned users</li>
+</ul>
+<p><strong>What to build:</strong></p>
+<ul>
+  <li>Day-1 welcome screen: "Log your first shift now" with pre-filled fields from their profile</li>
+  <li>Day-2 push notification: "How was yesterday's shift? Log it in 30 seconds"</li>
+  <li>Day-3: "You're on a 2-day streak. Most workers find their rhythm by day 5"</li>
+  <li>Day-5: "You've logged [X] shifts. Workers who log 6 in their first week stay with PORTPAL long-term"</li>
+  <li>Day-7: Celebration screen if 3+ shifts, rescue prompt if 0-1</li>
+</ul>
+<div class="opportunity">
+  <strong>Projected impact:</strong> Converting 30% of first-week churners (138 users) to 3+ shift users
+  would reduce overall churn by ~5-8 percentage points. At scale with 7,200 BC workers,
+  that's 360-576 additional retained users = $35K-$57K additional ARR.
+</div>
+</div>
+
+<div class="card">
+<h3>2. Lapse Detection & Re-engagement</h3>
+<p><strong>Impact: HIGH | Effort: MEDIUM</strong></p>
+<p>You currently have <strong>zero</strong> systems to detect and re-engage lapsing users. Build automated triggers:</p>
+<ul>
+  <li><strong>7-day lapse</strong> (user has 10+ shifts but hasn't logged in 7 days): Push notification &mdash; "Haven't seen you this week. Quick-log your shifts before you forget"</li>
+  <li><strong>14-day lapse</strong>: Email &mdash; "Your shift log is waiting. Here's what you might be missing in pay verification"</li>
+  <li><strong>21-day lapse</strong>: Personal-feeling message &mdash; "Workers who track regularly catch an average of $X in pay discrepancies"</li>
+  <li><strong>30-day lapse</strong>: Win-back offer for Pro users or "We saved your data" reassurance</li>
+</ul>
+<div class="opportunity">
+  <strong>Projected impact:</strong> Re-engaging 20% of the 66 long-term churners = 13 high-value users recovered.
+  Preventing churn on the current 46 at-risk users at a 50% save rate = 23 more retained.
+</div>
+</div>
+
+<div class="card">
+<h3>3. Empty-Job-Field Fix</h3>
+<p><strong>Impact: MEDIUM | Effort: LOW</strong></p>
+<p>Users with no first job have <strong>80% churn</strong>. This is a simple fix:</p>
+<ul>
+  <li>Make job selection mandatory on first shift entry (or during onboarding)</li>
+  <li>Pre-populate common jobs (LABOUR, TRACTOR TRAILER, RTG) as easy tap targets</li>
+  <li>Add "I don't know yet" option that follows up later rather than leaving blank</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>4. Smart Shift Entry (Reduce Friction)</h3>
+<p><strong>Impact: MEDIUM | Effort: MEDIUM</strong></p>
+<p>Active users log 4 shifts/week. That's 4x they open the app and fill in fields. Reduce this friction:</p>
+<ul>
+  <li><strong>"Same as last shift"</strong> button &mdash; pre-fill job, location, shift type from previous entry</li>
+  <li><strong>Shift templates</strong> &mdash; "My usual day shift at Vanterm" saves as a one-tap entry</li>
+  <li><strong>Batch entry</strong> &mdash; "Log the whole week" screen for users who forgot and want to catch up</li>
+  <li><strong>Smart defaults</strong> &mdash; if user always works TRACTOR TRAILER at CENTENNIAL, default to that</li>
+</ul>
+<div class="insight">
+  <strong>Key insight:</strong> The churned users who lasted 6+ months had 3.55 shifts/active_week vs. 4.0 for active users.
+  The difference is tiny &mdash; they may have churned not from disinterest but from friction fatigue.
+  Anything that saves even 10 seconds per entry compounds over hundreds of shifts.
+</div>
+</div>
+
+<div class="card">
+<h3>5. Pay Discrepancy Alerts (Value Demonstration)</h3>
+<p><strong>Impact: HIGH | Effort: HIGH</strong></p>
+<p>The app's core value prop is catching pay errors. But users currently have to discover discrepancies themselves.
+Make the app actively surface them:</p>
+<ul>
+  <li>After a shift is logged: "Based on your job, shift, and location, your expected pay is $X. Does your stub match?"</li>
+  <li>Weekly digest: "You worked 4 shifts this week for estimated $X total. Verify when your stub arrives."</li>
+  <li>Discrepancy detection: flag when a user's logged rate differs from the standard rate for that job/shift</li>
+</ul>
+<div class="opportunity">
+  <strong>This turns passive logging into active money-finding.</strong> Nothing retains a user like the app literally showing them they were underpaid $47.50.
+</div>
+</div>
+
+<div class="card">
+<h3>6. Target New Casuals (TRAINING First-Job Signal)</h3>
+<p><strong>Impact: MEDIUM | Effort: LOW</strong></p>
+<p>Users who start with TRAINING as their first job have <strong>19% churn</strong> &mdash; the lowest of any job category.
+These are new/casual workers who need to track hours for seniority. They are your ideal user:</p>
+<ul>
+  <li>Market directly at the union hall dispatch line &mdash; that's where casuals go every morning</li>
+  <li>Messaging: "Track your hours for seniority. Never lose a qualifying day."</li>
+  <li>Onboarding flow: "Are you casual or full-time?" &mdash; different experiences for each</li>
+  <li>Seniority tracker feature: days worked toward next seniority level</li>
+</ul>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════ CHALLENGES & RETENTION ═══════════════════════════ -->
+<div id="challenges" class="section">
+
+<h2>Challenge & Streak System</h2>
+<p style="margin-bottom:24px">Gamification works when the mechanics align with real user goals.
+Longshoremen aren't playing a game &mdash; they're tracking money and seniority.
+Every challenge should tie to <strong>financial accuracy</strong> or <strong>career tracking</strong>, not arbitrary engagement.</p>
+
+<div class="challenge-card">
+  <div class="challenge-icon" style="background:rgba(34,197,94,0.15)">&#x1F4C5;</div>
+  <div>
+    <h3 style="margin-top:0">First Week Challenge: "Port Starter"</h3>
+    <p>Log 5 shifts in your first 7 days.</p>
+    <p style="margin-top:8px"><strong>Why it works:</strong> Data shows 6+ first-week shifts = 32% churn vs. 59% for 1 shift.
+    Getting users to 5 shifts puts them past the activation threshold. The reward should be tangible:
+    unlock pay comparison features or a "verified worker" badge on their profile.</p>
+  </div>
+  <div class="challenge-meta">
+    <strong>Target</strong> All new users<br>
+    <strong>Projected impact</strong> -15pp churn<br>
+    <strong>Difficulty</strong> Easy to build
+  </div>
+</div>
+
+<div class="challenge-card">
+  <div class="challenge-icon" style="background:rgba(59,130,246,0.15)">&#x1F525;</div>
+  <div>
+    <h3 style="margin-top:0">Shift Streak</h3>
+    <p>Log a shift every work day you actually work. Track consecutive work-day logging streaks.</p>
+    <p style="margin-top:8px"><strong>Why it works:</strong> Streaks create loss aversion. But unlike Duolingo,
+    a port worker's streak should only count <em>days they actually work</em>, not calendar days.
+    Use dispatch data or let them mark rest days. Show: "12-day logging streak &mdash; your longest is 34."
+    Send a notification at 6 PM if they worked but haven't logged: "Don't break your streak."</p>
+  </div>
+  <div class="challenge-meta">
+    <strong>Target</strong> Active users<br>
+    <strong>Projected impact</strong> +15% engagement<br>
+    <strong>Difficulty</strong> Medium
+  </div>
+</div>
+
+<div class="challenge-card">
+  <div class="challenge-icon" style="background:rgba(139,92,246,0.15)">&#x1F4B0;</div>
+  <div>
+    <h3 style="margin-top:0">Monthly Pay Audit Challenge</h3>
+    <p>Verify every shift against your pay stub this month. Complete = "Pay Verified" month badge.</p>
+    <p style="margin-top:8px"><strong>Why it works:</strong> This is the core value prop turned into a habit loop.
+    When users verify their pay stubs and find (or confirm) accuracy, they're reinforcing why the app matters.
+    Show a monthly audit score: "23/25 shifts verified. 2 outstanding." Those 2 remaining
+    become pull-back triggers. Users who fully verify get to see: "You've confirmed $4,200 in accurate pay this month."</p>
+  </div>
+  <div class="challenge-meta">
+    <strong>Target</strong> Regular + Power<br>
+    <strong>Projected impact</strong> -10pp churn<br>
+    <strong>Difficulty</strong> Medium
+  </div>
+</div>
+
+<div class="challenge-card">
+  <div class="challenge-icon" style="background:rgba(245,158,11,0.15)">&#x1F3AF;</div>
+  <div>
+    <h3 style="margin-top:0">Seniority Tracker Challenge (Casuals)</h3>
+    <p>Track your qualifying days toward the next seniority level. Visual progress bar.</p>
+    <p style="margin-top:8px"><strong>Why it works:</strong> Casual workers need X qualifying days for advancement.
+    This is life-changing career progression. Make it visible: "142 / 200 qualifying days &mdash; 71% to next level."
+    Weekly update: "You logged 4 qualifying days this week. At this pace, you'll reach the next level by August."
+    This gives casuals a reason to open the app even on days they don't work (to check progress).</p>
+  </div>
+  <div class="challenge-meta">
+    <strong>Target</strong> Casual workers<br>
+    <strong>Projected impact</strong> High retention<br>
+    <strong>Difficulty</strong> Medium-High
+  </div>
+</div>
+
+<div class="challenge-card">
+  <div class="challenge-icon" style="background:rgba(6,182,212,0.15)">&#x1F4CA;</div>
+  <div>
+    <h3 style="margin-top:0">Quarterly Earnings Milestone</h3>
+    <p>Celebrate pay milestones: $10K, $25K, $50K, $100K tracked.</p>
+    <p style="margin-top:8px"><strong>Why it works:</strong> Your average active user has $54K+ in tracked pay (based on ~$570/shift average).
+    These are real, meaningful numbers. "You've tracked $50,000 in earnings with PORTPAL" is a flex-worthy
+    moment that users will screenshot and share. This doubles as organic marketing.
+    Make it shareable &mdash; a card they can post to social media or send to co-workers.</p>
+  </div>
+  <div class="challenge-meta">
+    <strong>Target</strong> All users<br>
+    <strong>Projected impact</strong> Viral loops<br>
+    <strong>Difficulty</strong> Easy
+  </div>
+</div>
+
+<div class="challenge-card">
+  <div class="challenge-icon" style="background:rgba(239,68,68,0.15)">&#x1F91D;</div>
+  <div>
+    <h3 style="margin-top:0">Referral Challenge: "Bring a Crew Member"</h3>
+    <p>Invite a co-worker. Both get 1 month free Pro (when paywall launches).</p>
+    <p style="margin-top:8px"><strong>Why it works:</strong> Longshoremen work in crews. They talk at dispatch.
+    Word-of-mouth is your #1 channel in this community. Formalize it: when a user refers someone and that
+    person logs 5 shifts, both get rewarded. Show a referral leaderboard: "Top referrers this month."
+    Target power users (307 of them) &mdash; they're your most credible advocates.
+    If each power user refers just 1 person, that's 307 new users.</p>
+  </div>
+  <div class="challenge-meta">
+    <strong>Target</strong> Power users<br>
+    <strong>Projected impact</strong> 2x acquisition<br>
+    <strong>Difficulty</strong> Medium
+  </div>
+</div>
+
+<h2>Notification Strategy (Anti-Churn)</h2>
+<p style="margin-bottom:16px">Based on the churn timing data, here's the exact notification cadence:</p>
+
+<table>
+  <thead><tr><th>Trigger</th><th>Timing</th><th>Message</th><th>Target</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>First shift logged</strong></td>
+      <td>Immediately</td>
+      <td>"Great start. Log tomorrow's shift and you're on your way to full pay tracking."</td>
+      <td>New users</td>
+    </tr>
+    <tr>
+      <td><strong>Day 2, no 2nd shift</strong></td>
+      <td>6 PM Day 2</td>
+      <td>"Did you work today? Quick-log your shift before you forget the details."</td>
+      <td>New users (1 shift)</td>
+    </tr>
+    <tr>
+      <td><strong>Day 5, &lt;3 shifts</strong></td>
+      <td>Morning Day 5</td>
+      <td>"Workers who log their first week of shifts catch pay errors 3x more often."</td>
+      <td>At-risk new users</td>
+    </tr>
+    <tr>
+      <td><strong>First week complete</strong></td>
+      <td>Day 7</td>
+      <td>"You logged [X] shifts! You're tracking $[Y] in pay. Keep it up."</td>
+      <td>Activated users</td>
+    </tr>
+    <tr>
+      <td><strong>3-day lapse (active user)</strong></td>
+      <td>Evening</td>
+      <td>"Haven't logged in 3 days. Got shifts to catch up on?"</td>
+      <td>10+ shift users</td>
+    </tr>
+    <tr>
+      <td><strong>7-day lapse</strong></td>
+      <td>Morning</td>
+      <td>"Your [streak] day logging streak is at risk. Log a shift to keep it alive."</td>
+      <td>Users with streaks</td>
+    </tr>
+    <tr>
+      <td><strong>14-day lapse</strong></td>
+      <td>Email</td>
+      <td>"You've tracked $[X] with PORTPAL. Don't let shifts go unverified."</td>
+      <td>All lapsing users</td>
+    </tr>
+    <tr>
+      <td><strong>30-day lapse</strong></td>
+      <td>Email</td>
+      <td>"We've saved all your data. Come back anytime &mdash; your [X] shifts are waiting."</td>
+      <td>Pre-churn users</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
+<!-- ═══════════════════════════ 90-DAY PLAYBOOK ═══════════════════════════ -->
+<div id="playbook" class="section">
+
+<h2>90-Day Improvement Playbook</h2>
+<p style="margin-bottom:24px">Prioritized by impact and effort. Each item includes the data justification.</p>
+
+<h3>Weeks 1-2: Quick Wins (Low Effort, Measurable Impact)</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Action</th><th>Why (Data)</th><th>Expected Impact</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Make job field mandatory</strong> on first shift</td>
+      <td>Empty-job users have 80% churn</td>
+      <td>Eliminate 10 churns/cohort</td>
+    </tr>
+    <tr>
+      <td><strong>Add "same as last shift"</strong> button</td>
+      <td>Active users log 4x/week, same job repeatedly</td>
+      <td>-30% entry time, less friction fatigue</td>
+    </tr>
+    <tr>
+      <td><strong>Add pay milestone cards</strong> ($10K, $25K, $50K)</td>
+      <td>Users average $54K tracked, shareable moment</td>
+      <td>Organic viral, re-engagement hook</td>
+    </tr>
+    <tr>
+      <td><strong>Welcome message sequence</strong> (day 1, 2, 5, 7)</td>
+      <td>89% churn if no day-2 return vs 38% if they return</td>
+      <td>-5pp first-week churn</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Weeks 3-6: Core Retention Features</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Action</th><th>Why (Data)</th><th>Expected Impact</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Shift streak system</strong></td>
+      <td>Engagement decay is gradual (3.55 vs 4.0 shifts/week before churn)</td>
+      <td>Prevent slow-fade churn</td>
+    </tr>
+    <tr>
+      <td><strong>First Week Challenge</strong> ("Port Starter")</td>
+      <td>5 first-week shifts → 32% churn vs 59%</td>
+      <td>-15pp new user churn</td>
+    </tr>
+    <tr>
+      <td><strong>Lapse notifications</strong> (3d, 7d, 14d, 30d)</td>
+      <td>46 active users currently at risk; 66 power users lost silently</td>
+      <td>Recover 20-30 users/quarter</td>
+    </tr>
+    <tr>
+      <td><strong>Shift templates</strong> ("My usual shifts")</td>
+      <td>Power users log 4.5 shifts/week, same configs</td>
+      <td>Reduce friction for power users</td>
+    </tr>
+    <tr>
+      <td><strong>Weekly pay summary</strong></td>
+      <td>Gives users a reason to open app on payday</td>
+      <td>+1 weekly session, value reinforcement</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Weeks 7-12: Growth & Differentiation</h3>
+<div class="card">
+<table>
+  <thead><tr><th>Action</th><th>Why (Data)</th><th>Expected Impact</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Referral system</strong></td>
+      <td>307 power users = potential advocates, no growth engine exists</td>
+      <td>Double acquisition rate</td>
+    </tr>
+    <tr>
+      <td><strong>Pay discrepancy alerts</strong></td>
+      <td>Core value prop is finding pay errors, currently passive</td>
+      <td>Strongest retention feature possible</td>
+    </tr>
+    <tr>
+      <td><strong>Seniority tracker (casuals)</strong></td>
+      <td>TRAINING first-job = 19% churn, casuals are ideal users</td>
+      <td>Unlock the casual worker segment</td>
+    </tr>
+    <tr>
+      <td><strong>Monthly Pay Audit Challenge</strong></td>
+      <td>Links the verification habit to gamification</td>
+      <td>-10pp churn for regular users</td>
+    </tr>
+    <tr>
+      <td><strong>Casual vs. Full-time onboarding</strong></td>
+      <td>Different needs, different churn patterns, different value props</td>
+      <td>Better activation for both segments</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>What Success Looks Like in 90 Days</h2>
+<div class="priority-grid">
+  <div class="card" style="text-align:center">
+    <div class="score-label">Today: Churn Rate</div>
+    <div class="score-grade grade-c" style="font-size:28px">42.6%</div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="score-label">Target: Churn Rate</div>
+    <div class="score-grade grade-b" style="font-size:28px">32-35%</div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="score-label">Today: First-Week Activation</div>
+    <div class="score-grade grade-c" style="font-size:28px">57%</div>
+    <div class="score-detail">% with 3+ first-week shifts</div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="score-label">Target: First-Week Activation</div>
+    <div class="score-grade grade-b" style="font-size:28px">70%+</div>
+    <div class="score-detail">via onboarding + challenges</div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="score-label">Today: At-Risk Recovery</div>
+    <div class="score-grade grade-d" style="font-size:28px">0%</div>
+    <div class="score-detail">No re-engagement system</div>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="score-label">Target: At-Risk Recovery</div>
+    <div class="score-grade grade-b" style="font-size:28px">30%+</div>
+    <div class="score-detail">via lapse notifications</div>
+  </div>
+</div>
+
+<div class="insight" style="font-size:15px">
+  <strong>The bottom line:</strong> Your app has already proven product-market fit with 307 power users
+  who log 15+ shifts/month for 11+ months. The problem isn't the product &mdash; it's that half your users
+  never experience the value before they leave. Fix the first week, add re-engagement, and reduce entry
+  friction. These three moves alone could shift your scorecard from a <strong>B</strong> to an <strong>A-</strong>.
+</div>
+
+</div>
+
+</div> <!-- /container -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

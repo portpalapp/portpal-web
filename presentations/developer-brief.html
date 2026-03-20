@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTPAL Developer Technical Brief</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    code, .mono { font-family: 'JetBrains Mono', monospace; }
+    .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem; }
+    .card-hover { transition: transform 0.2s, box-shadow 0.2s; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+  </style>
+</head>
+<body class="bg-slate-100">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // ============================================
+    // ALL DATA
+    // ============================================
+
+    const differentials = [
+      { class: "BASE", amount: 0, jobs: "LABOUR, HEAD CHECKER, DOCK CHECKER, BUNNY BUS, TRAINING" },
+      { class: "CLASS_1", amount: 2.50, jobs: "HD MECHANIC, CARPENTER, ELECTRICIAN, MILLWRIGHT, PLUMBER, TRACKMEN, WELDER" },
+      { class: "CLASS_2", amount: 1.00, jobs: "RUBBER TIRE GANTRY, FIRST AID, RAIL MOUNTED GANTRY, SHIP GANTRY, DOCK GANTRY" },
+      { class: "CLASS_3", amount: 0.65, jobs: "TRACTOR TRAILER, LOCI, REACHSTACKER, 40 TON (TOP PICK), FRONT END LOADER, BULLDOZER, EXCAVATOR, KOMATSU, MOBILE CRANE, WINCH DRIVER" },
+      { class: "CLASS_4", amount: 0.50, jobs: "LIFT TRUCK, STORESPERSON, GEARPERSON" },
+      { class: "WHEAT", amount: 1.15, jobs: "WHEAT MACHINE, WHEAT SPECIALTY" }
+    ];
+
+    const baseRates = [
+      { year: 1, start: "Apr 1, 2023", end: "Mar 31, 2024", weekdayDay: 50.64, weekdayNight: 65.01, weekdayGrave: 81.39, satDay: 66.12, satNight: 82.50, sunday: 83.82 },
+      { year: 2, start: "Apr 1, 2024", end: "Mar 31, 2025", weekdayDay: 53.17, weekdayNight: 68.26, weekdayGrave: 85.46, satDay: 69.43, satNight: 86.63, sunday: 88.01 },
+      { year: 3, start: "Apr 1, 2025", end: "Mar 31, 2026", weekdayDay: 55.30, weekdayNight: 69.67, weekdayGrave: 86.05, satDay: 70.78, satNight: 85.07, sunday: 85.07 },
+      { year: 4, start: "Apr 1, 2026", end: "Mar 31, 2027", weekdayDay: 57.51, weekdayNight: 72.46, weekdayGrave: 89.49, satDay: 73.61, satNight: 88.48, sunday: 91.86 }
+    ];
+
+    const locationOverrides = [
+      { location: "CENTENNIAL", shift: "DAY/NIGHT", hours: 9, jobs: "TRACTOR TRAILER, HEAD CHECKER, 40 TON, REACHSTACKER" },
+      { location: "CENTENNIAL", shift: "GRAVEYARD", hours: 7.5, jobs: "TRACTOR TRAILER, HEAD CHECKER, 40 TON, REACHSTACKER" },
+      { location: "CENTENNIAL", shift: "NIGHT", hours: 9, jobs: "LIFT TRUCK" },
+      { location: "FRASER SURREY", shift: "DAY", hours: 9, jobs: "FIRST AID only" },
+      { location: "All Others", shift: "DAY/NIGHT", hours: 8, jobs: "Standard default" },
+      { location: "All Others", shift: "GRAVEYARD", hours: 6.5, jobs: "Standard default" }
+    ];
+
+    const specialCases = [
+      {
+        name: "WHEAT Jobs",
+        jobs: "WHEAT MACHINE, WHEAT SPECIALTY",
+        rule: "7.5 regular hours + 0.5 overtime hours (built-in)",
+        differential: "+$1.15/hr",
+        terminals: "ALLIANCE GRAIN, G3 TERMINAL, CASCADIA, RICHARDSON, CARGILL, VITERRA PAC"
+      },
+      {
+        name: "TRAINER REGULAR",
+        jobs: "TRAINER",
+        rule: "Base rate × 1.333 (33.3% premium multiplier)",
+        differential: "Calculated",
+        terminals: "All"
+      },
+      {
+        name: "TRAINER SENIOR",
+        jobs: "TRAINER (Senior)",
+        rule: "Use senior rate table for all days",
+        differential: "Senior rates",
+        terminals: "All"
+      },
+      {
+        name: "All-OT Shifts",
+        jobs: "DOCK GANTRY (certain assignments)",
+        rule: "0 regular hours + 5 overtime hours",
+        differential: "+$1.00/hr (CLASS_2)",
+        terminals: "Specific locations"
+      }
+    ];
+
+    const canonicalJobs = [
+      "40 TON (TOP PICK)", "BULLDOZER", "BULK OPERATOR", "BUNNY BUS", "CARPENTER",
+      "DOCK CHECKER", "DOCK GANTRY", "DOW MEN", "ELECTRICIAN", "EXCAVATOR",
+      "FIRST AID", "FRONT END LOADER", "GEARPERSON", "HATCH TENDER/SIGNAL",
+      "HD MECHANIC", "HEAD CHECKER", "KOMATSU", "LABOUR", "LIFT TRUCK", "LINES",
+      "LIQUID BULK", "LOCI", "LOCKERMAN", "MILLWRIGHT", "MOBILE CRANE", "OB",
+      "PAINTER", "PLUMBER", "PUSHER", "RAIL MOUNTED GANTRY", "REACHSTACKER",
+      "RUBBER TIRE GANTRY", "SHIP GANTRY", "STORESPERSON", "SWITCHMAN", "TRACKMEN",
+      "TRACTOR TRAILER", "TRAINER", "TRAINING", "WELDER", "WHEAT MACHINE",
+      "WHEAT SPECIALTY", "WINCH DRIVER"
+    ];
+
+    const locations = [
+      { name: "CENTENNIAL", type: "Container", note: "9-hour shifts" },
+      { name: "VANTERM", type: "Container", note: "Standard 8-hour" },
+      { name: "DELTAPORT", type: "Container", note: "Standard 8-hour" },
+      { name: "FRASER SURREY", type: "Container", note: "9-hour FIRST AID" },
+      { name: "ALLIANCE GRAIN", type: "Wheat", note: "Wheat terminal" },
+      { name: "G3 TERMINAL", type: "Wheat", note: "Wheat terminal" },
+      { name: "CASCADIA", type: "Wheat", note: "Wheat terminal" },
+      { name: "RICHARDSON", type: "Wheat", note: "Wheat terminal" },
+      { name: "CARGILL", type: "Wheat", note: "Wheat terminal" },
+      { name: "VITERRA PAC", type: "Wheat", note: "Wheat terminal" }
+    ];
+
+    const paydiffsColumns = [
+      { name: "JOB", type: "text", desc: "Job classification (canonical name from list)" },
+      { name: "SHIFT", type: "text", desc: "DAY, NIGHT, or GRAVEYARD" },
+      { name: "LOCATION", type: "text", desc: "Terminal name (can be empty for all locations)" },
+      { name: "SUBJOB", type: "text", desc: "Sub-job like RAIL (TT), SHIP (TT) - can be empty" },
+      { name: "REGHRS", type: "number", desc: "Regular hours (non-standard)" },
+      { name: "OTHRS", type: "number", desc: "Overtime hours (built-in OT)" }
+    ];
+
+    const dbSchema = {
+      users: [
+        "id UUID PRIMARY KEY",
+        "tenant_id UUID NOT NULL",
+        "email VARCHAR(255) UNIQUE",
+        "phone VARCHAR(20)",
+        "first_name, last_name VARCHAR(100)",
+        "union_number VARCHAR(50)",
+        "seniority_date DATE",
+        "is_casual BOOLEAN DEFAULT false",
+        "subscription_tier VARCHAR(20) DEFAULT 'free'",
+        "subscription_expires_at TIMESTAMPTZ"
+      ],
+      shifts: [
+        "id UUID PRIMARY KEY",
+        "tenant_id UUID NOT NULL",
+        "user_id UUID NOT NULL",
+        "shift_date DATE NOT NULL",
+        "shift_type VARCHAR(20) -- DAY/NIGHT/GRAVEYARD",
+        "job_id UUID NOT NULL",
+        "subjob_id UUID (nullable)",
+        "location_id UUID NOT NULL",
+        "regular_hours DECIMAL(4,2)",
+        "overtime_hours DECIMAL(4,2) DEFAULT 0",
+        "double_time_hours DECIMAL(4,2) DEFAULT 0",
+        "calculated_pay DECIMAL(10,2)",
+        "user_entered_pay DECIMAL(10,2) (nullable)",
+        "notes TEXT"
+      ],
+      payDifferentials: [
+        "id UUID PRIMARY KEY",
+        "tenant_id UUID NOT NULL",
+        "job_code VARCHAR(50) NOT NULL",
+        "shift_type VARCHAR(20) NOT NULL",
+        "location_code VARCHAR(50) (nullable = all)",
+        "subjob_code VARCHAR(50) (nullable = all)",
+        "regular_hours DECIMAL(4,2) NOT NULL",
+        "overtime_hours DECIMAL(4,2) DEFAULT 0"
+      ]
+    };
+
+    const implementationSteps = [
+      { step: 1, title: "Upload PAYDIFFS Data", desc: "Import PAYDIFFS_clean.csv (330 entries) into your database", priority: "P0" },
+      { step: 2, title: "Implement Day Type Logic", desc: "Determine weekday vs Saturday vs Sunday from shift_date", priority: "P0" },
+      { step: 3, title: "Implement Rate Year Logic", desc: "Rates change April 1st - use getRateYear() function", priority: "P0" },
+      { step: 4, title: "Build Base Rate Lookup", desc: "day_type + shift_type + year → base rate", priority: "P0" },
+      { step: 5, title: "Add Job Differential", desc: "Look up job class → add differential to base rate", priority: "P0" },
+      { step: 6, title: "Query PAYDIFFS for Hours", desc: "Look up hours override, fall back to defaults (8/8/6.5)", priority: "P1" },
+      { step: 7, title: "Calculate Final Pay", desc: "(reg_hours × rate) + (ot_hours × rate × 1.5)", priority: "P1" },
+      { step: 8, title: "Handle Special Cases", desc: "WHEAT built-in OT, TRAINER multipliers", priority: "P2" },
+      { step: 9, title: "Write Tests", desc: "Test edge cases: April 1 boundary, CENTENNIAL, weekends", priority: "P2" }
+    ];
+
+    // ============================================
+    // COMPONENTS
+    // ============================================
+
+    function CodeBlock({ code, language = "typescript" }) {
+      return <pre className="text-sm overflow-x-auto my-4">{code}</pre>;
+    }
+
+    function Section({ title, children, className = "" }) {
+      return (
+        <div className={`mb-12 ${className}`}>
+          <h2 className="text-xl font-bold text-slate-800 mb-4 pb-2 border-b-2 border-slate-300">{title}</h2>
+          {children}
+        </div>
+      );
+    }
+
+    function Tab({ active, onClick, children }) {
+      return (
+        <button
+          onClick={onClick}
+          className={`px-4 py-2 font-medium rounded-lg transition-all text-sm whitespace-nowrap ${
+            active
+              ? 'bg-slate-800 text-white shadow-lg'
+              : 'bg-white text-slate-600 hover:bg-slate-200'
+          }`}
+        >
+          {children}
+        </button>
+      );
+    }
+
+    function Alert({ type, children }) {
+      const styles = {
+        warning: "bg-amber-50 border-amber-400 text-amber-900",
+        info: "bg-blue-50 border-blue-400 text-blue-900",
+        success: "bg-green-50 border-green-400 text-green-900",
+        error: "bg-red-50 border-red-400 text-red-900"
+      };
+      return (
+        <div className={`border-2 rounded-xl p-4 mb-6 ${styles[type]}`}>
+          {children}
+        </div>
+      );
+    }
+
+    function DataTable({ headers, rows, className = "" }) {
+      return (
+        <div className={`bg-white rounded-xl shadow-lg overflow-hidden ${className}`}>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-800 text-white">
+              <tr>
+                {headers.map((h, i) => (
+                  <th key={i} className="px-4 py-3 text-left font-medium">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
+                  {row.map((cell, j) => (
+                    <td key={j} className="px-4 py-3">{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    // ============================================
+    // MAIN APP
+    // ============================================
+
+    function App() {
+      const [activeTab, setActiveTab] = useState('overview');
+
+      const tabs = [
+        { id: 'overview', label: 'Overview' },
+        { id: 'payengine', label: 'Pay Engine' },
+        { id: 'rates', label: 'Rates & Differentials' },
+        { id: 'locations', label: 'Locations & Hours' },
+        { id: 'special', label: 'Special Cases' },
+        { id: 'paydiffs', label: 'PAYDIFFS Table' },
+        { id: 'schema', label: 'Database Schema' },
+        { id: 'implementation', label: 'Implementation' },
+        { id: 'reference', label: 'Reference Data' }
+      ];
+
+      return (
+        <div className="min-h-screen">
+          {/* Header */}
+          <header className="gradient-bg text-white py-8 px-6">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center text-lg font-bold mono">{"</>"}</div>
+                <h1 className="text-2xl font-bold">PORTPAL Developer Brief</h1>
+              </div>
+              <p className="text-slate-400">Complete technical specification for the pay calculation system</p>
+            </div>
+          </header>
+
+          {/* Navigation */}
+          <nav className="sticky top-0 bg-slate-200/95 backdrop-blur py-3 px-6 shadow-sm z-10">
+            <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto pb-1">
+              {tabs.map(tab => (
+                <Tab key={tab.id} active={activeTab === tab.id} onClick={() => setActiveTab(tab.id)}>
+                  {tab.label}
+                </Tab>
+              ))}
+            </div>
+          </nav>
+
+          {/* Content */}
+          <main className="max-w-6xl mx-auto px-6 py-10">
+
+            {/* ============ OVERVIEW ============ */}
+            {activeTab === 'overview' && (
+              <>
+                <Section title="What is PORTPAL?">
+                  <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
+                    <p className="text-lg text-slate-700 mb-4">
+                      PORTPAL is a <strong>shift tracking and pay verification app</strong> for longshoremen (port workers who load/unload ships).
+                      Users log their work shifts, and the system calculates expected pay using complex union pay rules.
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-slate-50 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-slate-800">752</div>
+                        <div className="text-slate-600 text-sm">Current Users</div>
+                      </div>
+                      <div className="bg-slate-50 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-slate-800">71,712</div>
+                        <div className="text-slate-600 text-sm">Shifts Tracked</div>
+                      </div>
+                      <div className="bg-slate-50 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-slate-800">$41M</div>
+                        <div className="text-slate-600 text-sm">Pay Tracked</div>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Current vs Target Tech Stack">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-orange-300">
+                      <h3 className="font-bold text-lg mb-4 text-orange-600">Current: 100% Bubble.io</h3>
+                      <ul className="space-y-2 text-slate-600">
+                        <li className="flex items-center gap-2"><span className="text-orange-500">●</span> Frontend: Bubble visual builder</li>
+                        <li className="flex items-center gap-2"><span className="text-orange-500">●</span> Backend: Bubble workflows</li>
+                        <li className="flex items-center gap-2"><span className="text-orange-500">●</span> Database: Bubble built-in</li>
+                        <li className="flex items-center gap-2"><span className="text-orange-500">●</span> Hosting: Bubble</li>
+                      </ul>
+                      <div className="mt-4 text-sm text-orange-700 font-medium">We want to migrate OFF Bubble</div>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-emerald-500">
+                      <h3 className="font-bold text-lg mb-4 text-emerald-600">Target: React + Supabase</h3>
+                      <ul className="space-y-2 text-slate-600">
+                        <li className="flex items-center gap-2"><span className="text-emerald-500">●</span> Frontend: React + TypeScript + Vite</li>
+                        <li className="flex items-center gap-2"><span className="text-emerald-500">●</span> Backend: Supabase Edge Functions</li>
+                        <li className="flex items-center gap-2"><span className="text-emerald-500">●</span> Database: PostgreSQL (Supabase)</li>
+                        <li className="flex items-center gap-2"><span className="text-emerald-500">●</span> Auth: Supabase Auth</li>
+                        <li className="flex items-center gap-2"><span className="text-emerald-500">●</span> Storage: Supabase (pay stub images)</li>
+                        <li className="flex items-center gap-2"><span className="text-slate-400">○</span> Mobile: React Native (future)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Why Pay Calculation is Complex">
+                  <Alert type="warning">
+                    <strong>This is the core complexity of the app.</strong> Get this right and everything else is straightforward.
+                  </Alert>
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <span className="bg-slate-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">1</span>
+                        <span><strong>40+ job types</strong> with different pay differentials ($0.50 to $2.50/hr extra)</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="bg-slate-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">2</span>
+                        <span><strong>3 shift types</strong> (Day/Night/Graveyard) with different base rates</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="bg-slate-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">3</span>
+                        <span><strong>3 day types</strong> (Weekday/Saturday/Sunday) with different premiums</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="bg-slate-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">4</span>
+                        <span><strong>Location variations</strong> - CENTENNIAL has 9-hour shifts, others have 8</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="bg-slate-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">5</span>
+                        <span><strong>Rate years change April 1st</strong> (not January 1st)</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="bg-slate-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">6</span>
+                        <span><strong>Special cases</strong> - WHEAT jobs have built-in overtime, TRAINERS get multipliers</span>
+                      </li>
+                    </ul>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {/* ============ PAY ENGINE ============ */}
+            {activeTab === 'payengine' && (
+              <>
+                <Section title="Pay Calculation Flow">
+                  <div className="bg-white rounded-xl p-6 shadow-lg mb-6">
+                    <div className="flex flex-wrap items-center gap-2 mb-6">
+                      {["Get Day Type", "Get Rate Year", "Get Base Rate", "Add Differential", "Get Hours", "Calculate Pay"].map((step, i) => (
+                        <React.Fragment key={i}>
+                          <div className="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-medium text-sm">{i+1}. {step}</div>
+                          {i < 5 && <span className="text-slate-400">→</span>}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+
+                  <CodeBlock code={`// Complete Pay Calculation
+async function calculatePay(shift: ShiftInput): Promise<PayResult> {
+  // 1. Determine day type from date
+  const dayOfWeek = shift.date.getDay(); // 0=Sunday, 6=Saturday
+  const dayType = dayOfWeek === 0 ? 'sunday'
+                : dayOfWeek === 6 ? 'saturday'
+                : 'weekday';
+
+  // 2. Determine rate year (changes April 1st!)
+  const month = shift.date.getMonth(); // 0-indexed
+  const year = shift.date.getFullYear();
+  const rateYear = month < 3 ? year - 1 : year; // Jan-Mar use previous year
+
+  // 3. Get base rate for day_type + shift_type + year
+  const baseRate = BASE_RATES[rateYear][dayType][shift.shiftType];
+
+  // 4. Add job differential
+  const jobClass = JOB_CLASSIFICATIONS[shift.jobCode]; // e.g., "CLASS_1"
+  const differential = DIFFERENTIALS[jobClass] || 0;   // e.g., 2.50
+  const rate = baseRate + differential;
+
+  // 5. Look up hours from PAYDIFFS (or use defaults)
+  const hoursOverride = await queryPayDiffs(shift.jobCode, shift.shiftType, shift.location, shift.subjob);
+
+  const hours = hoursOverride || {
+    regular: shift.shiftType === 'GRAVEYARD' ? 6.5 : 8,
+    overtime: 0
+  };
+
+  // 6. Calculate final pay
+  const regularPay = rate * hours.regular;
+  const overtimePay = (rate * 1.5) * hours.overtime;
+  const totalPay = regularPay + overtimePay;
+
+  return {
+    rate,
+    regularHours: hours.regular,
+    overtimeHours: hours.overtime,
+    regularPay,
+    overtimePay,
+    totalPay
+  };
+}`} />
+                </Section>
+
+                <Section title="Key Architecture Decision: Hours-Only PAYDIFFS">
+                  <Alert type="success">
+                    <strong>PAYDIFFS stores HOURS only, not rates.</strong> Rates are calculated dynamically from Job → Differential Class lookup.
+                  </Alert>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl p-6 shadow-lg">
+                      <h4 className="font-bold text-emerald-700 mb-3">Why This Design?</h4>
+                      <ul className="space-y-2 text-slate-600 text-sm">
+                        <li>● ~330 entries vs 11,000+ (much smaller table)</li>
+                        <li>● No rate validation issues (always calculated from source)</li>
+                        <li>● Easy contract year updates (change one rate table)</li>
+                        <li>● Less query overhead for standard shifts</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg">
+                      <h4 className="font-bold text-slate-700 mb-3">What PAYDIFFS Contains</h4>
+                      <ul className="space-y-2 text-slate-600 text-sm">
+                        <li>● CENTENNIAL 9-hour shifts</li>
+                        <li>● WHEAT jobs with built-in 0.5 OT</li>
+                        <li>● LINES jobs (4 hours)</li>
+                        <li>● All-OT shifts (DOCK GANTRY: 0 reg, 5 OT)</li>
+                        <li>● Any non-standard hour combination</li>
+                      </ul>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="PAYDIFFS Query Logic">
+                  <CodeBlock code={`-- Look for hours override (most specific match wins)
+SELECT regular_hours, overtime_hours
+FROM pay_differentials
+WHERE job_code = :job
+  AND shift_type = :shift_type
+  AND (location_code = :location OR location_code IS NULL)
+  AND (subjob_code = :subjob OR subjob_code IS NULL)
+ORDER BY
+  location_code NULLS LAST,  -- Specific location first
+  subjob_code NULLS LAST     -- Specific subjob first
+LIMIT 1;
+
+-- If no match found, use defaults:
+-- DAY/NIGHT: 8 hours regular, 0 OT
+-- GRAVEYARD: 6.5 hours regular, 0 OT`} />
+                </Section>
+              </>
+            )}
+
+            {/* ============ RATES & DIFFERENTIALS ============ */}
+            {activeTab === 'rates' && (
+              <>
+                <Section title="Rate Year Logic">
+                  <Alert type="error">
+                    <strong>CRITICAL:</strong> Rate years change on April 1st, NOT January 1st!
+                  </Alert>
+                  <CodeBlock code={`function getRateYear(shiftDate: Date): number {
+  const year = shiftDate.getFullYear();
+  const month = shiftDate.getMonth(); // 0-indexed (0=Jan, 3=Apr)
+
+  // If Jan, Feb, or Mar → use PREVIOUS year's rates
+  if (month < 3) {
+    return year - 1;
+  }
+  return year;
+}
+
+// Examples:
+// March 15, 2025 → rate year 2024 (uses Apr 2024 - Mar 2025 rates)
+// April 1, 2025 → rate year 2025 (uses Apr 2025 - Mar 2026 rates)
+// December 1, 2025 → rate year 2025`} />
+                </Section>
+
+                <Section title="Base Rates by Year (Longshoreman)">
+                  <DataTable
+                    headers={["Year", "Effective", "Weekday Day", "Weekday Night", "Weekday Grave", "Sat Day", "Sunday"]}
+                    rows={baseRates.map(r => [
+                      `Year ${r.year}`,
+                      `${r.start}`,
+                      `$${r.weekdayDay.toFixed(2)}`,
+                      `$${r.weekdayNight.toFixed(2)}`,
+                      `$${r.weekdayGrave.toFixed(2)}`,
+                      `$${r.satDay.toFixed(2)}`,
+                      `$${r.sunday.toFixed(2)}`
+                    ])}
+                  />
+                  <p className="text-sm text-slate-500 mt-3">Night premium: +$14.37 | Graveyard premium: +$30.75 | Saturday: +$15.48 | Sunday: +$33.18</p>
+                </Section>
+
+                <Section title="Job Differentials (Added to Base Rate)">
+                  <DataTable
+                    headers={["Class", "Differential", "Jobs"]}
+                    rows={differentials.map(d => [
+                      <code className="bg-slate-100 px-2 py-1 rounded font-bold">{d.class}</code>,
+                      <span className="text-emerald-600 font-bold">+${d.amount.toFixed(2)}/hr</span>,
+                      <span className="text-sm">{d.jobs}</span>
+                    ])}
+                  />
+                </Section>
+
+                <Section title="Example Calculation">
+                  <div className="bg-slate-900 text-slate-100 rounded-xl p-6">
+                    <h4 className="text-emerald-400 font-bold mb-4">TRACTOR TRAILER at CENTENNIAL on Saturday Night (April 2025)</h4>
+                    <div className="space-y-2 mono text-sm">
+                      <div>1. Day type: Saturday</div>
+                      <div>2. Rate year: 2025 (Apr 2025 - Mar 2026)</div>
+                      <div>3. Base rate for Saturday Night: $85.07</div>
+                      <div>4. TRACTOR TRAILER = CLASS_3 = +$0.65</div>
+                      <div>5. Rate: $85.07 + $0.65 = <span className="text-yellow-400">$85.72/hr</span></div>
+                      <div>6. CENTENNIAL Night = 9 hours (from PAYDIFFS)</div>
+                      <div>7. Total: 9 × $85.72 = <span className="text-emerald-400 font-bold">$771.48</span></div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {/* ============ LOCATIONS & HOURS ============ */}
+            {activeTab === 'locations' && (
+              <>
+                <Section title="Location-Based Hour Overrides">
+                  <Alert type="info">
+                    <strong>CENTENNIAL terminal has longer shifts than other terminals.</strong> This was validated from 71,712 user entries.
+                  </Alert>
+                  <DataTable
+                    headers={["Location", "Shift", "Hours", "Applies To"]}
+                    rows={locationOverrides.map(l => [
+                      <span className={l.location === "CENTENNIAL" ? "font-bold text-amber-700" : ""}>{l.location}</span>,
+                      l.shift,
+                      <span className="font-mono font-bold">{l.hours} hrs</span>,
+                      <span className="text-sm">{l.jobs}</span>
+                    ])}
+                  />
+                </Section>
+
+                <Section title="Terminal List">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl p-6 shadow-lg">
+                      <h4 className="font-bold text-slate-700 mb-3">Container Terminals</h4>
+                      <ul className="space-y-2">
+                        {locations.filter(l => l.type === "Container").map(l => (
+                          <li key={l.name} className="flex items-center justify-between">
+                            <span className="font-mono">{l.name}</span>
+                            <span className="text-sm text-slate-500">{l.note}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-white rounded-xl p-6 shadow-lg">
+                      <h4 className="font-bold text-slate-700 mb-3">Wheat Terminals</h4>
+                      <ul className="space-y-2">
+                        {locations.filter(l => l.type === "Wheat").map(l => (
+                          <li key={l.name} className="flex items-center justify-between">
+                            <span className="font-mono">{l.name}</span>
+                            <span className="text-sm text-amber-600">{l.note}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-sm text-amber-700 mt-4">All wheat terminals use WHEAT jobs with built-in OT</p>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Default Hours (When No PAYDIFFS Match)">
+                  <CodeBlock code={`function getDefaultHours(shiftType: string): { regular: number, overtime: number } {
+  if (shiftType === 'GRAVEYARD') {
+    return { regular: 6.5, overtime: 0 };
+  }
+  // DAY or NIGHT
+  return { regular: 8, overtime: 0 };
+}`} />
+                </Section>
+              </>
+            )}
+
+            {/* ============ SPECIAL CASES ============ */}
+            {activeTab === 'special' && (
+              <>
+                <Section title="Special Case Rules">
+                  {specialCases.map((sc, i) => (
+                    <div key={i} className="bg-white rounded-xl p-6 shadow-lg mb-4 border-l-4 border-amber-500">
+                      <div className="flex items-start justify-between mb-3">
+                        <h3 className="font-bold text-lg">{sc.name}</h3>
+                        <code className="bg-amber-100 text-amber-800 px-3 py-1 rounded text-sm">{sc.differential}</code>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-slate-500">Jobs:</span>
+                          <span className="ml-2 font-mono">{sc.jobs}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-500">Terminals:</span>
+                          <span className="ml-2">{sc.terminals}</span>
+                        </div>
+                      </div>
+                      <div className="mt-3 bg-slate-50 rounded-lg p-3">
+                        <span className="text-slate-500 text-sm">Rule:</span>
+                        <span className="ml-2 font-medium">{sc.rule}</span>
+                      </div>
+                    </div>
+                  ))}
+                </Section>
+
+                <Section title="Handling WHEAT Jobs">
+                  <CodeBlock code={`// WHEAT jobs ALWAYS have built-in overtime
+if (jobCode === 'WHEAT MACHINE' || jobCode === 'WHEAT SPECIALTY') {
+  // Don't query PAYDIFFS - always use these values
+  return {
+    regular: 7.5,
+    overtime: 0.5,  // Built-in half hour OT
+    differential: 1.15  // WHEAT class differential
+  };
+}`} />
+                </Section>
+
+                <Section title="Handling TRAINER Rates">
+                  <CodeBlock code={`// TRAINER gets a multiplier on base rate
+if (jobCode === 'TRAINER') {
+  const baseRate = getBaseRate(dayType, shiftType, rateYear);
+
+  if (trainerType === 'SENIOR') {
+    // Use senior rate table (different structure)
+    return getSeniorRate(dayType, shiftType, rateYear);
+  } else {
+    // Regular trainer: 33.3% premium
+    return baseRate * 1.333;
+  }
+}`} />
+                </Section>
+              </>
+            )}
+
+            {/* ============ PAYDIFFS TABLE ============ */}
+            {activeTab === 'paydiffs' && (
+              <>
+                <Section title="PAYDIFFS File to Upload">
+                  <div className="bg-emerald-50 border-2 border-emerald-500 rounded-xl p-6 mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className="text-4xl">📄</div>
+                      <div>
+                        <div className="font-bold text-lg text-emerald-800">pay data/bubble_upload/PAYDIFFS_clean.csv</div>
+                        <div className="text-emerald-700">330 entries • Ready to upload</div>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Table Structure">
+                  <DataTable
+                    headers={["Column", "Type", "Description"]}
+                    rows={paydiffsColumns.map(c => [
+                      <code className="bg-slate-100 px-2 py-1 rounded font-bold">{c.name}</code>,
+                      <span className="text-slate-500">{c.type}</span>,
+                      c.desc
+                    ])}
+                  />
+                </Section>
+
+                <Section title="Sample Data">
+                  <CodeBlock code={`JOB,SHIFT,LOCATION,SUBJOB,REGHRS,OTHRS
+TRACTOR TRAILER,DAY,CENTENNIAL,,9,0
+TRACTOR TRAILER,NIGHT,CENTENNIAL,,9,0
+TRACTOR TRAILER,GRAVEYARD,CENTENNIAL,,7.5,0
+HEAD CHECKER,DAY,CENTENNIAL,,9,0
+WHEAT MACHINE,DAY,,,7.5,0.5
+WHEAT MACHINE,NIGHT,,,7.5,0.5
+DOCK GANTRY,DAY,,"SPECIAL",0,5
+LINES,DAY,,,4,0`} />
+                </Section>
+
+                <Section title="What's NOT in PAYDIFFS">
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2 text-red-600">
+                        <span>✗</span> Rate data (calculated from job classification)
+                      </li>
+                      <li className="flex items-center gap-2 text-red-600">
+                        <span>✗</span> Standard 8-hour day/night shifts
+                      </li>
+                      <li className="flex items-center gap-2 text-red-600">
+                        <span>✗</span> Standard 6.5-hour graveyard shifts
+                      </li>
+                      <li className="flex items-center gap-2 text-red-600">
+                        <span>✗</span> Differential amounts (stored in job classification)
+                      </li>
+                    </ul>
+                    <p className="mt-4 text-slate-600 text-sm">
+                      If a job/shift/location combo is NOT in PAYDIFFS, use the defaults (8/8/6.5 hours, 0 OT).
+                    </p>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {/* ============ DATABASE SCHEMA ============ */}
+            {activeTab === 'schema' && (
+              <>
+                <Section title="Core Tables">
+                  <div className="space-y-6">
+                    {Object.entries(dbSchema).map(([table, columns]) => (
+                      <div key={table} className="bg-white rounded-xl p-6 shadow-lg">
+                        <h3 className="font-bold text-lg mb-3 font-mono text-blue-700">{table}</h3>
+                        <div className="bg-slate-900 rounded-lg p-4">
+                          <pre className="text-sm text-slate-300">
+                            {columns.map((col, i) => (
+                              <div key={i}>{col}{i < columns.length - 1 ? ',' : ''}</div>
+                            ))}
+                          </pre>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="Multi-Tenant Design">
+                  <Alert type="info">
+                    Each union local is a <strong>tenant</strong>. Different locals have different pay rules.
+                  </Alert>
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <h4 className="font-bold mb-3">What Varies by Tenant</h4>
+                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+                      <ul className="space-y-1">
+                        <li>● Pay rates and differentials</li>
+                        <li>● Job classifications</li>
+                        <li>● Location/terminal names</li>
+                      </ul>
+                      <ul className="space-y-1">
+                        <li>● Shift definitions</li>
+                        <li>● Overtime rules</li>
+                        <li>● Default hours</li>
+                      </ul>
+                    </div>
+                    <div className="mt-4 bg-slate-50 rounded-lg p-4">
+                      <code className="text-sm">tenant_id UUID on all tables + Row-Level Security (RLS)</code>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {/* ============ IMPLEMENTATION ============ */}
+            {activeTab === 'implementation' && (
+              <>
+                <Section title="Implementation Order">
+                  <div className="space-y-3">
+                    {implementationSteps.map(step => (
+                      <div key={step.step} className="bg-white rounded-xl p-5 shadow-lg flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${
+                          step.priority === 'P0' ? 'bg-red-600' :
+                          step.priority === 'P1' ? 'bg-orange-500' : 'bg-yellow-500'
+                        }`}>
+                          {step.step}
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold">{step.title}</div>
+                          <div className="text-slate-600 text-sm">{step.desc}</div>
+                        </div>
+                        <div className={`px-3 py-1 rounded text-xs font-bold ${
+                          step.priority === 'P0' ? 'bg-red-100 text-red-800' :
+                          step.priority === 'P1' ? 'bg-orange-100 text-orange-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {step.priority}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+
+                <Section title="Test Cases to Write">
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>March 31 → April 1 boundary (rate year change)</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>CENTENNIAL 9-hour shifts vs standard 8-hour</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>Graveyard shifts (6.5 and 7.5 hour variants)</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>WHEAT built-in overtime (7.5 + 0.5)</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>Weekend premiums (Saturday vs Sunday)</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>All 6 differential classes calculate correctly</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>PAYDIFFS lookup with specific location vs NULL</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <input type="checkbox" className="mt-1" />
+                        <span>Default hours when no PAYDIFFS match</span>
+                      </li>
+                    </ul>
+                  </div>
+                </Section>
+              </>
+            )}
+
+            {/* ============ REFERENCE DATA ============ */}
+            {activeTab === 'reference' && (
+              <>
+                <Section title="All Canonical Job Names">
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {canonicalJobs.map(job => (
+                        <code key={job} className="bg-slate-100 px-2 py-1 rounded text-xs">{job}</code>
+                      ))}
+                    </div>
+                    <p className="mt-4 text-sm text-slate-500">Use these exact names. Normalize any variations (e.g., "TT" → "TRACTOR TRAILER")</p>
+                  </div>
+                </Section>
+
+                <Section title="Common Name Variations">
+                  <DataTable
+                    headers={["User Might Enter", "Normalize To"]}
+                    rows={[
+                      ["TT", "TRACTOR TRAILER"],
+                      ["RTG", "RUBBER TIRE GANTRY"],
+                      ["RMG", "RAIL MOUNTED GANTRY"],
+                      ["HC", "HEAD CHECKER"],
+                      ["HEADCHECKER", "HEAD CHECKER"],
+                      ["TRACKMAN", "TRACKMEN"],
+                      ["TOP PICK", "40 TON (TOP PICK)"]
+                    ]}
+                  />
+                </Section>
+
+                <Section title="Files Reference">
+                  <div className="space-y-4">
+                    <div className="bg-emerald-50 border border-emerald-300 rounded-xl p-4">
+                      <div className="font-bold text-emerald-800">pay data/bubble_upload/PAYDIFFS_clean.csv</div>
+                      <div className="text-emerald-700 text-sm">330 hour overrides - UPLOAD THIS</div>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="font-bold text-slate-800">TECHNICAL_SPEC.md</div>
+                      <div className="text-slate-600 text-sm">Full technical specification document</div>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="font-bold text-slate-800">pay data/bubble_upload/README.md</div>
+                      <div className="text-slate-600 text-sm">Pay engine logic and Option Set setup</div>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="font-bold text-slate-800">rate_calculator.py</div>
+                      <div className="text-slate-600 text-sm">Python reference implementation (for testing)</div>
+                    </div>
+                    <div className="bg-white border border-slate-200 rounded-xl p-4">
+                      <div className="font-bold text-slate-800">MASTER_METRICS.md</div>
+                      <div className="text-slate-600 text-sm">Single source of truth for all numbers</div>
+                    </div>
+                  </div>
+                </Section>
+
+                <Section title="Quick Reference Card">
+                  <div className="bg-slate-900 text-white rounded-xl p-6">
+                    <div className="grid md:grid-cols-2 gap-6 text-sm font-mono">
+                      <div>
+                        <div className="text-slate-400 mb-2">Default Hours</div>
+                        <div>DAY/NIGHT: 8 reg, 0 OT</div>
+                        <div>GRAVEYARD: 6.5 reg, 0 OT</div>
+                        <div className="text-amber-400 mt-2">CENTENNIAL: 9/7.5 hrs</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 mb-2">Rate Year</div>
+                        <div>Changes: April 1st</div>
+                        <div>Jan-Mar → previous year</div>
+                        <div>Apr-Dec → current year</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 mb-2">OT Calculation</div>
+                        <div>Regular: rate × hours</div>
+                        <div>Overtime: rate × 1.5 × hours</div>
+                        <div>Double: rate × 2.0 × hours</div>
+                      </div>
+                      <div>
+                        <div className="text-slate-400 mb-2">Differential Range</div>
+                        <div>BASE: +$0.00</div>
+                        <div>CLASS_4: +$0.50</div>
+                        <div>CLASS_1: +$2.50</div>
+                      </div>
+                    </div>
+                  </div>
+                </Section>
+              </>
+            )}
+
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-slate-800 text-white py-6 px-6">
+            <div className="max-w-6xl mx-auto flex items-center justify-between text-sm">
+              <span className="text-slate-400">PORTPAL Developer Brief</span>
+              <span className="text-slate-500">Current: Bubble → Target: React + Supabase</span>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

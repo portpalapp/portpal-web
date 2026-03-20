@@ -1,0 +1,266 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Anchor, Flame, Trophy, TrendingUp, AlertCircle, ChevronRight, Sparkles, Target, Calendar, Brain } from 'lucide-react'
+import {
+  generateSampleShifts,
+  calculateWeeklyEarnings,
+  calculateYTDEarnings,
+  USER_STATS,
+} from '../data/mockData'
+import type { Shift } from '../data/mockData'
+
+export function Home() {
+  const navigate = useNavigate()
+  const [shifts, setShifts] = useState<Shift[]>([])
+
+  useEffect(() => {
+    setShifts(generateSampleShifts())
+  }, [])
+
+  const thisWeekEarnings = calculateWeeklyEarnings(shifts, 0)
+  const lastWeekEarnings = calculateWeeklyEarnings(shifts, 1)
+  const ytdEarnings = calculateYTDEarnings(shifts)
+  const pensionProgress = (ytdEarnings / USER_STATS.pensionGoal) * 100
+
+  // Calculate weeks until pension goal at current rate
+  const avgWeeklyEarnings = (thisWeekEarnings + lastWeekEarnings) / 2
+  const remainingToGoal = USER_STATS.pensionGoal - ytdEarnings
+  const weeksToGoal = avgWeeklyEarnings > 0 ? Math.ceil(remainingToGoal / avgWeeklyEarnings) : 0
+  const projectedDate = new Date()
+  projectedDate.setDate(projectedDate.getDate() + (weeksToGoal * 7))
+
+  // Get this week's shifts
+  const today = new Date()
+  const startOfWeek = new Date(today)
+  startOfWeek.setDate(today.getDate() - today.getDay())
+  startOfWeek.setHours(0, 0, 0, 0)
+
+  const thisWeekShifts = shifts.filter(s => {
+    const shiftDate = new Date(s.date)
+    return shiftDate >= startOfWeek
+  })
+
+  // Format date with "Today" for today
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    const today = new Date()
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today'
+    }
+    const yesterday = new Date(today)
+    yesterday.setDate(yesterday.getDate() - 1)
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday'
+    }
+    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+  }
+
+  return (
+    <div className="p-4 space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-slate-500 text-sm">Welcome back,</p>
+          <h1 className="text-xl font-bold text-slate-800">{USER_STATS.name}</h1>
+        </div>
+        <div className="flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded-full">
+          <Anchor size={16} />
+          <span className="text-sm font-medium">#{USER_STATS.seniority}</span>
+        </div>
+      </div>
+
+      {/* AI Prediction Card - Clickable */}
+      <button
+        onClick={() => navigate('/chat')}
+        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-4 text-white text-left"
+      >
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-white/20 rounded-xl">
+            <Brain size={24} />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Sparkles size={14} />
+              <span className="text-xs font-medium text-purple-200">AI Prediction</span>
+            </div>
+            <p className="font-semibold mt-1">Tomorrow: 73% chance of Ship Gantry</p>
+            <p className="text-purple-200 text-xs mt-1">Based on your seniority and recent dispatch patterns</p>
+          </div>
+          <ChevronRight size={20} className="text-purple-200" />
+        </div>
+      </button>
+
+      {/* Earnings Cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-4 text-white">
+          <p className="text-blue-100 text-xs font-medium">This Week</p>
+          <p className="text-2xl font-bold mt-1">${thisWeekEarnings.toLocaleString()}</p>
+          <div className="flex items-center gap-1 mt-2 text-blue-100 text-xs">
+            <TrendingUp size={12} />
+            <span>{thisWeekShifts.length} shifts</span>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-4 text-white">
+          <p className="text-slate-300 text-xs font-medium">Last Week</p>
+          <p className="text-2xl font-bold mt-1">${lastWeekEarnings.toLocaleString()}</p>
+          <div className="flex items-center gap-1 mt-2 text-slate-300 text-xs">
+            {lastWeekEarnings > 0 && (
+              <>
+                <span className={thisWeekEarnings > lastWeekEarnings ? 'text-green-400' : 'text-orange-400'}>
+                  {thisWeekEarnings > lastWeekEarnings ? '+' : ''}
+                  {Math.round(((thisWeekEarnings - lastWeekEarnings) / lastWeekEarnings) * 100)}%
+                </span>
+                <span>vs this week</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Pension Progress - Clickable for AI insights */}
+      <button
+        onClick={() => navigate('/chat')}
+        className="w-full bg-white rounded-2xl p-4 shadow-sm text-left"
+      >
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Target size={18} className="text-blue-600" />
+            <div>
+              <h3 className="font-semibold text-slate-800">Pension Year Progress</h3>
+              <p className="text-xs text-slate-500">Jan 4, 2026 - Jan 3, 2027</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-lg font-bold text-blue-600">${ytdEarnings.toLocaleString()}</p>
+            <p className="text-xs text-slate-500">of ${USER_STATS.pensionGoal.toLocaleString()}</p>
+          </div>
+        </div>
+        <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
+            style={{ width: `${Math.min(pensionProgress, 100)}%` }}
+          />
+        </div>
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-xs text-slate-500">{pensionProgress.toFixed(1)}% complete</span>
+          <div className="flex items-center gap-1 text-xs text-purple-600">
+            <Sparkles size={12} />
+            <span>Goal by {projectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+            <ChevronRight size={14} />
+          </div>
+        </div>
+      </button>
+
+      {/* Streak & Badges */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-orange-50 rounded-2xl p-4 border border-orange-100">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-orange-100 rounded-xl">
+              <Flame className="text-orange-500" size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-orange-600">{USER_STATS.currentStreak}</p>
+              <p className="text-xs text-orange-600">Day Streak</p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">Best: {USER_STATS.longestStreak} days</p>
+        </div>
+
+        <div className="bg-amber-50 rounded-2xl p-4 border border-amber-100">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-amber-100 rounded-xl">
+              <Trophy className="text-amber-500" size={20} />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-amber-600">{USER_STATS.totalShiftsLogged}</p>
+              <p className="text-xs text-amber-600">Shifts Logged</p>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">Since {new Date(USER_STATS.joinDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</p>
+        </div>
+      </div>
+
+      {/* Pay Alert (example) */}
+      <div className="bg-red-50 rounded-2xl p-4 border border-red-100 flex items-start gap-3">
+        <div className="p-2 bg-red-100 rounded-xl">
+          <AlertCircle className="text-red-500" size={20} />
+        </div>
+        <div className="flex-1">
+          <h4 className="font-semibold text-red-800">Pay Discrepancy Detected</h4>
+          <p className="text-xs text-red-600 mt-1">
+            Jan 15 shift shows $52.17/hr but should be $55.95/hr for TT Day.
+            Shortage: $34.02
+          </p>
+          <button className="mt-2 text-xs font-medium text-red-700 flex items-center gap-1">
+            Report Shortage <ChevronRight size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* This Week's Shifts */}
+      <div className="bg-white rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Calendar size={18} className="text-slate-600" />
+            <h3 className="font-semibold text-slate-800">This Week's Shifts</h3>
+          </div>
+          <button
+            onClick={() => navigate('/calendar')}
+            className="text-xs text-blue-600 font-medium flex items-center gap-1"
+          >
+            View All <ChevronRight size={14} />
+          </button>
+        </div>
+
+        {thisWeekShifts.length > 0 ? (
+          <div className="space-y-2">
+            {thisWeekShifts.slice(0, 5).map(shift => (
+              <div key={shift.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50">
+                <div className={`w-2 h-10 rounded-full ${
+                  shift.shift === 'DAY' ? 'bg-amber-400' :
+                  shift.shift === 'NIGHT' ? 'bg-blue-600' : 'bg-purple-600'
+                }`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium text-slate-800 text-sm truncate">{shift.job}</p>
+                    <p className="font-semibold text-slate-800">${shift.totalPay.toFixed(0)}</p>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span>{shift.location} • {shift.shift}</span>
+                    <span>{formatDate(shift.date)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-slate-500 text-sm text-center py-4">No shifts logged this week</p>
+        )}
+
+        {/* Week Total */}
+        {thisWeekShifts.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-slate-100 flex justify-between items-center">
+            <span className="text-sm text-slate-600">Week Total ({thisWeekShifts.length} shifts)</span>
+            <span className="font-bold text-slate-800">${thisWeekEarnings.toLocaleString()}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Quick AI Actions */}
+      <button
+        onClick={() => navigate('/chat')}
+        className="w-full bg-slate-100 rounded-2xl p-4 flex items-center gap-3"
+      >
+        <div className="p-2 bg-purple-100 rounded-xl">
+          <Sparkles className="text-purple-600" size={20} />
+        </div>
+        <div className="flex-1 text-left">
+          <p className="font-medium text-slate-800">Ask AI anything</p>
+          <p className="text-xs text-slate-500">Rates, predictions, collective agreement...</p>
+        </div>
+        <ChevronRight size={20} className="text-slate-400" />
+      </button>
+    </div>
+  )
+}

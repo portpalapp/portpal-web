@@ -1,0 +1,50 @@
+PORTPAL Marketing Summary
+
+THE APP: Shift tracking + pay verification for longshoremen
+
+TRACTION:
+- 752 users
+- 71,712 shifts tracked
+- $41M pay tracked
+- 68% retention
+
+THE MARKET:
+- BC: 7,200 workers
+- North America: 127,000 workers
+- Total opportunity: $12.6M/year
+
+KEY INSIGHT:
+Local 502 (New Westminster) = 3,000+ workers
+Local 500 (Vancouver) = 2,740 workers
+502 is BIGGER and same metro area!
+
+TARGET CUSTOMER: Casual workers
+- Irregular schedules
+- Complex pay
+- Need to track hours for seniority
+- Most likely to have pay errors
+
+PRICING:
+- 30-day free trial (full features)
+- Then $99/year for Pro
+- Target: 35% conversion
+
+EXPANSION PLAN:
+Y1: BC → $52K
+Y2: + Seattle → $97K
+Y3: + LA → $166K
+Y4: + Hawaii → $215K
+Y5: + East Coast → $312K
+
+KEY MESSAGES:
+- "Know your worth before payday"
+- "Track your hours, protect your pay"
+- "The pay stub detective in your pocket"
+
+NEXT PRIORITIES:
+1. Local 502 campaign (largest BC local!)
+2. Target casual workers
+3. Tax season push (Jan/Feb)
+4. Union hall partnerships
+
+Full brief: marketing/MARKETING_BRIEF.md
