@@ -1,59 +1,91 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Anchor, Flame, Trophy, TrendingUp, AlertCircle, ChevronRight, Sparkles, Target, Calendar, Brain } from 'lucide-react'
+import { Anchor, Flame, Trophy, TrendingUp, AlertCircle, ChevronRight, Sparkles, Target, Calendar, Brain, Loader2 } from 'lucide-react'
 import {
-  generateSampleShifts,
   calculateWeeklyEarnings,
   calculateYTDEarnings,
-  USER_STATS,
 } from '../data/mockData'
-import type { Shift } from '../data/mockData'
+import { useShifts } from '../hooks/useShifts'
+import type { Shift } from '../hooks/useShifts'
+import { useProfile } from '../hooks/useProfile'
+import { formatDateRelative, formatCurrency, getLocalDateStr } from '../lib/formatters'
+
+// Streak: counts consecutive shifts where each gap is <= 48 hours.
+// Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
+function calculateStreak(shifts: Shift[]): number {
+  if (shifts.length === 0) return 0
+
+  const sorted = [...shifts]
+    .map((s) => s.date)
+    .sort((a, b) => b.localeCompare(a))
+
+  // Deduplicate dates
+  const uniqueDates: string[] = []
+  for (const d of sorted) {
+    if (uniqueDates.length === 0 || uniqueDates[uniqueDates.length - 1] !== d) {
+      uniqueDates.push(d)
+    }
+  }
+
+  // The most recent shift must be within 48 hours of now to count
+  const now = new Date()
+  const latestShiftDate = new Date(uniqueDates[0] + 'T23:59:59')
+  const hoursSinceLatest = (now.getTime() - latestShiftDate.getTime()) / (1000 * 60 * 60)
+  if (hoursSinceLatest > 48) return 0
+
+  let streak = 1
+  for (let i = 1; i < uniqueDates.length; i++) {
+    const curr = new Date(uniqueDates[i - 1] + 'T00:00:00')
+    const prev = new Date(uniqueDates[i] + 'T00:00:00')
+    const gapDays = (curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24)
+    if (gapDays <= 2) {
+      streak++
+    } else {
+      break
+    }
+  }
+  return streak
+}
 
 export function Home() {
   const navigate = useNavigate()
-  const [shifts, setShifts] = useState<Shift[]>([])
+  const { shifts, loading: shiftsLoading } = useShifts()
+  const { profile, loading: profileLoading } = useProfile()
 
-  useEffect(() => {
-    setShifts(generateSampleShifts())
-  }, [])
+  const loading = shiftsLoading || profileLoading
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[60vh]">
+        <Loader2 size={36} className="text-blue-600 animate-spin" />
+      </div>
+    )
+  }
 
   const thisWeekEarnings = calculateWeeklyEarnings(shifts, 0)
   const lastWeekEarnings = calculateWeeklyEarnings(shifts, 1)
   const ytdEarnings = calculateYTDEarnings(shifts)
-  const pensionProgress = (ytdEarnings / USER_STATS.pensionGoal) * 100
+  const pensionProgress = profile.pensionGoal > 0 ? (ytdEarnings / profile.pensionGoal) * 100 : 0
 
   // Calculate weeks until pension goal at current rate
   const avgWeeklyEarnings = (thisWeekEarnings + lastWeekEarnings) / 2
-  const remainingToGoal = USER_STATS.pensionGoal - ytdEarnings
+  const remainingToGoal = profile.pensionGoal - ytdEarnings
   const weeksToGoal = avgWeeklyEarnings > 0 ? Math.ceil(remainingToGoal / avgWeeklyEarnings) : 0
   const projectedDate = new Date()
   projectedDate.setDate(projectedDate.getDate() + (weeksToGoal * 7))
 
-  // Get this week's shifts
+  // Get this week's shifts (string comparison for timezone safety)
   const today = new Date()
   const startOfWeek = new Date(today)
   startOfWeek.setDate(today.getDate() - today.getDay())
-  startOfWeek.setHours(0, 0, 0, 0)
+  const weekStartStr = getLocalDateStr(startOfWeek)
 
   const thisWeekShifts = shifts.filter(s => {
-    const shiftDate = new Date(s.date)
-    return shiftDate >= startOfWeek
+    return s.date.slice(0, 10) >= weekStartStr
   })
 
-  // Format date with "Today" for today
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    const today = new Date()
-    if (date.toDateString() === today.toDateString()) {
-      return 'Today'
-    }
-    const yesterday = new Date(today)
-    yesterday.setDate(yesterday.getDate() - 1)
-    if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday'
-    }
-    return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-  }
+  // Calculate streaks and total shifts from real data
+  const currentStreak = calculateStreak(shifts)
+  const totalShiftsLogged = shifts.length
 
   return (
     <div className="p-4 space-y-4">
@@ -61,11 +93,11 @@ export function Home() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-slate-500 text-sm">Welcome back,</p>
-          <h1 className="text-xl font-bold text-slate-800">{USER_STATS.name}</h1>
+          <h1 className="text-xl font-bold text-slate-800">{profile.name}</h1>
         </div>
         <div className="flex items-center gap-2 bg-blue-600 text-white px-3 py-1.5 rounded-full">
           <Anchor size={16} />
-          <span className="text-sm font-medium">#{USER_STATS.seniority}</span>
+          <span className="text-sm font-medium">#{profile.seniority}</span>
         </div>
       </div>
 
@@ -94,7 +126,7 @@ export function Home() {
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-4 text-white">
           <p className="text-blue-100 text-xs font-medium">This Week</p>
-          <p className="text-2xl font-bold mt-1">${thisWeekEarnings.toLocaleString()}</p>
+          <p className="text-2xl font-bold mt-1">{formatCurrency(thisWeekEarnings)}</p>
           <div className="flex items-center gap-1 mt-2 text-blue-100 text-xs">
             <TrendingUp size={12} />
             <span>{thisWeekShifts.length} shifts</span>
@@ -103,7 +135,7 @@ export function Home() {
 
         <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-4 text-white">
           <p className="text-slate-300 text-xs font-medium">Last Week</p>
-          <p className="text-2xl font-bold mt-1">${lastWeekEarnings.toLocaleString()}</p>
+          <p className="text-2xl font-bold mt-1">{formatCurrency(lastWeekEarnings)}</p>
           <div className="flex items-center gap-1 mt-2 text-slate-300 text-xs">
             {lastWeekEarnings > 0 && (
               <>
@@ -132,8 +164,8 @@ export function Home() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-lg font-bold text-blue-600">${ytdEarnings.toLocaleString()}</p>
-            <p className="text-xs text-slate-500">of ${USER_STATS.pensionGoal.toLocaleString()}</p>
+            <p className="text-lg font-bold text-blue-600">{formatCurrency(ytdEarnings)}</p>
+            <p className="text-xs text-slate-500">of {formatCurrency(profile.pensionGoal)}</p>
           </div>
         </div>
         <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
@@ -160,11 +192,10 @@ export function Home() {
               <Flame className="text-orange-500" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-orange-600">{USER_STATS.currentStreak}</p>
+              <p className="text-2xl font-bold text-orange-600">{currentStreak}</p>
               <p className="text-xs text-orange-600">Day Streak</p>
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">Best: {USER_STATS.longestStreak} days</p>
         </div>
 
         <div className="bg-amber-50 rounded-2xl p-4 border border-amber-100">
@@ -173,11 +204,10 @@ export function Home() {
               <Trophy className="text-amber-500" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-amber-600">{USER_STATS.totalShiftsLogged}</p>
+              <p className="text-2xl font-bold text-amber-600">{totalShiftsLogged}</p>
               <p className="text-xs text-amber-600">Shifts Logged</p>
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-2">Since {new Date(USER_STATS.joinDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</p>
         </div>
       </div>
 
@@ -224,11 +254,11 @@ export function Home() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <p className="font-medium text-slate-800 text-sm truncate">{shift.job}</p>
-                    <p className="font-semibold text-slate-800">${shift.totalPay.toFixed(0)}</p>
+                    <p className="font-semibold text-slate-800">{formatCurrency(shift.totalPay)}</p>
                   </div>
                   <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span>{shift.location} • {shift.shift}</span>
-                    <span>{formatDate(shift.date)}</span>
+                    <span>{shift.location} &middot; {shift.shift}</span>
+                    <span>{formatDateRelative(shift.date)}</span>
                   </div>
                 </div>
               </div>
@@ -242,7 +272,7 @@ export function Home() {
         {thisWeekShifts.length > 0 && (
           <div className="mt-3 pt-3 border-t border-slate-100 flex justify-between items-center">
             <span className="text-sm text-slate-600">Week Total ({thisWeekShifts.length} shifts)</span>
-            <span className="font-bold text-slate-800">${thisWeekEarnings.toLocaleString()}</span>
+            <span className="font-bold text-slate-800">{formatCurrency(thisWeekEarnings)}</span>
           </div>
         )}
       </div>

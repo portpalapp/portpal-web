@@ -1,6 +1,10 @@
-// Mock data based on actual PORTPAL analysis
+// Reference data based on actual PORTPAL analysis
 // 71,712 user shifts, 42 jobs, 24 locations
 
+/**
+ * @deprecated The canonical Shift type is now in hooks/useShifts.ts.
+ * Kept here for backwards compatibility with existing imports.
+ */
 export interface Shift {
   id: string
   date: string
@@ -188,73 +192,13 @@ export const HOURS_BY_LOCATION: Record<string, { day: number; night: number; gra
   DEFAULT: { day: 8, night: 8, graveyard: 6.5 },
 }
 
-// Generate sample shifts for the current user
-export function generateSampleShifts(): Shift[] {
-  const shifts: Shift[] = []
-  const today = new Date()
+// --- REMOVED: generateSampleShifts() ---
+// No longer needed. Use the useShifts() hook from hooks/useShifts.ts
+// to fetch real shift data from Supabase.
 
-  // Last 2 weeks of shifts
-  for (let i = 0; i < 14; i++) {
-    const date = new Date(today)
-    date.setDate(date.getDate() - i)
-
-    // Skip some days randomly (not everyone works every day)
-    if (Math.random() > 0.7) continue
-
-    const job = JOBS[Math.floor(Math.random() * 6)] // Top 6 jobs
-    const location = LOCATIONS[Math.floor(Math.random() * 5)] // Top 5 locations
-    const shiftTypes: ('DAY' | 'NIGHT' | 'GRAVEYARD')[] = ['DAY', 'NIGHT', 'GRAVEYARD']
-    const shift = shiftTypes[Math.floor(Math.random() * 3)]
-
-    const hours = HOURS_BY_LOCATION[location] || HOURS_BY_LOCATION.DEFAULT
-    const regHours = shift === 'DAY' ? hours.day : shift === 'NIGHT' ? hours.night : hours.graveyard
-    const otHours = Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 0
-
-    const diff = DIFFERENTIALS[job] || { amount: 0, class: 'BASE' }
-    const dayOfWeek = date.getDay()
-    const dayType = dayOfWeek === 0 ? 'SUN' : dayOfWeek === 6 ? 'SAT' : 'MON-FRI'
-
-    let baseRate = BASE_RATES[shift][dayType]
-    if (job === 'TRAINER') {
-      baseRate = baseRate * 1.333333 + 1.67
-    } else {
-      baseRate = baseRate + diff.amount
-    }
-
-    const regRate = Math.round(baseRate * 100) / 100
-    const otRate = Math.round(regRate * 1.5 * 100) / 100
-    const totalPay = Math.round((regHours * regRate + otHours * otRate) * 100) / 100
-
-    shifts.push({
-      id: `shift-${i}`,
-      date: date.toISOString().split('T')[0],
-      job,
-      location,
-      subjob: SUBJOBS[job]?.[Math.floor(Math.random() * SUBJOBS[job].length)],
-      shift,
-      regHours,
-      otHours,
-      regRate,
-      otRate,
-      totalPay,
-    })
-  }
-
-  return shifts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}
-
-// User stats
-export const USER_STATS = {
-  name: 'Mike Thompson',
-  seniority: 2847,
-  board: 'A',
-  pensionGoal: 120000,
-  vacationRate: 0.04,
-  currentStreak: 12,
-  longestStreak: 28,
-  totalShiftsLogged: 347,
-  joinDate: '2023-04-15',
-}
+// --- REMOVED: USER_STATS ---
+// No longer needed. Use the useProfile() hook from hooks/useProfile.ts
+// to fetch real user profile data from Supabase.
 
 // Calculate weekly earnings
 export function calculateWeeklyEarnings(shifts: Shift[], weeksAgo = 0): number {

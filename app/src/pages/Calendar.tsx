@@ -1,20 +1,16 @@
-import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, Download } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronLeft, ChevronRight, Download, Loader2 } from 'lucide-react'
 import { format, startOfWeek, addDays, startOfMonth, endOfMonth, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns'
-import { generateSampleShifts } from '../data/mockData'
-import type { Shift } from '../data/mockData'
+import { useShifts } from '../hooks/useShifts'
 
 type ViewMode = 'week' | 'month'
 
 export function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [viewMode, setViewMode] = useState<ViewMode>('week')
-  const [shifts, setShifts] = useState<Shift[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
-  useEffect(() => {
-    setShifts(generateSampleShifts())
-  }, [])
+  const { shifts, loading } = useShifts()
 
   const getShiftsForDate = (date: Date) => {
     return shifts.filter(s => isSameDay(new Date(s.date), date))
@@ -58,6 +54,17 @@ export function Calendar() {
     const dayShifts = getShiftsForDate(day)
     return sum + dayShifts.reduce((s, shift) => s + shift.totalPay, 0)
   }, 0)
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 size={32} className="animate-spin text-blue-600" />
+          <p className="text-sm text-slate-500">Loading shifts...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-4">

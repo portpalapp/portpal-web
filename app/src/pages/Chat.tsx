@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Send, Upload, FileText, Book, Newspaper, Bot, User, Target, TrendingUp, Calendar, Zap } from 'lucide-react'
-import { USER_STATS } from '../data/mockData'
+import { useProfile } from '../hooks/useProfile'
 
 interface Message {
   id: string
@@ -9,11 +9,12 @@ interface Message {
 }
 
 export function Chat() {
+  const { profile } = useProfile()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: `Hey ${USER_STATS.name.split(' ')[0]}! I'm your PORTPAL AI. I can analyze your work patterns and help you optimize for your goals.\n\nAsk me about:\n• 🎯 Pension goal strategies\n• 📊 Work pattern analysis\n• 💰 Job & shift comparisons\n• 📅 Time-off planning\n\nWhat would you like to know?`
+      content: `Hey ${profile.name.split(' ')[0]}! I'm your PORTPAL AI. I can analyze your work patterns and help you optimize for your goals.\n\nAsk me about:\n• 🎯 Pension goal strategies\n• 📊 Work pattern analysis\n• 💰 Job & shift comparisons\n• 📅 Time-off planning\n\nWhat would you like to know?`
     }
   ])
   const [input, setInput] = useState('')
@@ -86,7 +87,7 @@ export function Chat() {
     let responseContent = ""
 
     if (lowerInput.includes('fewest') || lowerInput.includes('minimum') || lowerInput.includes('least')) {
-      responseContent = `📊 **Minimum Shifts Analysis**\n\nTo hit your $120k pension goal, here's the breakdown:\n\n**Optimal Strategy (HD Mechanic + Weekends):**\n• Rate: $91.55/hr (night) + weekend premiums\n• ~142 shifts total\n• That's ~3 shifts/week for the year\n\n**Your Current Pattern (TT mixed shifts):**\n• Avg ~$580/shift\n• Need ~207 shifts\n• ~4 shifts/week\n\n**Fewest possible (all graveyard weekends):**\n• ~118 shifts at ~$1,015/shift\n• But limited availability\n\n💡 Want me to build a custom schedule based on your seniority #${USER_STATS.seniority}?`
+      responseContent = `📊 **Minimum Shifts Analysis**\n\nTo hit your $120k pension goal, here's the breakdown:\n\n**Optimal Strategy (HD Mechanic + Weekends):**\n• Rate: $91.55/hr (night) + weekend premiums\n• ~142 shifts total\n• That's ~3 shifts/week for the year\n\n**Your Current Pattern (TT mixed shifts):**\n• Avg ~$580/shift\n• Need ~207 shifts\n• ~4 shifts/week\n\n**Fewest possible (all graveyard weekends):**\n• ~118 shifts at ~$1,015/shift\n• But limited availability\n\n💡 Want me to build a custom schedule based on your seniority #${profile.seniority}?`
     }
     else if (lowerInput.includes('august') || lowerInput.includes('month off') || lowerInput.includes('take off')) {
       responseContent = `📅 **Time Off Analysis**\n\nIf you take August off (4 weeks):\n\n**Current pace:** ~$2,800/week\n**Lost earnings:** ~$11,200\n\n**To still hit $120k:**\n• Need to make up ~$1,020/week extra\n• Work 1 extra shift/week before & after\n• Or: prioritize weekend/graveyard shifts\n\n**Recommended approach:**\n1. Front-load May-July with 5 shifts/week\n2. Take August off guilt-free\n3. Resume normal 4 shifts/week Sept-Dec\n\n✅ Yes, it's doable! You'd need to bank ~$67k by end of July.`
@@ -95,13 +96,13 @@ export function Chat() {
       responseContent = `☀️ **Day Shifts Only Analysis**\n\nIf you only work day shifts:\n\n**Weekday rate (TT):** $55.95/hr × 8h = $447/day\n**Weekend rate:** $71.43/hr × 8h = $571/day\n\n**To hit $120k with days only:**\n• Need ~230 day shifts\n• That's 4.4 shifts/week all year\n• Compare to 3.5 with mixed shifts\n\n**Trade-off:**\n• +26 extra shifts/year\n• But better work-life balance\n• Easier on the body long-term\n\n💡 Consider: 3 weekdays + 1 Saturday = good balance`
     }
     else if (lowerInput.includes('best job') || lowerInput.includes('maximiz')) {
-      responseContent = `💰 **Highest Paying Jobs Analysis**\n\nBased on hourly rate + typical hours:\n\n**Top 5 for weekly earnings:**\n1. HD Mechanic (night) - $648/shift\n2. Electrician (night) - $648/shift\n3. RTG (graveyard weekend) - $634/shift\n4. Ship Gantry (night) - $567/shift\n5. Trainer (any) - $590/shift avg\n\n**At your seniority (#${USER_STATS.seniority}):**\n• HD Mechanic: Rare, need certification\n• RTG: Good availability at DELTAPORT\n• Ship Gantry: Solid choice, regular work\n\n🎯 Realistic best: Ship Gantry nights at CENTENNIAL (9h shifts = $630/shift)`
+      responseContent = `💰 **Highest Paying Jobs Analysis**\n\nBased on hourly rate + typical hours:\n\n**Top 5 for weekly earnings:**\n1. HD Mechanic (night) - $648/shift\n2. Electrician (night) - $648/shift\n3. RTG (graveyard weekend) - $634/shift\n4. Ship Gantry (night) - $567/shift\n5. Trainer (any) - $590/shift avg\n\n**At your seniority (#${profile.seniority}):**\n• HD Mechanic: Rare, need certification\n• RTG: Good availability at DELTAPORT\n• Ship Gantry: Solid choice, regular work\n\n🎯 Realistic best: Ship Gantry nights at CENTENNIAL (9h shifts = $630/shift)`
     }
     else if (lowerInput.includes('night vs graveyard') || lowerInput.includes('graveyard')) {
       responseContent = `🌙 **Night vs Graveyard Comparison**\n\n**Night Shift (Mon-Fri TT):**\n• Rate: $70.32/hr\n• Hours: 8h (9h at CENT)\n• Per shift: $562 - $632\n\n**Graveyard (Mon-Fri TT):**\n• Rate: $86.70/hr\n• Hours: 6.5h (7.5h at CENT)\n• Per shift: $563 - $650\n\n**Verdict:**\n• Graveyard pays ~$23/hr MORE\n• But 1.5h fewer hours\n• Net: About the same per shift!\n• CENTENNIAL graveyard wins (+$18/shift)\n\n💡 Graveyard = higher rate, shorter shift. Pick based on lifestyle preference.`
     }
     else if (lowerInput.includes('track') || lowerInput.includes('last year') || lowerInput.includes('compare')) {
-      responseContent = `📈 **Your Progress Analysis**\n\n**This Year vs Last Year:**\n• YTD: $${(USER_STATS.pensionGoal * 0.15).toLocaleString()} earned\n• Same time last year: ~$16,800\n• You're ${Math.random() > 0.5 ? 'ahead' : 'slightly behind'} by ~$${Math.floor(Math.random() * 2000)}\n\n**Your patterns:**\n• Most common: TT Rail at CENTENNIAL\n• Avg shifts/week: 3.8\n• Preferred: Night shifts (62%)\n\n**Trend:**\n• Earnings up 8% vs last year\n• Working 0.5 fewer shifts/week\n• Higher-paying jobs more often\n\n🎯 On track for pension goal by mid-November!`
+      responseContent = `📈 **Your Progress Analysis**\n\n**This Year vs Last Year:**\n• YTD: $${(profile.pensionGoal * 0.15).toLocaleString()} earned\n• Same time last year: ~$16,800\n• You're ${Math.random() > 0.5 ? 'ahead' : 'slightly behind'} by ~$${Math.floor(Math.random() * 2000)}\n\n**Your patterns:**\n• Most common: TT Rail at CENTENNIAL\n• Avg shifts/week: 3.8\n• Preferred: Night shifts (62%)\n\n**Trend:**\n• Earnings up 8% vs last year\n• Working 0.5 fewer shifts/week\n• Higher-paying jobs more often\n\n🎯 On track for pension goal by mid-November!`
     }
     else if (lowerInput.includes('2 week') || lowerInput.includes('two week')) {
       responseContent = `🏖️ **2 Weeks Off Analysis**\n\nIf you take 2 weeks off:\n\n**Impact:**\n• Missed earnings: ~$5,600\n• New weekly target: +$215/week\n• That's just 0.4 extra shifts/week\n\n**Easy to recover:**\n• Add 1 Saturday shift per month\n• Or work 1 graveyard instead of day\n• Or pick up 1 extra shift in busy months\n\n✅ **Verdict:** Very doable! Take the vacation.\n\n💡 Pro tip: Take time off in slower dispatch months (Feb, Sept) when jobs are harder to get anyway.`

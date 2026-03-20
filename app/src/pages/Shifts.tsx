@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Check, Calendar, Plus, Minus, AlertCircle, CheckCircle2, RotateCcw, Star, Edit3, X } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Check, Calendar, Plus, Minus, AlertCircle, CheckCircle2, RotateCcw, Star, Edit3, X, Loader2 } from 'lucide-react'
 import {
   JOBS,
   LOCATIONS,
@@ -8,40 +8,35 @@ import {
   DIFFERENTIALS,
   HOURS_BY_LOCATION,
 } from '../data/mockData'
+import { useShifts } from '../hooks/useShifts'
+import type { Shift, AddShiftInput } from '../hooks/useShifts'
+import { useTemplates } from '../hooks/useTemplates'
+import type { TemplateRecord } from '../hooks/useTemplates'
 
 type ShiftType = 'DAY' | 'NIGHT' | 'GRAVEYARD'
 
-interface ShiftTemplate {
-  id: string
-  name: string
-  job: string
-  location: string
-  subjob: string
-  shift: ShiftType
-}
-
-// Get yesterday's shift from localStorage (mock for now)
-const getYesterdayShift = () => {
-  const saved = localStorage.getItem('lastShift')
-  if (saved) return JSON.parse(saved)
-  return null
-}
-
-// Get saved templates
-const getTemplates = (): ShiftTemplate[] => {
-  const saved = localStorage.getItem('shiftTemplates')
-  if (saved) return JSON.parse(saved)
-  return []
-}
-
-// Get custom locations
+// Get custom locations (kept in localStorage — user-local preference)
 const getCustomLocations = (): string[] => {
   const saved = localStorage.getItem('customLocations')
   if (saved) return JSON.parse(saved)
   return []
 }
 
+// Inline toast state
+interface Toast {
+  type: 'success' | 'error'
+  message: string
+}
+
 export function Shifts() {
+  const { shifts, loading: shiftsLoading, addShift } = useShifts()
+  const {
+    templates,
+    loading: templatesLoading,
+    addTemplate,
+    deleteTemplate: deleteTemplateSupa,
+  } = useTemplates()
+
   const [step, setStep] = useState(1)
   const [job, setJob] = useState('')
   const [location, setLocation] = useState('')
@@ -59,18 +54,26 @@ export function Shifts() {
   const [customLocations, setCustomLocations] = useState<string[]>([])
   const [editingRate, setEditingRate] = useState(false)
   const [manualRegRate, setManualRegRate] = useState<number | null>(null)
-  const [templates, setTemplates] = useState<ShiftTemplate[]>([])
   const [showTemplates, setShowTemplates] = useState(false)
   const [newTemplateName, setNewTemplateName] = useState('')
   const [showSaveTemplate, setShowSaveTemplate] = useState(false)
-  const [lastShift, setLastShift] = useState<any>(null)
+  const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState<Toast | null>(null)
 
-  // Load saved data on mount
+  // Derive "last shift" from the shifts array (most recent by date)
+  const lastShift: Shift | null = shifts.length > 0 ? shifts[0] : null
+
+  // Load custom locations on mount
   useEffect(() => {
-    setTemplates(getTemplates())
     setCustomLocations(getCustomLocations())
-    setLastShift(getYesterdayShift())
   }, [])
+
+  // Auto-dismiss toast after 3 seconds
+  useEffect(() => {
+    if (!toast) return
+    const timer = setTimeout(() => setToast(null), 3000)
+    return () => clearTimeout(timer)
+  }, [toast])
 
   // Calculate rate based on selections
   const calculateRate = () => {
@@ -103,7 +106,7 @@ export function Shifts() {
   const { regRate, otRate } = calculateRate()
   const totalPay = regHours * regRate + otHours * otRate
 
-  // Apply callback (repeat yesterday's shift)
+  // Apply callback (repeat last shift)
   const applyCallback = () => {
     if (lastShift) {
       setJob(lastShift.job)
@@ -115,41 +118,38 @@ export function Shifts() {
   }
 
   // Apply template
-  const applyTemplate = (template: ShiftTemplate) => {
+  const applyTemplate = (template: TemplateRecord) => {
     setJob(template.job)
     setLocation(template.location)
     setSubjob(template.subjob || '')
-    setShift(template.shift)
+    setShift(template.shift as ShiftType)
     setShowTemplates(false)
     setStep(3) // Skip to review
   }
 
-  // Save current as template
-  const saveAsTemplate = () => {
+  // Save current as template (Supabase)
+  const saveAsTemplate = useCallback(async () => {
     if (!newTemplateName || !job || !location) return
-    const newTemplate: ShiftTemplate = {
-      id: Date.now().toString(),
+    const { error } = await addTemplate({
       name: newTemplateName,
       job,
       location,
-      subjob,
+      subjob: subjob || undefined,
       shift,
+    })
+    if (error) {
+      setToast({ type: 'error', message: 'Failed to save template' })
     }
-    const updated = [...templates, newTemplate]
-    setTemplates(updated)
-    localStorage.setItem('shiftTemplates', JSON.stringify(updated))
     setNewTemplateName('')
     setShowSaveTemplate(false)
-  }
+  }, [newTemplateName, job, location, subjob, shift, addTemplate])
 
-  // Delete template
-  const deleteTemplate = (id: string) => {
-    const updated = templates.filter(t => t.id !== id)
-    setTemplates(updated)
-    localStorage.setItem('shiftTemplates', JSON.stringify(updated))
-  }
+  // Delete template (Supabase)
+  const handleDeleteTemplate = useCallback(async (id: string) => {
+    await deleteTemplateSupa(id)
+  }, [deleteTemplateSupa])
 
-  // Save custom location
+  // Save custom location (localStorage)
   const saveCustomLocation = () => {
     if (!customLocation) return
     const updated = [...customLocations, customLocation.toUpperCase()]
@@ -168,14 +168,76 @@ export function Shifts() {
     else setRegHours(hours.graveyard)
   }
 
+  // Save shift to Supabase
+  const handleSaveShift = async () => {
+    setSaving(true)
+    const input: AddShiftInput = {
+      job,
+      location,
+      subjob: subjob || undefined,
+      shift,
+      date,
+      regHours,
+      otHours,
+      regRate,
+      otRate,
+      totalPay: Math.round(totalPay * 100) / 100,
+    }
+
+    const { error } = await addShift(input)
+    setSaving(false)
+
+    if (error) {
+      setToast({ type: 'error', message: `Failed to save shift: ${error.message}` })
+      return
+    }
+
+    setToast({ type: 'success', message: 'Shift saved successfully!' })
+
+    // Reset form
+    setStep(1)
+    setJob('')
+    setLocation('')
+    setSubjob('')
+    setManualRegRate(null)
+    setEditingRate(false)
+  }
+
   // Filter out "BLANK" from subjobs
   const availableSubjobs = (SUBJOBS[job] || []).filter(s => s !== 'BLANK')
 
   // All locations including custom ones
   const allLocations = [...LOCATIONS, ...customLocations.filter(c => !LOCATIONS.includes(c))]
 
+  // Show a spinner while initial data loads
+  if (shiftsLoading && shifts.length === 0) {
+    return (
+      <div className="p-4 flex flex-col items-center justify-center min-h-[300px] gap-3">
+        <Loader2 size={32} className="animate-spin text-blue-600" />
+        <p className="text-sm text-slate-500">Loading shifts...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="p-4">
+      {/* Toast */}
+      {toast && (
+        <div
+          className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition-all ${
+            toast.type === 'success'
+              ? 'bg-green-600 text-white'
+              : 'bg-red-600 text-white'
+          }`}
+        >
+          {toast.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+          {toast.message}
+          <button onClick={() => setToast(null)} className="ml-2 opacity-70 hover:opacity-100">
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-xl font-bold text-slate-800">Log Shift</h1>
@@ -213,7 +275,7 @@ export function Shifts() {
                 className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-50 text-green-700 rounded-xl border border-green-200 font-medium"
               >
                 <RotateCcw size={18} />
-                <span>Repeat Yesterday</span>
+                <span>Repeat Last</span>
               </button>
             )}
             {templates.length > 0 && (
@@ -222,7 +284,7 @@ export function Shifts() {
                 className="flex-1 flex items-center justify-center gap-2 py-3 bg-purple-50 text-purple-700 rounded-xl border border-purple-200 font-medium"
               >
                 <Star size={18} />
-                <span>Templates</span>
+                <span>Templates{templatesLoading ? '...' : ''}</span>
               </button>
             )}
           </div>
@@ -238,10 +300,10 @@ export function Shifts() {
                     className="flex-1 text-left p-2 rounded-lg bg-slate-50 hover:bg-slate-100"
                   >
                     <p className="font-medium text-slate-700 text-sm">{template.name}</p>
-                    <p className="text-xs text-slate-500">{template.job} • {template.location}</p>
+                    <p className="text-xs text-slate-500">{template.job} - {template.location}</p>
                   </button>
                   <button
-                    onClick={() => deleteTemplate(template.id)}
+                    onClick={() => handleDeleteTemplate(template.id)}
                     className="p-2 text-red-400 hover:text-red-600"
                   >
                     <X size={16} />
@@ -620,7 +682,7 @@ export function Shifts() {
               <div>
                 <p className="font-semibold">{job}</p>
                 <p className="text-blue-100 text-sm">
-                  {location}{subjob ? ` • ${subjob}` : ''}
+                  {location}{subjob ? ` - ${subjob}` : ''}
                 </p>
               </div>
               <div className={`px-2 py-1 rounded text-xs font-medium ${
@@ -682,43 +744,27 @@ export function Shifts() {
           <div className="flex gap-2">
             <button
               onClick={() => setStep(2)}
-              className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-medium"
+              disabled={saving}
+              className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-medium disabled:opacity-50"
             >
               Back
             </button>
             <button
-              onClick={() => {
-                // Save shift to localStorage for callback feature
-                const shiftData = {
-                  job,
-                  location,
-                  subjob,
-                  shift,
-                  date,
-                  regHours,
-                  otHours,
-                  regRate,
-                  otRate,
-                  totalPay,
-                }
-                localStorage.setItem('lastShift', JSON.stringify(shiftData))
-                setLastShift(shiftData)
-
-                // TODO: Save to actual database
-                alert('Shift saved!')
-
-                // Reset form
-                setStep(1)
-                setJob('')
-                setLocation('')
-                setSubjob('')
-                setManualRegRate(null)
-                setEditingRate(false)
-              }}
-              className="flex-1 py-3 bg-green-600 text-white rounded-xl font-medium flex items-center justify-center gap-2"
+              onClick={handleSaveShift}
+              disabled={saving}
+              className="flex-1 py-3 bg-green-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <Check size={18} />
-              Save Shift
+              {saving ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Check size={18} />
+                  Save Shift
+                </>
+              )}
             </button>
           </div>
         </div>

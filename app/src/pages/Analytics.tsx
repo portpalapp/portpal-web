@@ -1,16 +1,35 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { TrendingUp, MapPin, Clock, DollarSign } from 'lucide-react'
-import { generateSampleShifts } from '../data/mockData'
-import type { Shift } from '../data/mockData'
+import { TrendingUp, MapPin, Clock, DollarSign, Loader2 } from 'lucide-react'
+import { useShifts } from '../hooks/useShifts'
+import { formatCurrency } from '../lib/formatters'
 
 export function Analytics() {
-  const [shifts, setShifts] = useState<Shift[]>([])
+  const { shifts, loading } = useShifts()
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('month')
 
-  useEffect(() => {
-    setShifts(generateSampleShifts())
-  }, [])
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      </div>
+    )
+  }
+
+  // Empty state
+  if (shifts.length === 0) {
+    return (
+      <div className="p-4 space-y-4">
+        <h1 className="text-xl font-bold text-slate-800">Analytics</h1>
+        <div className="flex flex-col items-center justify-center h-64 text-slate-400">
+          <TrendingUp size={40} className="mb-3" />
+          <p className="font-medium text-slate-600">No data yet</p>
+          <p className="text-sm">Log some shifts to see your analytics</p>
+        </div>
+      </div>
+    )
+  }
 
   // Calculate stats
   const totalEarnings = shifts.reduce((sum, s) => sum + s.totalPay, 0)
@@ -85,7 +104,7 @@ export function Analytics() {
             <DollarSign size={14} />
             <span className="text-xs">Total Earnings</span>
           </div>
-          <p className="text-xl font-bold text-slate-800">${totalEarnings.toLocaleString()}</p>
+          <p className="text-xl font-bold text-slate-800">{formatCurrency(totalEarnings)}</p>
         </div>
 
         <div className="bg-white rounded-xl p-3 border border-slate-200">
@@ -101,7 +120,7 @@ export function Analytics() {
             <TrendingUp size={14} />
             <span className="text-xs">Avg Hourly</span>
           </div>
-          <p className="text-xl font-bold text-green-600">${avgHourlyRate.toFixed(2)}</p>
+          <p className="text-xl font-bold text-green-600">{formatCurrency(avgHourlyRate)}</p>
         </div>
 
         <div className="bg-white rounded-xl p-3 border border-slate-200">
@@ -176,7 +195,7 @@ export function Analytics() {
               <div className="flex-1">
                 <div className="flex justify-between items-center">
                   <p className="font-medium text-slate-800 text-sm">{job.name}</p>
-                  <p className="font-semibold text-slate-800">${job.earnings.toFixed(0)}</p>
+                  <p className="font-semibold text-slate-800">{formatCurrency(job.earnings)}</p>
                 </div>
                 <div className="h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden">
                   <div
