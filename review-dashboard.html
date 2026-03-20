@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PORTPAL Code Review Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #161922;
+    --surface-2: #1e2130;
+    --surface-3: #262a3d;
+    --border: #2a2e42;
+    --border-light: #353a52;
+    --text: #e4e7f1;
+    --text-muted: #8b90a8;
+    --text-dim: #5c6180;
+    --critical: #ff4d6a;
+    --critical-bg: rgba(255, 77, 106, 0.08);
+    --critical-border: rgba(255, 77, 106, 0.2);
+    --high: #ff8c42;
+    --high-bg: rgba(255, 140, 66, 0.08);
+    --high-border: rgba(255, 140, 66, 0.2);
+    --medium: #fbbf24;
+    --medium-bg: rgba(251, 191, 36, 0.08);
+    --medium-border: rgba(251, 191, 36, 0.2);
+    --low: #60a5fa;
+    --low-bg: rgba(96, 165, 250, 0.08);
+    --low-border: rgba(96, 165, 250, 0.2);
+    --good: #34d399;
+    --good-bg: rgba(52, 211, 153, 0.08);
+    --good-border: rgba(52, 211, 153, 0.2);
+    --accent: #818cf8;
+    --accent-bg: rgba(129, 140, 248, 0.08);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #161922 0%, #1a1f35 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 0;
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -1px;
+  }
+
+  .brand h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .meta-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  /* Score cards row */
+  .score-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+  }
+
+  .score-card.critical::before { background: var(--critical); }
+  .score-card.high::before { background: var(--high); }
+  .score-card.medium::before { background: var(--medium); }
+  .score-card.low::before { background: var(--low); }
+  .score-card.good::before { background: var(--good); }
+
+  .score-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .score-card.critical .score-label { color: var(--critical); }
+  .score-card.high .score-label { color: var(--high); }
+  .score-card.medium .score-label { color: var(--medium); }
+  .score-card.low .score-label { color: var(--low); }
+  .score-card.good .score-label { color: var(--good); }
+
+  .score-number {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .score-card.critical .score-number { color: var(--critical); }
+  .score-card.high .score-number { color: var(--high); }
+  .score-card.medium .score-number { color: var(--medium); }
+  .score-card.low .score-number { color: var(--low); }
+  .score-card.good .score-number { color: var(--good); }
+
+  .score-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* Main content */
+  .main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  /* Severity bar chart */
+  .severity-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+
+  .severity-chart h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .severity-chart h2 span {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .bar-label {
+    width: 80px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: right;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 32px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding-left: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bar-fill.critical { background: linear-gradient(90deg, var(--critical), #e63956); }
+  .bar-fill.high { background: linear-gradient(90deg, var(--high), #e67a30); }
+  .bar-fill.medium { background: linear-gradient(90deg, var(--medium), #e5a600); }
+  .bar-fill.low { background: linear-gradient(90deg, var(--low), #4b91e6); }
+
+  .bar-count {
+    width: 40px;
+    font-size: 18px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  /* Two column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+
+  /* Priority table */
+  .priority-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .priority-table h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .ptable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .ptable th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 0 12px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ptable td {
+    padding: 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .ptable tr:last-child td { border-bottom: none; }
+
+  .ptable .finding-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .sev-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .sev-badge.critical { background: var(--critical-bg); color: var(--critical); border: 1px solid var(--critical-border); }
+  .sev-badge.high { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); }
+  .sev-badge.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .sev-badge.low { background: var(--low-bg); color: var(--low); border: 1px solid var(--low-border); }
+
+  .effort-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* What's Good */
+  .whats-good {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .whats-good h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--good);
+  }
+
+  .good-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .good-item:last-child { border-bottom: none; }
+
+  .good-check {
+    width: 22px;
+    height: 22px;
+    background: var(--good-bg);
+    border: 1px solid var(--good-border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--good);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .good-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .good-text strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Finding cards */
+  .findings-section {
+    margin-bottom: 28px;
+  }
+
+  .findings-section h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .finding-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .finding-card:hover {
+    border-color: var(--border-light);
+  }
+
+  .finding-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 24px;
+    gap: 16px;
+  }
+
+  .finding-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .finding-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .finding-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  .finding-body {
+    padding: 0 24px 20px;
+  }
+
+  .finding-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .finding-code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    overflow-x: auto;
+  }
+
+  .finding-code .highlight {
+    color: var(--critical);
+    font-weight: 600;
+  }
+
+  .finding-code .comment {
+    color: var(--text-dim);
+  }
+
+  .finding-code .good-hl {
+    color: var(--good);
+    font-weight: 600;
+  }
+
+  .finding-impact {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .finding-impact.critical {
+    background: var(--critical-bg);
+    border: 1px solid var(--critical-border);
+    color: var(--critical);
+  }
+
+  .finding-impact.high {
+    background: var(--high-bg);
+    border: 1px solid var(--high-border);
+    color: var(--high);
+  }
+
+  .finding-impact.medium {
+    background: var(--medium-bg);
+    border: 1px solid var(--medium-border);
+    color: var(--medium);
+  }
+
+  /* Health ring */
+  .health-ring-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .health-ring-container h2 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    align-self: flex-start;
+  }
+
+  .ring-wrap {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+  }
+
+  .ring-wrap svg {
+    width: 200px;
+    height: 200px;
+    transform: rotate(-90deg);
+  }
+
+  .ring-wrap circle {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+  }
+
+  .ring-bg { stroke: var(--surface-3); }
+  .ring-fill {
+    stroke: var(--high);
+    stroke-dasharray: 502;
+    stroke-dashoffset: 175;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring-score {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    color: var(--high);
+    line-height: 1;
+  }
+
+  .ring-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .ring-sublabel {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* Stats grid under ring */
+  .ring-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .ring-stat {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+
+  .ring-stat-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .ring-stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 4px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-dim);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+
+  .footer strong { color: var(--text-muted); }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .score-row { grid-template-columns: repeat(3, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .header-top { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+
+  @media (max-width: 600px) {
+    .score-row { grid-template-columns: repeat(2, 1fr); }
+    .main { padding: 16px; }
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .finding-card, .score-card, .severity-chart, .priority-table, .whats-good, .health-ring-container {
+    animation: fadeUp 0.5s ease-out both;
+  }
+
+  .finding-card:nth-child(1) { animation-delay: 0.05s; }
+  .finding-card:nth-child(2) { animation-delay: 0.1s; }
+  .finding-card:nth-child(3) { animation-delay: 0.15s; }
+  .finding-card:nth-child(4) { animation-delay: 0.2s; }
+  .finding-card:nth-child(5) { animation-delay: 0.25s; }
+  .finding-card:nth-child(6) { animation-delay: 0.3s; }
+
+  .score-card:nth-child(1) { animation-delay: 0.1s; }
+  .score-card:nth-child(2) { animation-delay: 0.15s; }
+  .score-card:nth-child(3) { animation-delay: 0.2s; }
+  .score-card:nth-child(4) { animation-delay: 0.25s; }
+  .score-card:nth-child(5) { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-icon">PP</div>
+        <div>
+          <h1>PORTPAL Code Review</h1>
+          <div class="brand-sub">Structural Audit &mdash; 95 source files across mobile &amp; web</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-pill">
+          <div class="dot" style="background: var(--accent)"></div>
+          957 live users
+        </div>
+        <div class="meta-pill">
+          <div class="dot" style="background: var(--good)"></div>
+          $41M pay tracked
+        </div>
+        <div class="meta-pill">
+          <div class="dot" style="background: var(--high)"></div>
+          Mar 19, 2026
+        </div>
+      </div>
+    </div>
+
+    <div class="score-row">
+      <div class="score-card critical">
+        <div class="score-label">Critical</div>
+        <div class="score-number">3</div>
+        <div class="score-desc">Pay calc, timezone, limit</div>
+      </div>
+      <div class="score-card medium">
+        <div class="score-label">Medium</div>
+        <div class="score-number">4</div>
+        <div class="score-desc">Security, data, locale</div>
+      </div>
+      <div class="score-card low">
+        <div class="score-label">Low / Style</div>
+        <div class="score-number">5</div>
+        <div class="score-desc">Cleanup, types, dead code</div>
+      </div>
+      <div class="score-card good">
+        <div class="score-label">Strengths</div>
+        <div class="score-number">6</div>
+        <div class="score-desc">Solid patterns found</div>
+      </div>
+      <div class="score-card" style="border-left: 3px solid var(--accent);">
+        <div class="score-label" style="color: var(--accent);">Files Audited</div>
+        <div class="score-number" style="color: var(--text);">95</div>
+        <div class="score-desc">TS/TSX/JS across 2 apps</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- Severity Chart + Health Ring -->
+  <div class="two-col">
+    <div class="severity-chart">
+      <h2>Severity Distribution <span>12 total findings</span></h2>
+
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--critical)">Critical</div>
+        <div class="bar-track">
+          <div class="bar-fill critical" style="width: 25%">3 findings</div>
+        </div>
+        <div class="bar-count" style="color: var(--critical)">3</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--medium)">Medium</div>
+        <div class="bar-track">
+          <div class="bar-fill medium" style="width: 33%">4 findings</div>
+        </div>
+        <div class="bar-count" style="color: var(--medium)">4</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--low)">Low</div>
+        <div class="bar-track">
+          <div class="bar-fill low" style="width: 42%">5 findings</div>
+        </div>
+        <div class="bar-count" style="color: var(--low)">5</div>
+      </div>
+    </div>
+
+    <div class="health-ring-container">
+      <h2>Codebase Health Score</h2>
+      <div class="ring-wrap">
+        <svg viewBox="0 0 200 200">
+          <circle class="ring-bg" cx="100" cy="100" r="80" />
+          <circle class="ring-fill" cx="100" cy="100" r="80" />
+        </svg>
+        <div class="ring-text">
+          <div class="ring-score">65</div>
+          <div class="ring-label">/ 100</div>
+        </div>
+      </div>
+      <div class="ring-sublabel">3 critical issues blocking production safety</div>
+      <div class="ring-stats" style="margin-top: 16px;">
+        <div class="ring-stat">
+          <div class="ring-stat-val">73K</div>
+          <div class="ring-stat-label">Shifts Tracked</div>
+        </div>
+        <div class="ring-stat">
+          <div class="ring-stat-val">208K</div>
+          <div class="ring-stat-label">Lines of Code</div>
+        </div>
+        <div class="ring-stat">
+          <div class="ring-stat-val">0</div>
+          <div class="ring-stat-label">Test Files</div>
+        </div>
+        <div class="ring-stat">
+          <div class="ring-stat-val">v1.2.0</div>
+          <div class="ring-stat-label">APK Version</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRITICAL FINDINGS -->
+  <div class="findings-section">
+    <h2>
+      <span style="color: var(--critical)">&#9632;</span>
+      Critical Findings
+      <span class="sev-badge critical">Must Fix</span>
+    </h2>
+
+    <!-- Finding 1 -->
+    <div class="finding-card" style="border-left: 3px solid var(--critical);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#5 &middot; PAY CALCULATION</div>
+          <div class="finding-title">OT Rate Formula is Wrong</div>
+          <div class="finding-file">mobile/data/mockData.ts:205</div>
+        </div>
+        <span class="sev-badge critical">Critical</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          The OT rate computes <strong>(Base + Differential) &times; 1.5</strong> but the BCMEA contract specifies <strong>(Base &times; 1.5) + Differential (flat)</strong>. Every job with a differential shows incorrect pay estimates. For a Class 1 trade like HD MECHANIC (+$2.50/hr), this overestimates OT by <strong>$1.25/hr</strong>.
+        </div>
+        <div class="finding-code">
+<span class="comment">// Current (WRONG):</span>
+const otRate = Math.round(<span class="highlight">regRate * 1.5</span> * 100) / 100
+
+<span class="comment">// Correct per BCMEA contract:</span>
+const otRate = Math.round((<span class="good-hl">baseRate * 1.5 + differential</span>) * 100) / 100
+        </div>
+        <div class="finding-impact critical">
+          &#9888; Affects every user with a differential job &mdash; wrong pay estimates on 957 active users
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 2 -->
+    <div class="finding-card" style="border-left: 3px solid var(--critical);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#1 &middot; TIMEZONE BUG</div>
+          <div class="finding-title"><code>calculateWeeklyEarnings</code> uses <code>new Date()</code> on date strings</div>
+          <div class="finding-file">mobile/data/mockData.ts:251</div>
+        </div>
+        <span class="sev-badge critical">Critical</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Your own <code>formatters.ts</code> header says: <em>&ldquo;Date strings are compared lexicographically (no new Date(dateString))&rdquo;</em> &mdash; but <code>calculateWeeklyEarnings</code> violates this rule. <code>new Date('2026-03-19')</code> parses as <strong>UTC midnight</strong>, which is <strong>4-8 PM the previous day</strong> in Pacific time. Shifts at week boundaries get miscounted.
+        </div>
+        <div class="finding-code">
+<span class="comment">// Current (WRONG &mdash; timezone-unsafe):</span>
+.filter(s => {
+  const shiftDate = <span class="highlight">new Date(s.date)</span>
+  return shiftDate >= startOfWeek && shiftDate < endOfWeek
+})
+
+<span class="comment">// Correct (matches calculateYTDEarnings pattern):</span>
+.filter(s => {
+  const d = <span class="good-hl">s.date.slice(0, 10)</span>
+  return d >= weekStartStr && d < weekEndStr
+})
+        </div>
+        <div class="finding-impact critical">
+          &#9888; Affects every user's home screen earnings display at week boundaries
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 3 -->
+    <div class="finding-card" style="border-left: 3px solid var(--critical);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#4 &middot; DATA TRUNCATION</div>
+          <div class="finding-title">Shift fetch hard-limited to 200 rows</div>
+          <div class="finding-file">mobile/hooks/useShifts.ts:80</div>
+        </div>
+        <span class="sev-badge critical">Critical</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Power users logging 5 shifts/week hit 200 in ~9 months. After that, their <strong>pension YTD calculation</strong>, analytics, and calendar silently miss older shifts. The pension progress bar &mdash; the core value prop &mdash; would show <strong>incorrect progress</strong>. Your most engaged users break first.
+        </div>
+        <div class="finding-code">
+const { data, error } = await supabase
+  .from('shifts')
+  .select('*')
+  .eq('user_id', user.id)
+  .order('date', { ascending: false })
+  <span class="highlight">.limit(200)</span>  <span class="comment">// ← 40 weeks of daily shifts</span>
+        </div>
+        <div class="finding-impact critical">
+          &#9888; Will silently break for your most engaged users first &mdash; 9 months from launch
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDIUM FINDINGS -->
+  <div class="findings-section">
+    <h2>
+      <span style="color: var(--medium)">&#9632;</span>
+      Medium Findings
+      <span class="sev-badge medium">Should Fix</span>
+    </h2>
+
+    <div class="finding-card" style="border-left: 3px solid var(--medium);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#3 &middot; SECURITY</div>
+          <div class="finding-title">Delete mutation missing <code>user_id</code> guard</div>
+          <div class="finding-file">mobile/hooks/useShifts.ts:132 &middot; useTemplates.ts:72</div>
+        </div>
+        <span class="sev-badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Deletes filter by <code>id</code> only, not <code>user_id</code>. If Supabase RLS is the only guard and it's ever misconfigured, any user could delete another user's shift. Defense-in-depth says add the <code>user_id</code> check.
+        </div>
+        <div class="finding-code">
+<span class="comment">// Current:</span>
+const { error } = await supabase.from('shifts').delete()<span class="highlight">.eq('id', id)</span>;
+
+<span class="comment">// Safer:</span>
+const { error } = await supabase.from('shifts').delete()
+  .eq('id', id)<span class="good-hl">.eq('user_id', user.id)</span>;
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--medium);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#9 &middot; LOCALE</div>
+          <div class="finding-title"><code>formatCurrency</code> uses device locale instead of <code>en-CA</code></div>
+          <div class="finding-file">mobile/lib/formatters.ts:105</div>
+        </div>
+        <span class="sev-badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          <code>toLocaleString(undefined, ...)</code> uses the device locale. A user with a French locale gets <code>$1.234,56</code> instead of <code>$1,234.56</code>. All users are Canadian longshoremen &mdash; should hardcode <code>'en-CA'</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--medium);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#6 &middot; HARDCODED DATE</div>
+          <div class="finding-title">Pension year hardcoded to 2026</div>
+          <div class="finding-file">mobile/data/mockData.ts:259</div>
+        </div>
+        <span class="sev-badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          <code>const pensionYearStart = '2026-01-04'</code> will break on January 4, 2027 when the next WIPP pension year starts. Should calculate dynamically based on the WIPP Sunday-Saturday boundary.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--medium);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#7 &middot; DATA ACCURACY</div>
+          <div class="finding-title">HEAD CHECKER differential: CLASS_3 vs BASE mismatch</div>
+          <div class="finding-file">mobile/data/mockData.ts:149 vs CLAUDE.md</div>
+        </div>
+        <span class="sev-badge medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Code says HEAD CHECKER is CLASS_3 (+$0.65) but CLAUDE.md lists it under BASE (+$0.00). If the code is wrong, every HEAD CHECKER user sees inflated pay estimates. Needs verification against the official BCMEA rate sheet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOW FINDINGS -->
+  <div class="findings-section">
+    <h2>
+      <span style="color: var(--low)">&#9632;</span>
+      Low / Style Findings
+    </h2>
+
+    <div class="finding-card" style="border-left: 3px solid var(--low);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#8 &middot; DATA INTEGRITY</div>
+          <div class="finding-title">No optimistic rollback on failed delete</div>
+          <div class="finding-file">mobile/hooks/useShifts.ts:136-143</div>
+        </div>
+        <span class="sev-badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Delete mutation removes the shift from cache in <code>onMutate</code> but has no <code>onError</code> handler to restore it. If the server rejects the delete, the shift vanishes from UI but persists in the database.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--low);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#10 &middot; UX GAP</div>
+          <div class="finding-title">Demo mode has no data isolation</div>
+          <div class="finding-file">mobile/lib/auth.tsx:35</div>
+        </div>
+        <span class="sev-badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          <code>enterDemoMode</code> sets a flag but hooks don't check for it. Previously-logged-in users see real data in demo mode; not-logged-in users see empty screens. Not a true demo experience.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--low);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#2 &middot; TIMEZONE</div>
+          <div class="finding-title"><code>generateSampleShifts</code> uses <code>toISOString()</code> for dates</div>
+          <div class="finding-file">mobile/data/mockData.ts:210</div>
+        </div>
+        <span class="sev-badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Demo data generator uses <code>toISOString().split('T')[0]</code> which returns UTC dates. Near midnight local time, generates yesterday's date. Minor since it's demo-only data.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--low);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#11 &middot; DEAD CODE</div>
+          <div class="finding-title"><code>formatHours</code> has identical branches</div>
+          <div class="finding-file">mobile/lib/formatters.ts:125</div>
+        </div>
+        <span class="sev-badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Both branches of the ternary return <code>${hours}h</code>. The integer branch should probably format as <code>8h</code> vs <code>8.5h</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card" style="border-left: 3px solid var(--low);">
+      <div class="finding-card-header">
+        <div>
+          <div class="finding-id">#12 &middot; TYPES &middot; #13 &middot; CONFIG</div>
+          <div class="finding-title"><code>as any</code> casts + missing root <code>.gitignore</code></div>
+          <div class="finding-file">useShifts.ts:116 &middot; useProfile.ts:93</div>
+        </div>
+        <span class="sev-badge low">Low</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-desc">
+          Multiple <code>as any</code> casts on Supabase queries suggest <code>database.types.ts</code> is out of sync. Also, no root <code>.gitignore</code> &mdash; risk of committing <code>node_modules</code>, <code>.env</code>, or build artifacts.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Priority Table + What's Good -->
+  <div class="two-col">
+    <div class="priority-table">
+      <h2>&#9889; Priority Fix Order</h2>
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Finding</th>
+            <th>Severity</th>
+            <th>Fix Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">1</td>
+            <td class="finding-name">OT formula wrong</td>
+            <td><span class="sev-badge critical">Critical</span></td>
+            <td class="effort-badge">~5 min</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">2</td>
+            <td class="finding-name">Weekly earnings timezone bug</td>
+            <td><span class="sev-badge critical">Critical</span></td>
+            <td class="effort-badge">~5 min</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">3</td>
+            <td class="finding-name">200 shift limit</td>
+            <td><span class="sev-badge critical">Critical</span></td>
+            <td class="effort-badge">~10 min</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">4</td>
+            <td class="finding-name">Delete missing user_id guard</td>
+            <td><span class="sev-badge medium">Medium</span></td>
+            <td class="effort-badge">~2 min</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">5</td>
+            <td class="finding-name">formatCurrency locale</td>
+            <td><span class="sev-badge medium">Medium</span></td>
+            <td class="effort-badge">~1 min</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">6</td>
+            <td class="finding-name">Hardcoded pension year</td>
+            <td><span class="sev-badge medium">Medium</span></td>
+            <td class="effort-badge">~10 min</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">7</td>
+            <td class="finding-name">HEAD CHECKER differential</td>
+            <td><span class="sev-badge medium">Medium</span></td>
+            <td class="effort-badge">Verify</td>
+          </tr>
+          <tr>
+            <td style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-weight: 700;">8</td>
+            <td class="finding-name">formatHours no-op branch</td>
+            <td><span class="sev-badge low">Low</span></td>
+            <td class="effort-badge">~1 min</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="whats-good">
+      <h2>&#10003; What's Solid</h2>
+      <div class="good-item">
+        <div class="good-check">&#10003;</div>
+        <div class="good-text"><strong>Timezone-safe date patterns</strong> in formatters.ts &mdash; well-documented and correctly implemented. The violations are in mockData.ts, not the formatters.</div>
+      </div>
+      <div class="good-item">
+        <div class="good-check">&#10003;</div>
+        <div class="good-text"><strong>React Query</strong> used consistently with proper staleTime, optimistic updates, and cache invalidation patterns.</div>
+      </div>
+      <div class="good-item">
+        <div class="good-check">&#10003;</div>
+        <div class="good-text"><strong>Auth retry logic</strong> with exponential backoff in auth.tsx &mdash; graceful degradation on network errors.</div>
+      </div>
+      <div class="good-item">
+        <div class="good-check">&#10003;</div>
+        <div class="good-text"><strong>Shared utilities</strong> properly centralized in lib/ &mdash; no inline color/format duplicates across screens.</div>
+      </div>
+      <div class="good-item">
+        <div class="good-check">&#10003;</div>
+        <div class="good-text"><strong>Type safety</strong> with proper interfaces for DB rows (snake_case) vs app types (camelCase) with explicit mapping.</div>
+      </div>
+      <div class="good-item">
+        <div class="good-check">&#10003;</div>
+        <div class="good-text"><strong>RLS-first security</strong> &mdash; all Supabase queries filter by user.id, consistent across all hooks.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>PORTPAL Code Review Dashboard</strong> &mdash; Generated by gstack /review &middot; Claude Opus 4.6 &middot; March 19, 2026
+  <br>
+  95 files audited &middot; 12 findings &middot; 3 critical &middot; Estimated fix time: ~35 min with CC
+</div>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "PORTPAL",
+    "slug": "portpal",
+    "version": "1.3.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.jpg",
+    "userInterfaceStyle": "light",
+    "scheme": "portpal",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f172a"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.portpal.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "PORTPAL needs camera access to photograph work slips.",
+        "NSPhotoLibraryUsageDescription": "PORTPAL needs photo library access to attach work slip photos."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0f172a",
+        "foregroundImage": "./assets/icon.jpg"
+      },
+      "package": "com.portpal.app",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a021547e-22c1-4ad6-b788-93117de789c3"
+      },
+      "router": {}
+    },
+    "owner": "veetesh"
+  }
+}

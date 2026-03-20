@@ -1,0 +1,6947 @@
+[
+  {
+    "imo": 9345996,
+    "name": "A-REX DEXTERITY",
+    "weight": 8
+  },
+  {
+    "imo": 9088110,
+    "name": "ACER",
+    "weight": 18
+  },
+  {
+    "imo": 9260914,
+    "name": "ADAMS",
+    "weight": 18
+  },
+  {
+    "imo": 9245005,
+    "name": "ADVANTAGE",
+    "weight": 90
+  },
+  {
+    "imo": 9426790,
+    "name": "AENEAS",
+    "weight": 90
+  },
+  {
+    "imo": 9349605,
+    "name": "AGIOS DIMITRIOS",
+    "weight": 90
+  },
+  {
+    "imo": 9525869,
+    "name": "AIN SNAN EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9307011,
+    "name": "AKA BHUM",
+    "weight": 8
+  },
+  {
+    "imo": 9224532,
+    "name": "AKINADA BRIDGE",
+    "weight": 9
+  },
+  {
+    "imo": 9261712,
+    "name": "AL ENCORE",
+    "weight": 8
+  },
+  {
+    "imo": 9261724,
+    "name": "AL ENDEAVOR I",
+    "weight": 9
+  },
+  {
+    "imo": 9261736,
+    "name": "AL ENDURANCE I",
+    "weight": 8
+  },
+  {
+    "imo": 9948774,
+    "name": "ALETTE MAERSK",
+    "weight": 8
+  },
+  {
+    "imo": 9227015,
+    "name": "ALGECIRAS EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9327786,
+    "name": "ALS KRONOS",
+    "weight": 9
+  },
+  {
+    "imo": 9407146,
+    "name": "ALTAMIRA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9525883,
+    "name": "ALULA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9397913,
+    "name": "AMALTHEA",
+    "weight": 90
+  },
+  {
+    "imo": 9475703,
+    "name": "AMBITION",
+    "weight": 90
+  },
+  {
+    "imo": 9193317,
+    "name": "AMSTERDAM EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9744661,
+    "name": "ANDREI TITOV",
+    "weight": 90
+  },
+  {
+    "imo": 9961441,
+    "name": "ANDROKLIS",
+    "weight": 90
+  },
+  {
+    "imo": 9387102,
+    "name": "ANGEL",
+    "weight": 18
+  },
+  {
+    "imo": 9219367,
+    "name": "ANKE",
+    "weight": 18
+  },
+  {
+    "imo": 9532800,
+    "name": "ANL GIPPSLAND",
+    "weight": 8
+  },
+  {
+    "imo": 9440772,
+    "name": "ANL WARRNAMBOOL",
+    "weight": 90
+  },
+  {
+    "imo": 9710244,
+    "name": "ANTHEA Y",
+    "weight": 90
+  },
+  {
+    "imo": 9398448,
+    "name": "ANTWERP",
+    "weight": 90
+  },
+  {
+    "imo": 9532795,
+    "name": "APL ANTWERP",
+    "weight": 90
+  },
+  {
+    "imo": 9462043,
+    "name": "APL BARCELONA",
+    "weight": 90
+  },
+  {
+    "imo": 9597496,
+    "name": "APL BOSTON",
+    "weight": 90
+  },
+  {
+    "imo": 9350044,
+    "name": "APL CALIFORNIA",
+    "weight": 90
+  },
+  {
+    "imo": 9074389,
+    "name": "APL CHINA",
+    "weight": 90
+  },
+  {
+    "imo": 9461867,
+    "name": "APL CHONGQING",
+    "weight": 90
+  },
+  {
+    "imo": 9597525,
+    "name": "APL COLUMBUS",
+    "weight": 90
+  },
+  {
+    "imo": 9674517,
+    "name": "APL DANUBE",
+    "weight": 90
+  },
+  {
+    "imo": 9632208,
+    "name": "APL DETROIT",
+    "weight": 90
+  },
+  {
+    "imo": 9601314,
+    "name": "APL DUBLIN",
+    "weight": 90
+  },
+  {
+    "imo": 9632038,
+    "name": "APL ESPLANADE",
+    "weight": 90
+  },
+  {
+    "imo": 9350032,
+    "name": "APL FLORIDA",
+    "weight": 90
+  },
+  {
+    "imo": 9632026,
+    "name": "APL FULLERTON",
+    "weight": 90
+  },
+  {
+    "imo": 9218674,
+    "name": "APL HOLLAND",
+    "weight": 90
+  },
+  {
+    "imo": 9597537,
+    "name": "APL HOUSTON",
+    "weight": 90
+  },
+  {
+    "imo": 9632014,
+    "name": "APL MERLION",
+    "weight": 90
+  },
+  {
+    "imo": 9597549,
+    "name": "APL MIAMI",
+    "weight": 90
+  },
+  {
+    "imo": 9350018,
+    "name": "APL MINNESOTA",
+    "weight": 8
+  },
+  {
+    "imo": 9350020,
+    "name": "APL NEW JERSEY",
+    "weight": 8
+  },
+  {
+    "imo": 9597484,
+    "name": "APL NEW YORK",
+    "weight": 8
+  },
+  {
+    "imo": 9532783,
+    "name": "APL OREGON",
+    "weight": 8
+  },
+  {
+    "imo": 9601302,
+    "name": "APL PARIS",
+    "weight": 8
+  },
+  {
+    "imo": 9462029,
+    "name": "APL SALALAH",
+    "weight": 8
+  },
+  {
+    "imo": 9597563,
+    "name": "APL SANTIAGO",
+    "weight": 90
+  },
+  {
+    "imo": 9597513,
+    "name": "APL SAVANNAH",
+    "weight": 90
+  },
+  {
+    "imo": 9218662,
+    "name": "APL SCOTLAND",
+    "weight": 8
+  },
+  {
+    "imo": 9632040,
+    "name": "APL SENTOSA",
+    "weight": 90
+  },
+  {
+    "imo": 9462017,
+    "name": "APL SOUTHAMPTON",
+    "weight": 8
+  },
+  {
+    "imo": 9077123,
+    "name": "APL THAILAND",
+    "weight": 8
+  },
+  {
+    "imo": 9532771,
+    "name": "APL TURKEY",
+    "weight": 8
+  },
+  {
+    "imo": 9597472,
+    "name": "APL VANCOUVER",
+    "weight": 8
+  },
+  {
+    "imo": 9462031,
+    "name": "APL YANGSHAN",
+    "weight": 8
+  },
+  {
+    "imo": 9316323,
+    "name": "APU",
+    "weight": 18
+  },
+  {
+    "imo": 9262716,
+    "name": "ARGUS",
+    "weight": 18
+  },
+  {
+    "imo": 9495765,
+    "name": "ARICA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9262728,
+    "name": "ARIES",
+    "weight": 18
+  },
+  {
+    "imo": 9127019,
+    "name": "ARON",
+    "weight": 18
+  },
+  {
+    "imo": 9226425,
+    "name": "ARTOTINA",
+    "weight": 90
+  },
+  {
+    "imo": 9314947,
+    "name": "AS CAMELLIA",
+    "weight": 8
+  },
+  {
+    "imo": 9311775,
+    "name": "AS CARLOTTA",
+    "weight": 90
+  },
+  {
+    "imo": 9314935,
+    "name": "AS CAROLINA",
+    "weight": 90
+  },
+  {
+    "imo": 9311799,
+    "name": "AS CHRISTIANA",
+    "weight": 90
+  },
+  {
+    "imo": 9330549,
+    "name": "AS CLAUDIA",
+    "weight": 90
+  },
+  {
+    "imo": 9308390,
+    "name": "AS CONSTANTINA",
+    "weight": 90
+  },
+  {
+    "imo": 9353230,
+    "name": "AS NARA",
+    "weight": 90
+  },
+  {
+    "imo": 9401178,
+    "name": "AS NINA",
+    "weight": 8
+  },
+  {
+    "imo": 9294525,
+    "name": "AS PATRIA",
+    "weight": 90
+  },
+  {
+    "imo": 9387463,
+    "name": "AS SABRINA",
+    "weight": 8
+  },
+  {
+    "imo": 9430935,
+    "name": "AS SICILIA",
+    "weight": 8
+  },
+  {
+    "imo": 9410296,
+    "name": "AS SUSANNA",
+    "weight": 90
+  },
+  {
+    "imo": 9410284,
+    "name": "AS SVENJA",
+    "weight": 8
+  },
+  {
+    "imo": 9158501,
+    "name": "AS TAMINA",
+    "weight": 8
+  },
+  {
+    "imo": 9235983,
+    "name": "ATLANTIC PROJECT II",
+    "weight": 8
+  },
+  {
+    "imo": 9436458,
+    "name": "BACH",
+    "weight": 18
+  },
+  {
+    "imo": 9463346,
+    "name": "BAI CHAY BRIDGE",
+    "weight": 8
+  },
+  {
+    "imo": 9454759,
+    "name": "BALTIC KLIPPER",
+    "weight": 90
+  },
+  {
+    "imo": 9160724,
+    "name": "BALTIC LORD",
+    "weight": 90
+  },
+  {
+    "imo": 9665621,
+    "name": "BALTIMORE EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9463279,
+    "name": "BANGKOK BRIDGE",
+    "weight": 9
+  },
+  {
+    "imo": 9252096,
+    "name": "BANGSA",
+    "weight": 90
+  },
+  {
+    "imo": 9463267,
+    "name": "BAY BRIDGE",
+    "weight": 8
+  },
+  {
+    "imo": 9463293,
+    "name": "BEAR MOUNTAIN BRIDGE",
+    "weight": 8
+  },
+  {
+    "imo": 9308508,
+    "name": "BEIJING",
+    "weight": 90
+  },
+  {
+    "imo": 9292230,
+    "name": "BEIJING BRIDGE",
+    "weight": 9
+  },
+  {
+    "imo": 9290440,
+    "name": "BELLAVIA",
+    "weight": 90
+  },
+  {
+    "imo": 9484546,
+    "name": "BERNHARD SCHULTE",
+    "weight": 90
+  },
+  {
+    "imo": 9001239,
+    "name": "BEST",
+    "weight": 18
+  },
+  {
+    "imo": 9332860,
+    "name": "BF HAMBURG",
+    "weight": 8
+  },
+  {
+    "imo": 9448827,
+    "name": "BHARANI",
+    "weight": 90
+  },
+  {
+    "imo": 9403621,
+    "name": "BHUDTHI BHUM",
+    "weight": 9
+  },
+  {
+    "imo": 9142942,
+    "name": "BIG GEORGE",
+    "weight": 8
+  },
+  {
+    "imo": 9307047,
+    "name": "BIGLI",
+    "weight": 18
+  },
+  {
+    "imo": 9315355,
+    "name": "BOSTON",
+    "weight": 90
+  },
+  {
+    "imo": 9108178,
+    "name": "BOX CHINA",
+    "weight": 8
+  },
+  {
+    "imo": 9332846,
+    "name": "BRIGHTON",
+    "weight": 90
+  },
+  {
+    "imo": 9458999,
+    "name": "BROOKLYN BRIDGE",
+    "weight": 90
+  },
+  {
+    "imo": 9333046,
+    "name": "BSG BARBADOS",
+    "weight": 8
+  },
+  {
+    "imo": 9303766,
+    "name": "BSG BONAIRE",
+    "weight": 8
+  },
+  {
+    "imo": 9450430,
+    "name": "BUDAPEST EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9292242,
+    "name": "BULL",
+    "weight": 18
+  },
+  {
+    "imo": 9727613,
+    "name": "CAPE KORTIA",
+    "weight": 8
+  },
+  {
+    "imo": 9719874,
+    "name": "CAPE PIONEER",
+    "weight": 8
+  },
+  {
+    "imo": 9706205,
+    "name": "CAPE TAINARO",
+    "weight": 8
+  },
+  {
+    "imo": 9294159,
+    "name": "CAPTAIN THANASIS I",
+    "weight": 90
+  },
+  {
+    "imo": 9326794,
+    "name": "CARAT",
+    "weight": 18
+  },
+  {
+    "imo": 9629457,
+    "name": "CARDIFF",
+    "weight": 90
+  },
+  {
+    "imo": 8913459,
+    "name": "CARIBBEAN SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9400136,
+    "name": "CELSIUS NAPLES",
+    "weight": 90
+  },
+  {
+    "imo": 9461506,
+    "name": "CHARLESTON",
+    "weight": 90
+  },
+  {
+    "imo": 9245744,
+    "name": "CHARLOTTE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9383259,
+    "name": "CHARM C",
+    "weight": 8
+  },
+  {
+    "imo": 9219800,
+    "name": "CHASTINE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9306158,
+    "name": "CHENNAI EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9153410,
+    "name": "CHENNAI VOYAGER",
+    "weight": 90
+  },
+  {
+    "imo": 9492713,
+    "name": "CHIBA C",
+    "weight": 8
+  },
+  {
+    "imo": 9247558,
+    "name": "CHICAGO",
+    "weight": 90
+  },
+  {
+    "imo": 9295268,
+    "name": "CHICAGO EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9344631,
+    "name": "CHIQUITA MERCHANT",
+    "weight": 90
+  },
+  {
+    "imo": 9245770,
+    "name": "CLEMENTINE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9780859,
+    "name": "CMA CGM A. LINCOLN",
+    "weight": 90
+  },
+  {
+    "imo": 9469572,
+    "name": "CMA CGM ALASKA",
+    "weight": 90
+  },
+  {
+    "imo": 9450648,
+    "name": "CMA CGM ALMAVIVA",
+    "weight": 90
+  },
+  {
+    "imo": 9706308,
+    "name": "CMA CGM AMAZON",
+    "weight": 90
+  },
+  {
+    "imo": 9436422,
+    "name": "CMA CGM AMBARLI",
+    "weight": 90
+  },
+  {
+    "imo": 9951551,
+    "name": "CMA CGM AMBITION",
+    "weight": 90
+  },
+  {
+    "imo": 9410741,
+    "name": "CMA CGM AQUILA",
+    "weight": 40
+  },
+  {
+    "imo": 9722651,
+    "name": "CMA CGM ARKANSAS",
+    "weight": 40
+  },
+  {
+    "imo": 9344655,
+    "name": "CMA CGM BALBOA",
+    "weight": 90
+  },
+  {
+    "imo": 9322475,
+    "name": "CMA CGM BARRACUDA",
+    "weight": 90
+  },
+  {
+    "imo": 9302956,
+    "name": "CMA CGM BEIRA",
+    "weight": 90
+  },
+  {
+    "imo": 9706891,
+    "name": "CMA CGM BENJAMIN FRANKLIN",
+    "weight": 90
+  },
+  {
+    "imo": 9436367,
+    "name": "CMA CGM BIANCA",
+    "weight": 90
+  },
+  {
+    "imo": 9702156,
+    "name": "CMA CGM BOUGAINVILLE",
+    "weight": 90
+  },
+  {
+    "imo": 9365790,
+    "name": "CMA CGM BUTTERFLY",
+    "weight": 40
+  },
+  {
+    "imo": 9410753,
+    "name": "CMA CGM CALLISTO",
+    "weight": 90
+  },
+  {
+    "imo": 9449819,
+    "name": "CMA CGM CENDRILLON",
+    "weight": 90
+  },
+  {
+    "imo": 9410777,
+    "name": "CMA CGM CENTAURUS",
+    "weight": 90
+  },
+  {
+    "imo": 9224312,
+    "name": "CMA CGM CHIWAN",
+    "weight": 90
+  },
+  {
+    "imo": 9526502,
+    "name": "CMA CGM CLEVELAND",
+    "weight": 90
+  },
+  {
+    "imo": 9410789,
+    "name": "CMA CGM COLUMBA",
+    "weight": 90
+  },
+  {
+    "imo": 9450624,
+    "name": "CMA CGM DALILA",
+    "weight": 90
+  },
+  {
+    "imo": 9445576,
+    "name": "CMA CGM DEBUSSY",
+    "weight": 90
+  },
+  {
+    "imo": 9405033,
+    "name": "CMA CGM DIAMOND",
+    "weight": 90
+  },
+  {
+    "imo": 9322487,
+    "name": "CMA CGM DOLPHIN",
+    "weight": 90
+  },
+  {
+    "imo": 9318101,
+    "name": "CMA CGM DON PASCUALE",
+    "weight": 90
+  },
+  {
+    "imo": 9674529,
+    "name": "CMA CGM ELBE",
+    "weight": 90
+  },
+  {
+    "imo": 9299642,
+    "name": "CMA CGM FIDELIO",
+    "weight": 90
+  },
+  {
+    "imo": 9450600,
+    "name": "CMA CGM FIGARO",
+    "weight": 90
+  },
+  {
+    "imo": 9356696,
+    "name": "CMA CGM FRANCOISE SAGAN",
+    "weight": 90
+  },
+  {
+    "imo": 9780847,
+    "name": "CMA CGM G. WASHINGTON",
+    "weight": 90
+  },
+  {
+    "imo": 9410791,
+    "name": "CMA CGM GEMINI",
+    "weight": 90
+  },
+  {
+    "imo": 9702144,
+    "name": "CMA CGM GEORG FORSTER",
+    "weight": 90
+  },
+  {
+    "imo": 9332884,
+    "name": "CMA CGM GEORGE SAND",
+    "weight": 90
+  },
+  {
+    "imo": 9351127,
+    "name": "CMA CGM GEORGIA",
+    "weight": 90
+  },
+  {
+    "imo": 9218686,
+    "name": "CMA CGM HONG KONG",
+    "weight": 90
+  },
+  {
+    "imo": 9356309,
+    "name": "CMA CGM HYDRA",
+    "weight": 90
+  },
+  {
+    "imo": 9321902,
+    "name": "CMA CGM ISKENDERUN",
+    "weight": 90
+  },
+  {
+    "imo": 9365805,
+    "name": "CMA CGM IVANHOE",
+    "weight": 90
+  },
+  {
+    "imo": 9702132,
+    "name": "CMA CGM KERGUELEN",
+    "weight": 90
+  },
+  {
+    "imo": 9450612,
+    "name": "CMA CGM LA SCALA",
+    "weight": 90
+  },
+  {
+    "imo": 9409194,
+    "name": "CMA CGM LAMARTINE",
+    "weight": 90
+  },
+  {
+    "imo": 9443463,
+    "name": "CMA CGM LEBU",
+    "weight": 90
+  },
+  {
+    "imo": 9951537,
+    "name": "CMA CGM LEGACY",
+    "weight": 90
+  },
+  {
+    "imo": 9399208,
+    "name": "CMA CGM LEO",
+    "weight": 18
+  },
+  {
+    "imo": 9399193,
+    "name": "CMA CGM LIBRA",
+    "weight": 90
+  },
+  {
+    "imo": 9431800,
+    "name": "CMA CGM LISBON",
+    "weight": 40
+  },
+  {
+    "imo": 9674531,
+    "name": "CMA CGM LOIRE",
+    "weight": 8
+  },
+  {
+    "imo": 9410806,
+    "name": "CMA CGM LYRA",
+    "weight": 8
+  },
+  {
+    "imo": 9454424,
+    "name": "CMA CGM MAGELLAN",
+    "weight": 90
+  },
+  {
+    "imo": 9322499,
+    "name": "CMA CGM MANTA RAY",
+    "weight": 90
+  },
+  {
+    "imo": 9322463,
+    "name": "CMA CGM MARLIN",
+    "weight": 90
+  },
+  {
+    "imo": 9299800,
+    "name": "CMA CGM MEDEA",
+    "weight": 90
+  },
+  {
+    "imo": 9718105,
+    "name": "CMA CGM MEKONG",
+    "weight": 90
+  },
+  {
+    "imo": 9449106,
+    "name": "CMA CGM MENDELSSOHN",
+    "weight": 90
+  },
+  {
+    "imo": 9679907,
+    "name": "CMA CGM MISSISSIPPI",
+    "weight": 8
+  },
+  {
+    "imo": 9348443,
+    "name": "CMA CGM MONTOIR",
+    "weight": 8
+  },
+  {
+    "imo": 9280615,
+    "name": "CMA CGM MOZART",
+    "weight": 8
+  },
+  {
+    "imo": 9299630,
+    "name": "CMA CGM NABUCCO",
+    "weight": 90
+  },
+  {
+    "imo": 9538658,
+    "name": "CMA CGM NANSHA",
+    "weight": 90
+  },
+  {
+    "imo": 9351141,
+    "name": "CMA CGM NEW JERSEY",
+    "weight": 90
+  },
+  {
+    "imo": 9295218,
+    "name": "CMA CGM NINGBO",
+    "weight": 90
+  },
+  {
+    "imo": 9299812,
+    "name": "CMA CGM NORMA",
+    "weight": 90
+  },
+  {
+    "imo": 9364992,
+    "name": "CMA CGM ORFEO",
+    "weight": 90
+  },
+  {
+    "imo": 9299628,
+    "name": "CMA CGM OTELLO",
+    "weight": 90
+  },
+  {
+    "imo": 9365788,
+    "name": "CMA CGM PELLEAS",
+    "weight": 90
+  },
+  {
+    "imo": 9597501,
+    "name": "CMA CGM PHOENIX",
+    "weight": 90
+  },
+  {
+    "imo": 9275050,
+    "name": "CMA CGM PUERTO ANTIOQUIA",
+    "weight": 90
+  },
+  {
+    "imo": 9674543,
+    "name": "CMA CGM RHONE",
+    "weight": 90
+  },
+  {
+    "imo": 9299654,
+    "name": "CMA CGM RIGOLETTO",
+    "weight": 90
+  },
+  {
+    "imo": 9436379,
+    "name": "CMA CGM SAMSON",
+    "weight": 90
+  },
+  {
+    "imo": 9649835,
+    "name": "CMA CGM SANTOS",
+    "weight": 90
+  },
+  {
+    "imo": 9348431,
+    "name": "CMA CGM SAVANNAH",
+    "weight": 90
+  },
+  {
+    "imo": 9295220,
+    "name": "CMA CGM SHANGHAI",
+    "weight": 90
+  },
+  {
+    "imo": 9331000,
+    "name": "CMA CGM SWORDFISH",
+    "weight": 90
+  },
+  {
+    "imo": 9977751,
+    "name": "CMA CGM SYRACUSE",
+    "weight": 90
+  },
+  {
+    "imo": 9780861,
+    "name": "CMA CGM T. JEFFERSON",
+    "weight": 90
+  },
+  {
+    "imo": 9780873,
+    "name": "CMA CGM T. ROOSEVELT",
+    "weight": 90
+  },
+  {
+    "imo": 9674555,
+    "name": "CMA CGM TAGE",
+    "weight": 90
+  },
+  {
+    "imo": 9436355,
+    "name": "CMA CGM TANCREDI",
+    "weight": 90
+  },
+  {
+    "imo": 9356294,
+    "name": "CMA CGM THALASSA",
+    "weight": 90
+  },
+  {
+    "imo": 9674567,
+    "name": "CMA CGM THAMES",
+    "weight": 90
+  },
+  {
+    "imo": 9450636,
+    "name": "CMA CGM TITUS",
+    "weight": 8
+  },
+  {
+    "imo": 9706889,
+    "name": "CMA CGM VASCO DE GAMA",
+    "weight": 90
+  },
+  {
+    "imo": 9354923,
+    "name": "CMA CGM VELA",
+    "weight": 90
+  },
+  {
+    "imo": 9331165,
+    "name": "CMA CGM VERDI",
+    "weight": 90
+  },
+  {
+    "imo": 9351139,
+    "name": "CMA CGM VIRGINIA",
+    "weight": 90
+  },
+  {
+    "imo": 9705081,
+    "name": "CMA CGM VOLGA",
+    "weight": 90
+  },
+  {
+    "imo": 9400069,
+    "name": "CMA CGM XIAMEN",
+    "weight": 90
+  },
+  {
+    "imo": 9732606,
+    "name": "CMA CGM YUKON",
+    "weight": 90
+  },
+  {
+    "imo": 9706906,
+    "name": "CMA CGM ZHENG HE",
+    "weight": 90
+  },
+  {
+    "imo": 9635664,
+    "name": "COLOMBIA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9256212,
+    "name": "COLOMBO",
+    "weight": 90
+  },
+  {
+    "imo": 9295244,
+    "name": "COLOMBO EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9245768,
+    "name": "COLUMBINE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9286255,
+    "name": "CONTI ANNAPURNA",
+    "weight": 40
+  },
+  {
+    "imo": 9293791,
+    "name": "CONTI CHIVALRY",
+    "weight": 40
+  },
+  {
+    "imo": 9293753,
+    "name": "CONTI CORTESIA",
+    "weight": 40
+  },
+  {
+    "imo": 9293789,
+    "name": "CONTI COURAGE",
+    "weight": 90
+  },
+  {
+    "imo": 9293820,
+    "name": "CONTI CRYSTAL",
+    "weight": 40
+  },
+  {
+    "imo": 9286243,
+    "name": "CONTI MAKALU",
+    "weight": 8
+  },
+  {
+    "imo": 9664275,
+    "name": "CONTSHIP ART",
+    "weight": 9
+  },
+  {
+    "imo": 9509786,
+    "name": "CONTSHIP DAY",
+    "weight": 8
+  },
+  {
+    "imo": 9470961,
+    "name": "CONTSHIP PEP II",
+    "weight": 9
+  },
+  {
+    "imo": 9664263,
+    "name": "CONTSHIP YEN",
+    "weight": 8
+  },
+  {
+    "imo": 9167801,
+    "name": "COOL MAGNUS",
+    "weight": 8
+  },
+  {
+    "imo": 9687526,
+    "name": "COPIAPO",
+    "weight": 90
+  },
+  {
+    "imo": 9687564,
+    "name": "CORCOVADO",
+    "weight": 90
+  },
+  {
+    "imo": 9245756,
+    "name": "CORNELIA MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9345439,
+    "name": "COSCO AFRICA",
+    "weight": 90
+  },
+  {
+    "imo": 9345427,
+    "name": "COSCO AMERICA",
+    "weight": 90
+  },
+  {
+    "imo": 9246396,
+    "name": "COSCO ANTWERP",
+    "weight": 90
+  },
+  {
+    "imo": 9345403,
+    "name": "COSCO ASIA",
+    "weight": 90
+  },
+  {
+    "imo": 9484261,
+    "name": "COSCO AUCKLAND",
+    "weight": 90
+  },
+  {
+    "imo": 9516404,
+    "name": "COSCO BELGIUM",
+    "weight": 90
+  },
+  {
+    "imo": 9335173,
+    "name": "COSCO BOSTON",
+    "weight": 90
+  },
+  {
+    "imo": 9516478,
+    "name": "COSCO DENMARK",
+    "weight": 90
+  },
+  {
+    "imo": 9472139,
+    "name": "COSCO DEVELOPMENT",
+    "weight": 90
+  },
+  {
+    "imo": 9516428,
+    "name": "COSCO ENGLAND",
+    "weight": 90
+  },
+  {
+    "imo": 9345415,
+    "name": "COSCO EUROPE",
+    "weight": 90
+  },
+  {
+    "imo": 9472189,
+    "name": "COSCO EXCELLENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9472141,
+    "name": "COSCO FAITH",
+    "weight": 90
+  },
+  {
+    "imo": 9246401,
+    "name": "COSCO FELIXSTOWE",
+    "weight": 90
+  },
+  {
+    "imo": 9472127,
+    "name": "COSCO FORTUNE",
+    "weight": 90
+  },
+  {
+    "imo": 9466245,
+    "name": "COSCO GLORY",
+    "weight": 90
+  },
+  {
+    "imo": 9221085,
+    "name": "COSCO HAMBURG",
+    "weight": 90
+  },
+  {
+    "imo": 9472177,
+    "name": "COSCO HARMONY",
+    "weight": 90
+  },
+  {
+    "imo": 9308510,
+    "name": "COSCO HELLAS",
+    "weight": 90
+  },
+  {
+    "imo": 9227778,
+    "name": "COSCO HONG KONG",
+    "weight": 90
+  },
+  {
+    "imo": 9484273,
+    "name": "COSCO HOUSTON",
+    "weight": 90
+  },
+  {
+    "imo": 9448786,
+    "name": "COSCO INDONESIA",
+    "weight": 90
+  },
+  {
+    "imo": 9484340,
+    "name": "COSCO ISTANBUL",
+    "weight": 90
+  },
+  {
+    "imo": 9516454,
+    "name": "COSCO ITALY",
+    "weight": 90
+  },
+  {
+    "imo": 9448748,
+    "name": "COSCO JAPAN",
+    "weight": 90
+  },
+  {
+    "imo": 9484352,
+    "name": "COSCO JEDDAH",
+    "weight": 90
+  },
+  {
+    "imo": 9355563,
+    "name": "COSCO KAOHSIUNG",
+    "weight": 8
+  },
+  {
+    "imo": 9448750,
+    "name": "COSCO KOREA",
+    "weight": 8
+  },
+  {
+    "imo": 9448774,
+    "name": "COSCO MALAYSIA",
+    "weight": 8
+  },
+  {
+    "imo": 9516430,
+    "name": "COSCO NETHERLANDS",
+    "weight": 8
+  },
+  {
+    "imo": 9334923,
+    "name": "COSCO OCEANIA",
+    "weight": 90
+  },
+  {
+    "imo": 9484364,
+    "name": "COSCO PIRAEUS",
+    "weight": 90
+  },
+  {
+    "imo": 9516466,
+    "name": "COSCO PORTUGAL",
+    "weight": 8
+  },
+  {
+    "imo": 9472153,
+    "name": "COSCO PRIDE",
+    "weight": 90
+  },
+  {
+    "imo": 9221073,
+    "name": "COSCO ROTTERDAM",
+    "weight": 8
+  },
+  {
+    "imo": 9484376,
+    "name": "COSCO SANTOS",
+    "weight": 8
+  },
+  {
+    "imo": 9221097,
+    "name": "COSCO SHANGHAI",
+    "weight": 90
+  },
+  {
+    "imo": 9757864,
+    "name": "COSCO SHIPPING ALPS",
+    "weight": 90
+  },
+  {
+    "imo": 9757840,
+    "name": "COSCO SHIPPING HIMALAYAS",
+    "weight": 90
+  },
+  {
+    "imo": 9785809,
+    "name": "COSCO SHIPPING ROSE",
+    "weight": 90
+  },
+  {
+    "imo": 9221102,
+    "name": "COSCO SINGAPORE",
+    "weight": 90
+  },
+  {
+    "imo": 9516442,
+    "name": "COSCO SPAIN",
+    "weight": 90
+  },
+  {
+    "imo": 9355575,
+    "name": "COSCO TAICANG",
+    "weight": 90
+  },
+  {
+    "imo": 9448798,
+    "name": "COSCO THAILAND",
+    "weight": 8
+  },
+  {
+    "imo": 9484405,
+    "name": "COSCO VENICE",
+    "weight": 8
+  },
+  {
+    "imo": 9448815,
+    "name": "COSCO VIETNAM",
+    "weight": 90
+  },
+  {
+    "imo": 9112260,
+    "name": "CREED",
+    "weight": 18
+  },
+  {
+    "imo": 9438511,
+    "name": "CS TRUST",
+    "weight": 8
+  },
+  {
+    "imo": 9286011,
+    "name": "CSCL AFRICA",
+    "weight": 8
+  },
+  {
+    "imo": 9645891,
+    "name": "CSCL AUTUMN",
+    "weight": 40
+  },
+  {
+    "imo": 9645889,
+    "name": "CSCL BOHAI SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9645918,
+    "name": "CSCL EAST CHINA SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9314258,
+    "name": "CSCL LONG BEACH",
+    "weight": 8
+  },
+  {
+    "imo": 9467299,
+    "name": "CSCL SATURN",
+    "weight": 8
+  },
+  {
+    "imo": 9645920,
+    "name": "CSCL SOUTH CHINA SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9645853,
+    "name": "CSCL SPRING",
+    "weight": 8
+  },
+  {
+    "imo": 9645877,
+    "name": "CSCL WINTER",
+    "weight": 8
+  },
+  {
+    "imo": 9645906,
+    "name": "CSCL YELLOW SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9314234,
+    "name": "CSCL ZEEBRUGGE",
+    "weight": 9
+  },
+  {
+    "imo": 9043782,
+    "name": "CSL MARIE",
+    "weight": 9
+  },
+  {
+    "imo": 9314997,
+    "name": "CUSSLER",
+    "weight": 90
+  },
+  {
+    "imo": 9539664,
+    "name": "DACHAN BAY EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9282950,
+    "name": "DALLAS",
+    "weight": 90
+  },
+  {
+    "imo": 9193288,
+    "name": "DALLAS EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9719056,
+    "name": "DANIEL K. INOUYE",
+    "weight": 90
+  },
+  {
+    "imo": 9253301,
+    "name": "DELI",
+    "weight": 18
+  },
+  {
+    "imo": 9341110,
+    "name": "DELOS WAVE",
+    "weight": 90
+  },
+  {
+    "imo": 9337652,
+    "name": "DELPHINUS C",
+    "weight": 8
+  },
+  {
+    "imo": 9250995,
+    "name": "DIMITRA C",
+    "weight": 8
+  },
+  {
+    "imo": 8902577,
+    "name": "DIMITRIOS C",
+    "weight": 8
+  },
+  {
+    "imo": 9312432,
+    "name": "DORIS OCEAN",
+    "weight": 8
+  },
+  {
+    "imo": 9495040,
+    "name": "DP WORLD KOCHI",
+    "weight": 8
+  },
+  {
+    "imo": 9215828,
+    "name": "DS KINGDOM",
+    "weight": 8
+  },
+  {
+    "imo": 9232577,
+    "name": "DUBLIN EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9143556,
+    "name": "DUSSELDORF EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9967495,
+    "name": "EA CETUS",
+    "weight": 8
+  },
+  {
+    "imo": 9226827,
+    "name": "EASLINE KWANGYANG",
+    "weight": 90
+  },
+  {
+    "imo": 9205665,
+    "name": "EASLINE OSAKA",
+    "weight": 90
+  },
+  {
+    "imo": 9062087,
+    "name": "EAST",
+    "weight": 18
+  },
+  {
+    "imo": 9463011,
+    "name": "EDISON",
+    "weight": 90
+  },
+  {
+    "imo": 9312640,
+    "name": "ELBELLA",
+    "weight": 90
+  },
+  {
+    "imo": 9397585,
+    "name": "ELENI T",
+    "weight": 8
+  },
+  {
+    "imo": 9321500,
+    "name": "ELEONORA MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9419254,
+    "name": "ELM ARROW",
+    "weight": 8
+  },
+  {
+    "imo": 9338967,
+    "name": "EM HYDRA",
+    "weight": 9
+  },
+  {
+    "imo": 9334351,
+    "name": "EM KEA",
+    "weight": 8
+  },
+  {
+    "imo": 9618288,
+    "name": "EMERALD TOWER",
+    "weight": 90
+  },
+  {
+    "imo": 9247546,
+    "name": "ENSENADA",
+    "weight": 90
+  },
+  {
+    "imo": 7617905,
+    "name": "ENTERPRISE",
+    "weight": 90
+  },
+  {
+    "imo": 9289116,
+    "name": "ERICA",
+    "weight": 18
+  },
+  {
+    "imo": 9144768,
+    "name": "EROS",
+    "weight": 18
+  },
+  {
+    "imo": 9463023,
+    "name": "ERVING",
+    "weight": 90
+  },
+  {
+    "imo": 9670822,
+    "name": "ESL ASANTE",
+    "weight": 8
+  },
+  {
+    "imo": 9535175,
+    "name": "ESL KABIR",
+    "weight": 8
+  },
+  {
+    "imo": 9535199,
+    "name": "ESL NHAVA SHEVA",
+    "weight": 8
+  },
+  {
+    "imo": 9290945,
+    "name": "ESL SHEKOU",
+    "weight": 8
+  },
+  {
+    "imo": 9347281,
+    "name": "ESL WINNER",
+    "weight": 8
+  },
+  {
+    "imo": 8912742,
+    "name": "ESM CREMONA",
+    "weight": 8
+  },
+  {
+    "imo": 9301469,
+    "name": "ETOILE",
+    "weight": 90
+  },
+  {
+    "imo": 9321550,
+    "name": "EUGEN MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 8807741,
+    "name": "EURO",
+    "weight": 18
+  },
+  {
+    "imo": 9285988,
+    "name": "EUROPE",
+    "weight": 90
+  },
+  {
+    "imo": 9142162,
+    "name": "EVER DELIGHT",
+    "weight": 8
+  },
+  {
+    "imo": 9241310,
+    "name": "EVER EAGLE",
+    "weight": 90
+  },
+  {
+    "imo": 9241281,
+    "name": "EVER ELITE",
+    "weight": 90
+  },
+  {
+    "imo": 9241308,
+    "name": "EVER ENVOY",
+    "weight": 90
+  },
+  {
+    "imo": 9241293,
+    "name": "EVER ETHIC",
+    "weight": 90
+  },
+  {
+    "imo": 9241322,
+    "name": "EVER EXCEL",
+    "weight": 90
+  },
+  {
+    "imo": 9850903,
+    "name": "EVER FULL",
+    "weight": 90
+  },
+  {
+    "imo": 9595448,
+    "name": "EVER LADEN",
+    "weight": 8
+  },
+  {
+    "imo": 9595436,
+    "name": "EVER LAMBENT",
+    "weight": 40
+  },
+  {
+    "imo": 9595450,
+    "name": "EVER LASTING",
+    "weight": 40
+  },
+  {
+    "imo": 9595474,
+    "name": "EVER LAUREL",
+    "weight": 40
+  },
+  {
+    "imo": 9595503,
+    "name": "EVER LEADER",
+    "weight": 8
+  },
+  {
+    "imo": 9595462,
+    "name": "EVER LEADING",
+    "weight": 40
+  },
+  {
+    "imo": 9604108,
+    "name": "EVER LEARNED",
+    "weight": 40
+  },
+  {
+    "imo": 9595515,
+    "name": "EVER LEGACY",
+    "weight": 40
+  },
+  {
+    "imo": 9604146,
+    "name": "EVER LENIENT",
+    "weight": 40
+  },
+  {
+    "imo": 9604160,
+    "name": "EVER LIBERAL",
+    "weight": 90
+  },
+  {
+    "imo": 9595486,
+    "name": "EVER LIBRA",
+    "weight": 8
+  },
+  {
+    "imo": 9629079,
+    "name": "EVER LISSOME",
+    "weight": 40
+  },
+  {
+    "imo": 9604134,
+    "name": "EVER LIVELY",
+    "weight": 40
+  },
+  {
+    "imo": 9595527,
+    "name": "EVER LIVEN",
+    "weight": 40
+  },
+  {
+    "imo": 9629031,
+    "name": "EVER LIVING",
+    "weight": 40
+  },
+  {
+    "imo": 9629081,
+    "name": "EVER LOADING",
+    "weight": 8
+  },
+  {
+    "imo": 9604081,
+    "name": "EVER LOGIC",
+    "weight": 8
+  },
+  {
+    "imo": 9604122,
+    "name": "EVER LOTUS",
+    "weight": 90
+  },
+  {
+    "imo": 9629110,
+    "name": "EVER LOVELY",
+    "weight": 9
+  },
+  {
+    "imo": 9604158,
+    "name": "EVER LOYAL",
+    "weight": 90
+  },
+  {
+    "imo": 9629067,
+    "name": "EVER LUCENT",
+    "weight": 40
+  },
+  {
+    "imo": 9629055,
+    "name": "EVER LUCID",
+    "weight": 8
+  },
+  {
+    "imo": 9604172,
+    "name": "EVER LUCKY",
+    "weight": 8
+  },
+  {
+    "imo": 9629093,
+    "name": "EVER LUNAR",
+    "weight": 8
+  },
+  {
+    "imo": 9629108,
+    "name": "EVER LYRIC",
+    "weight": 8
+  },
+  {
+    "imo": 9935387,
+    "name": "EVER MATCH",
+    "weight": 8
+  },
+  {
+    "imo": 9935272,
+    "name": "EVER MEMO",
+    "weight": 8
+  },
+  {
+    "imo": 9061124,
+    "name": "EVER REFINE",
+    "weight": 90
+  },
+  {
+    "imo": 9055462,
+    "name": "EVER REWARD",
+    "weight": 90
+  },
+  {
+    "imo": 9300465,
+    "name": "EVER SAFETY",
+    "weight": 8
+  },
+  {
+    "imo": 9300477,
+    "name": "EVER SALUTE",
+    "weight": 8
+  },
+  {
+    "imo": 9300386,
+    "name": "EVER SHINE",
+    "weight": 8
+  },
+  {
+    "imo": 9300398,
+    "name": "EVER SIGMA",
+    "weight": 8
+  },
+  {
+    "imo": 9300403,
+    "name": "EVER SMART",
+    "weight": 8
+  },
+  {
+    "imo": 9300415,
+    "name": "EVER SMILE",
+    "weight": 90
+  },
+  {
+    "imo": 9300439,
+    "name": "EVER STEADY",
+    "weight": 90
+  },
+  {
+    "imo": 9300441,
+    "name": "EVER STRONG",
+    "weight": 8
+  },
+  {
+    "imo": 9300453,
+    "name": "EVER SUMMIT",
+    "weight": 90
+  },
+  {
+    "imo": 9300427,
+    "name": "EVER SUPERB",
+    "weight": 8
+  },
+  {
+    "imo": 9196955,
+    "name": "EVER ULYSSES",
+    "weight": 90
+  },
+  {
+    "imo": 9196967,
+    "name": "EVER UNICORN",
+    "weight": 90
+  },
+  {
+    "imo": 9116606,
+    "name": "EVER UNIQUE",
+    "weight": 90
+  },
+  {
+    "imo": 9169160,
+    "name": "EVER URBAN",
+    "weight": 90
+  },
+  {
+    "imo": 9168879,
+    "name": "EVER USEFUL",
+    "weight": 90
+  },
+  {
+    "imo": 9188154,
+    "name": "EVER UTILE",
+    "weight": 90
+  },
+  {
+    "imo": 9463310,
+    "name": "EVERLASTING VIRTUE",
+    "weight": 40
+  },
+  {
+    "imo": 9443011,
+    "name": "EXPRESS ARGENTINA",
+    "weight": 40
+  },
+  {
+    "imo": 9484948,
+    "name": "EXPRESS ATHENS",
+    "weight": 40
+  },
+  {
+    "imo": 9484924,
+    "name": "EXPRESS BERLIN",
+    "weight": 40
+  },
+  {
+    "imo": 9443059,
+    "name": "EXPRESS BLACK SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9484936,
+    "name": "EXPRESS ROME",
+    "weight": 90
+  },
+  {
+    "imo": 9443047,
+    "name": "EXPRESS SPAIN",
+    "weight": 90
+  },
+  {
+    "imo": 9302580,
+    "name": "FAN YA GUANGZHOU",
+    "weight": 90
+  },
+  {
+    "imo": 9290529,
+    "name": "FAN YA SHANGHAI",
+    "weight": 90
+  },
+  {
+    "imo": 9227039,
+    "name": "FELIXSTOWE",
+    "weight": 90
+  },
+  {
+    "imo": 9196905,
+    "name": "FERN",
+    "weight": 18
+  },
+  {
+    "imo": 9237503,
+    "name": "FESCO SOFIA",
+    "weight": 90
+  },
+  {
+    "imo": 9516739,
+    "name": "FITZ ROY",
+    "weight": 8
+  },
+  {
+    "imo": 9236547,
+    "name": "FLORIDA 1",
+    "weight": 90
+  },
+  {
+    "imo": 9348699,
+    "name": "FOS EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9395082,
+    "name": "FOUMA",
+    "weight": 18
+  },
+  {
+    "imo": 9280835,
+    "name": "FOUR STAR",
+    "weight": 8
+  },
+  {
+    "imo": 9450442,
+    "name": "FRANKFURT EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9275048,
+    "name": "GARDINER",
+    "weight": 90
+  },
+  {
+    "imo": 9077460,
+    "name": "GARNET",
+    "weight": 90
+  },
+  {
+    "imo": 9320257,
+    "name": "GEORG MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 7729461,
+    "name": "GEORGE II",
+    "weight": 90
+  },
+  {
+    "imo": 9302073,
+    "name": "GEORGE WASHINGTON BRIDGE",
+    "weight": 90
+  },
+  {
+    "imo": 9320245,
+    "name": "GERD MAERSK",
+    "weight": 8
+  },
+  {
+    "imo": 9359052,
+    "name": "GERDA MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9328481,
+    "name": "GERHARD SCHULTE",
+    "weight": 90
+  },
+  {
+    "imo": 9359002,
+    "name": "GERNER MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9436434,
+    "name": "GFS PRECIOUS",
+    "weight": 8
+  },
+  {
+    "imo": 9303819,
+    "name": "GFS PRESTIGE",
+    "weight": 8
+  },
+  {
+    "imo": 9406960,
+    "name": "GFS ROJA",
+    "weight": 8
+  },
+  {
+    "imo": 9377559,
+    "name": "GH FOEHN",
+    "weight": 9
+  },
+  {
+    "imo": 9320233,
+    "name": "GJERTRUD MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9302097,
+    "name": "GLEN CANYON",
+    "weight": 40
+  },
+  {
+    "imo": 9247948,
+    "name": "GOLD",
+    "weight": 18
+  },
+  {
+    "imo": 9321031,
+    "name": "GOOD PROSPECT",
+    "weight": 9
+  },
+  {
+    "imo": 9196890,
+    "name": "GRACE",
+    "weight": 18
+  },
+  {
+    "imo": 9292266,
+    "name": "GRACE BRIDGE",
+    "weight": 90
+  },
+  {
+    "imo": 9147095,
+    "name": "GRANDOUR",
+    "weight": 90
+  },
+  {
+    "imo": 9193276,
+    "name": "GRASMERE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9970026,
+    "name": "GREENFIELD",
+    "weight": 90
+  },
+  {
+    "imo": 9302889,
+    "name": "GRETE MAERSK",
+    "weight": 8
+  },
+  {
+    "imo": 9246310,
+    "name": "GROTON",
+    "weight": 90
+  },
+  {
+    "imo": 9260457,
+    "name": "GSL ALEXANDRA",
+    "weight": 40
+  },
+  {
+    "imo": 9229324,
+    "name": "GSL CHRISTEN",
+    "weight": 40
+  },
+  {
+    "imo": 9260433,
+    "name": "GSL EFFIE",
+    "weight": 9
+  },
+  {
+    "imo": 9285677,
+    "name": "GSL ELENI",
+    "weight": 9
+  },
+  {
+    "imo": 9285653,
+    "name": "GSL GRANIA",
+    "weight": 8
+  },
+  {
+    "imo": 9285689,
+    "name": "GSL KALLIOPI",
+    "weight": 8
+  },
+  {
+    "imo": 9260419,
+    "name": "GSL LYDIA",
+    "weight": 8
+  },
+  {
+    "imo": 9504592,
+    "name": "GSL MAREN",
+    "weight": 8
+  },
+  {
+    "imo": 9231236,
+    "name": "GSL MARIA",
+    "weight": 8
+  },
+  {
+    "imo": 9337274,
+    "name": "GSL MERCER",
+    "weight": 8
+  },
+  {
+    "imo": 9213583,
+    "name": "GSL MYNY",
+    "weight": 8
+  },
+  {
+    "imo": 9229348,
+    "name": "GSL NICOLETTA",
+    "weight": 8
+  },
+  {
+    "imo": 9256482,
+    "name": "GSL NINGBO",
+    "weight": 8
+  },
+  {
+    "imo": 9260421,
+    "name": "GSL SOFIA",
+    "weight": 8
+  },
+  {
+    "imo": 9349617,
+    "name": "GSL SUSAN",
+    "weight": 8
+  },
+  {
+    "imo": 9437062,
+    "name": "GSL SYROS",
+    "weight": 8
+  },
+  {
+    "imo": 9222986,
+    "name": "GSL TEGEA",
+    "weight": 8
+  },
+  {
+    "imo": 9437048,
+    "name": "GSL TRIPOLI",
+    "weight": 8
+  },
+  {
+    "imo": 9302877,
+    "name": "GUDRUN MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9359014,
+    "name": "GUNDE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9359026,
+    "name": "GUNHILDE MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9302891,
+    "name": "GUNVOR MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9150183,
+    "name": "GURU",
+    "weight": 18
+  },
+  {
+    "imo": 9359038,
+    "name": "GUSTAV MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9359040,
+    "name": "GUTHORM MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9322516,
+    "name": "HAIAN GAMA",
+    "weight": 8
+  },
+  {
+    "imo": 9470727,
+    "name": "HAIAN VIEW",
+    "weight": 90
+  },
+  {
+    "imo": 9778129,
+    "name": "HAIPHONG EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9354167,
+    "name": "HAKUNA MATATA",
+    "weight": 90
+  },
+  {
+    "imo": 9151527,
+    "name": "HAMMONIA THRACIUM",
+    "weight": 90
+  },
+  {
+    "imo": 9343716,
+    "name": "HANOVER EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9419797,
+    "name": "HANSA AFRICA",
+    "weight": 40
+  },
+  {
+    "imo": 9357793,
+    "name": "HANSA LANKA",
+    "weight": 90
+  },
+  {
+    "imo": 9401661,
+    "name": "HANSA SIEGBURG",
+    "weight": 90
+  },
+  {
+    "imo": 9138252,
+    "name": "HE JIN",
+    "weight": 8
+  },
+  {
+    "imo": 9057472,
+    "name": "HENG HUI 2",
+    "weight": 8
+  },
+  {
+    "imo": 9323015,
+    "name": "HENG HUI 5",
+    "weight": 8
+  },
+  {
+    "imo": 9535163,
+    "name": "HENRIKA SCHULTE",
+    "weight": 90
+  },
+  {
+    "imo": 9535187,
+    "name": "HERMANN SCHULTE",
+    "weight": 90
+  },
+  {
+    "imo": 9535151,
+    "name": "HERTA",
+    "weight": 18
+  },
+  {
+    "imo": 8902553,
+    "name": "HH EMILIA",
+    "weight": 8
+  },
+  {
+    "imo": 9036909,
+    "name": "HH NIKOL C.",
+    "weight": 8
+  },
+  {
+    "imo": 9128166,
+    "name": "HIGHNESS",
+    "weight": 90
+  },
+  {
+    "imo": 9330537,
+    "name": "HIRANYA BHUM",
+    "weight": 9
+  },
+  {
+    "imo": 9323510,
+    "name": "HMM BANGKOK",
+    "weight": 8
+  },
+  {
+    "imo": 9312418,
+    "name": "HMM CEBU",
+    "weight": 8
+  },
+  {
+    "imo": 9323508,
+    "name": "HMM COLOMBO",
+    "weight": 8
+  },
+  {
+    "imo": 9323522,
+    "name": "HMM JAKARTA",
+    "weight": 8
+  },
+  {
+    "imo": 9571313,
+    "name": "HMM MOMBASA",
+    "weight": 8
+  },
+  {
+    "imo": 9385013,
+    "name": "HMM OAKLAND",
+    "weight": 8
+  },
+  {
+    "imo": 9944508,
+    "name": "HMM PEARL",
+    "weight": 90
+  },
+  {
+    "imo": 9955260,
+    "name": "HMM SAPPHIRE",
+    "weight": 90
+  },
+  {
+    "imo": 9385001,
+    "name": "HMM TACOMA",
+    "weight": 90
+  },
+  {
+    "imo": 9955284,
+    "name": "HMM TOPAZ",
+    "weight": 90
+  },
+  {
+    "imo": 9463085,
+    "name": "HMM VANCOUVER",
+    "weight": 90
+  },
+  {
+    "imo": 7617890,
+    "name": "HORIZON PACIFIC",
+    "weight": 8
+  },
+  {
+    "imo": 7729459,
+    "name": "HORIZON SPIRIT",
+    "weight": 8
+  },
+  {
+    "imo": 9123594,
+    "name": "HR AARAI",
+    "weight": 8
+  },
+  {
+    "imo": 9123582,
+    "name": "HR FARHA",
+    "weight": 8
+  },
+  {
+    "imo": 9157399,
+    "name": "HR SAHARE",
+    "weight": 8
+  },
+  {
+    "imo": 9157404,
+    "name": "HR SARERA",
+    "weight": 8
+  },
+  {
+    "imo": 9248083,
+    "name": "HS COLON",
+    "weight": 8
+  },
+  {
+    "imo": 9535204,
+    "name": "HUBERT SCHULTE",
+    "weight": 90
+  },
+  {
+    "imo": 9251846,
+    "name": "HUNSA BHUM",
+    "weight": 8
+  },
+  {
+    "imo": 9311787,
+    "name": "HUTTON",
+    "weight": 90
+  },
+  {
+    "imo": 9346304,
+    "name": "HYUNDAI BRAVE",
+    "weight": 8
+  },
+  {
+    "imo": 9305659,
+    "name": "HYUNDAI BUSAN",
+    "weight": 90
+  },
+  {
+    "imo": 9347542,
+    "name": "HYUNDAI COURAGE",
+    "weight": 90
+  },
+  {
+    "imo": 9725110,
+    "name": "HYUNDAI EARTH",
+    "weight": 90
+  },
+  {
+    "imo": 9347554,
+    "name": "HYUNDAI FAITH",
+    "weight": 90
+  },
+  {
+    "imo": 9347566,
+    "name": "HYUNDAI FORCE",
+    "weight": 90
+  },
+  {
+    "imo": 9330707,
+    "name": "HYUNDAI FORWARD",
+    "weight": 90
+  },
+  {
+    "imo": 9347607,
+    "name": "HYUNDAI GOODWILL",
+    "weight": 90
+  },
+  {
+    "imo": 9305661,
+    "name": "HYUNDAI HONGKONG",
+    "weight": 90
+  },
+  {
+    "imo": 9347592,
+    "name": "HYUNDAI INTEGRAL",
+    "weight": 90
+  },
+  {
+    "imo": 9725134,
+    "name": "HYUNDAI JUPITER",
+    "weight": 8
+  },
+  {
+    "imo": 9725158,
+    "name": "HYUNDAI NEPTUNE",
+    "weight": 8
+  },
+  {
+    "imo": 9725146,
+    "name": "HYUNDAI SATURN",
+    "weight": 8
+  },
+  {
+    "imo": 9305647,
+    "name": "HYUNDAI SHANGHAI",
+    "weight": 90
+  },
+  {
+    "imo": 9305685,
+    "name": "HYUNDAI SINGAPORE",
+    "weight": 8
+  },
+  {
+    "imo": 9347619,
+    "name": "HYUNDAI SUPREME",
+    "weight": 8
+  },
+  {
+    "imo": 9305673,
+    "name": "HYUNDAI TOKYO",
+    "weight": 8
+  },
+  {
+    "imo": 9330719,
+    "name": "HYUNDAI UNITY",
+    "weight": 8
+  },
+  {
+    "imo": 9347580,
+    "name": "HYUNDAI VOYAGER",
+    "weight": 90
+  },
+  {
+    "imo": 9189500,
+    "name": "IAN H",
+    "weight": 18
+  },
+  {
+    "imo": 9200823,
+    "name": "INTERASIA INSPIRATION",
+    "weight": 40
+  },
+  {
+    "imo": 9467055,
+    "name": "IRENES POWER",
+    "weight": 90
+  },
+  {
+    "imo": 9322504,
+    "name": "IRENES RAY",
+    "weight": 8
+  },
+  {
+    "imo": 9315850,
+    "name": "IRENES REMEDY",
+    "weight": 90
+  },
+  {
+    "imo": 9200811,
+    "name": "ISTANBUL BRIDGE",
+    "weight": 40
+  },
+  {
+    "imo": 9196981,
+    "name": "ITAL UNICA",
+    "weight": 8
+  },
+  {
+    "imo": 9196993,
+    "name": "ITAL UNIVERSO",
+    "weight": 8
+  },
+  {
+    "imo": 9196979,
+    "name": "ITAL USODIMARE",
+    "weight": 8
+  },
+  {
+    "imo": 9157698,
+    "name": "ITEA",
+    "weight": 18
+  },
+  {
+    "imo": 9081203,
+    "name": "JADE",
+    "weight": 18
+  },
+  {
+    "imo": 9403229,
+    "name": "JAMAICA",
+    "weight": 90
+  },
+  {
+    "imo": 9074391,
+    "name": "JAPAN",
+    "weight": 18
+  },
+  {
+    "imo": 9387097,
+    "name": "JERSEY",
+    "weight": 90
+  },
+  {
+    "imo": 9619402,
+    "name": "JOGELA",
+    "weight": 90
+  },
+  {
+    "imo": 9467043,
+    "name": "JOLLY ARGENTO",
+    "weight": 8
+  },
+  {
+    "imo": 9450313,
+    "name": "JOLLY ORO",
+    "weight": 8
+  },
+  {
+    "imo": 9297852,
+    "name": "JPO PISCES",
+    "weight": 8
+  },
+  {
+    "imo": 9351608,
+    "name": "JPO VENUS",
+    "weight": 9
+  },
+  {
+    "imo": 9287912,
+    "name": "KAETHE",
+    "weight": 90
+  },
+  {
+    "imo": 9719068,
+    "name": "KAIMANA HILA",
+    "weight": 8
+  },
+  {
+    "imo": 9408841,
+    "name": "KANDLA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 7802718,
+    "name": "KAUAI",
+    "weight": 18
+  },
+  {
+    "imo": 9372872,
+    "name": "KAWA WILHELMSHAVEN",
+    "weight": 8
+  },
+  {
+    "imo": 8902539,
+    "name": "KIEL EXPRESS",
+    "weight": 9
+  },
+  {
+    "imo": 9347437,
+    "name": "KMTC COLOMBO",
+    "weight": 8
+  },
+  {
+    "imo": 8903167,
+    "name": "KNUD",
+    "weight": 18
+  },
+  {
+    "imo": 9492701,
+    "name": "KOBE C",
+    "weight": 8
+  },
+  {
+    "imo": 9143544,
+    "name": "KOBE EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9085560,
+    "name": "KOKURA",
+    "weight": 90
+  },
+  {
+    "imo": 9074535,
+    "name": "KOREA",
+    "weight": 18
+  },
+  {
+    "imo": 9260469,
+    "name": "KOSTAS K",
+    "weight": 8
+  },
+  {
+    "imo": 9494606,
+    "name": "KOTA CABAR",
+    "weight": 40
+  },
+  {
+    "imo": 9494589,
+    "name": "KOTA CAHAYA",
+    "weight": 40
+  },
+  {
+    "imo": 9494591,
+    "name": "KOTA CANTIK",
+    "weight": 40
+  },
+  {
+    "imo": 9494577,
+    "name": "KOTA CARUM",
+    "weight": 8
+  },
+  {
+    "imo": 9638977,
+    "name": "KOTA CEPAT",
+    "weight": 40
+  },
+  {
+    "imo": 9205677,
+    "name": "KOTA JAYA",
+    "weight": 8
+  },
+  {
+    "imo": 9226839,
+    "name": "KOTA JUTA",
+    "weight": 8
+  },
+  {
+    "imo": 9322308,
+    "name": "KOTA LAGU",
+    "weight": 9
+  },
+  {
+    "imo": 9351024,
+    "name": "KOTA LAMBAI",
+    "weight": 8
+  },
+  {
+    "imo": 9267651,
+    "name": "KOTA LIMA",
+    "weight": 8
+  },
+  {
+    "imo": 9305465,
+    "name": "KOTA MANZANILLO",
+    "weight": 8
+  },
+  {
+    "imo": 9786712,
+    "name": "KOTA PAHLAWAN",
+    "weight": 8
+  },
+  {
+    "imo": 9473731,
+    "name": "KOTA PEONY",
+    "weight": 8
+  },
+  {
+    "imo": 9475686,
+    "name": "KOTA PLUMBAGO",
+    "weight": 8
+  },
+  {
+    "imo": 9475674,
+    "name": "KOTA PRIMROSE",
+    "weight": 8
+  },
+  {
+    "imo": 9793959,
+    "name": "KOTA PURI",
+    "weight": 8
+  },
+  {
+    "imo": 9293765,
+    "name": "KOTA SANTOS",
+    "weight": 8
+  },
+  {
+    "imo": 9937531,
+    "name": "KOTA VALPARAISO",
+    "weight": 8
+  },
+  {
+    "imo": 9000871,
+    "name": "KOTA WIRANAN",
+    "weight": 8
+  },
+  {
+    "imo": 9343730,
+    "name": "KUALA LUMPUR EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9085522,
+    "name": "KURE",
+    "weight": 18
+  },
+  {
+    "imo": 9297474,
+    "name": "LADY JANE",
+    "weight": 8
+  },
+  {
+    "imo": 9768007,
+    "name": "LAEM CHABANG EXPRESS",
+    "weight": 9
+  },
+  {
+    "imo": 9868431,
+    "name": "LAUTOKA CHIEF",
+    "weight": 90
+  },
+  {
+    "imo": 9307243,
+    "name": "LE HAVRE",
+    "weight": 8
+  },
+  {
+    "imo": 9332872,
+    "name": "LE HAVRE EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9963528,
+    "name": "LEONIDAS Z",
+    "weight": 8
+  },
+  {
+    "imo": 9311880,
+    "name": "LETO",
+    "weight": 18
+  },
+  {
+    "imo": 7105471,
+    "name": "LIHUE",
+    "weight": 18
+  },
+  {
+    "imo": 9293454,
+    "name": "LILA LONDON",
+    "weight": 8
+  },
+  {
+    "imo": 9317913,
+    "name": "LISE",
+    "weight": 18
+  },
+  {
+    "imo": 9571296,
+    "name": "LOG-IN ENDURANCE",
+    "weight": 40
+  },
+  {
+    "imo": 9327669,
+    "name": "LOG-IN RESILIENTE",
+    "weight": 90
+  },
+  {
+    "imo": 9437385,
+    "name": "LONCOMILLA",
+    "weight": 90
+  },
+  {
+    "imo": 9143568,
+    "name": "LONDON EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9348675,
+    "name": "LONG BEACH EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9311763,
+    "name": "LORRAINE",
+    "weight": 90
+  },
+  {
+    "imo": 9665633,
+    "name": "LOS ANGELES EXPRESS",
+    "weight": 40
+  },
+  {
+    "imo": 9461465,
+    "name": "LOTUS A",
+    "weight": 8
+  },
+  {
+    "imo": 9120748,
+    "name": "LU HE",
+    "weight": 8
+  },
+  {
+    "imo": 9330070,
+    "name": "LUANDA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 7321087,
+    "name": "LURLINE",
+    "weight": 90
+  },
+  {
+    "imo": 9447847,
+    "name": "MADRID EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9342516,
+    "name": "MAERSK ALFIRK",
+    "weight": 90
+  },
+  {
+    "imo": 9342528,
+    "name": "MAERSK ALGOL",
+    "weight": 90
+  },
+  {
+    "imo": 9342499,
+    "name": "MAERSK ALTAIR",
+    "weight": 90
+  },
+  {
+    "imo": 9342504,
+    "name": "MAERSK ANTARES",
+    "weight": 90
+  },
+  {
+    "imo": 9398424,
+    "name": "MAERSK ATHABASCA",
+    "weight": 90
+  },
+  {
+    "imo": 9924223,
+    "name": "MAERSK CANDOR",
+    "weight": 90
+  },
+  {
+    "imo": 9484560,
+    "name": "MAERSK CAP JACKSON",
+    "weight": 90
+  },
+  {
+    "imo": 9484572,
+    "name": "MAERSK CAP JERVIS",
+    "weight": 90
+  },
+  {
+    "imo": 9525352,
+    "name": "MAERSK CAPE TOWN",
+    "weight": 90
+  },
+  {
+    "imo": 9155133,
+    "name": "MAERSK CAROLINA",
+    "weight": 90
+  },
+  {
+    "imo": 9332975,
+    "name": "MAERSK CHICAGO",
+    "weight": 90
+  },
+  {
+    "imo": 9456757,
+    "name": "MAERSK EDINBURGH",
+    "weight": 90
+  },
+  {
+    "imo": 9502867,
+    "name": "MAERSK EDIRNE",
+    "weight": 90
+  },
+  {
+    "imo": 9458030,
+    "name": "MAERSK EDMONTON",
+    "weight": 90
+  },
+  {
+    "imo": 9456771,
+    "name": "MAERSK EINDHOVEN",
+    "weight": 90
+  },
+  {
+    "imo": 9458078,
+    "name": "MAERSK ELBA",
+    "weight": 9
+  },
+  {
+    "imo": 9456769,
+    "name": "MAERSK EMDEN",
+    "weight": 40
+  },
+  {
+    "imo": 9502910,
+    "name": "MAERSK EMERALD",
+    "weight": 90
+  },
+  {
+    "imo": 9502958,
+    "name": "MAERSK ENSENADA",
+    "weight": 40
+  },
+  {
+    "imo": 9502946,
+    "name": "MAERSK ENSHI",
+    "weight": 40
+  },
+  {
+    "imo": 9502972,
+    "name": "MAERSK ESMERALDAS",
+    "weight": 90
+  },
+  {
+    "imo": 9456783,
+    "name": "MAERSK ESSEN",
+    "weight": 40
+  },
+  {
+    "imo": 9458092,
+    "name": "MAERSK ESSEX",
+    "weight": 40
+  },
+  {
+    "imo": 9501239,
+    "name": "MAERSK EUREKA",
+    "weight": 40
+  },
+  {
+    "imo": 9458080,
+    "name": "MAERSK EVORA",
+    "weight": 8
+  },
+  {
+    "imo": 9329629,
+    "name": "MAERSK INCHEON",
+    "weight": 90
+  },
+  {
+    "imo": 9526978,
+    "name": "MAERSK LABERINTO",
+    "weight": 90
+  },
+  {
+    "imo": 9527051,
+    "name": "MAERSK LAMANAI",
+    "weight": 90
+  },
+  {
+    "imo": 9526930,
+    "name": "MAERSK LEBU",
+    "weight": 8
+  },
+  {
+    "imo": 9526916,
+    "name": "MAERSK LETICIA",
+    "weight": 90
+  },
+  {
+    "imo": 9527025,
+    "name": "MAERSK LINS",
+    "weight": 90
+  },
+  {
+    "imo": 9526887,
+    "name": "MAERSK LIRQUEN",
+    "weight": 8
+  },
+  {
+    "imo": 9348651,
+    "name": "MAERSK MEMPHIS",
+    "weight": 8
+  },
+  {
+    "imo": 9348053,
+    "name": "MAERSK MONTE AZUL",
+    "weight": 90
+  },
+  {
+    "imo": 9283198,
+    "name": "MAERSK MONTE OLIVIA",
+    "weight": 90
+  },
+  {
+    "imo": 9215878,
+    "name": "MAERSK NEWCASTLE",
+    "weight": 8
+  },
+  {
+    "imo": 9215880,
+    "name": "MAERSK NEWHAVEN",
+    "weight": 8
+  },
+  {
+    "imo": 9303534,
+    "name": "MAERSK SAIGON",
+    "weight": 8
+  },
+  {
+    "imo": 9699206,
+    "name": "MAERSK SAN VICENTE",
+    "weight": 8
+  },
+  {
+    "imo": 9289922,
+    "name": "MAERSK SANA",
+    "weight": 90
+  },
+  {
+    "imo": 9289934,
+    "name": "MAERSK SANTANA",
+    "weight": 90
+  },
+  {
+    "imo": 9289946,
+    "name": "MAERSK SARNIA",
+    "weight": 90
+  },
+  {
+    "imo": 9315238,
+    "name": "MAERSK SEBAROK",
+    "weight": 40
+  },
+  {
+    "imo": 9943097,
+    "name": "MAERSK SEQUOIA",
+    "weight": 40
+  },
+  {
+    "imo": 9299927,
+    "name": "MAERSK SEVILLE",
+    "weight": 40
+  },
+  {
+    "imo": 9299939,
+    "name": "MAERSK SHEERNESS",
+    "weight": 40
+  },
+  {
+    "imo": 9466984,
+    "name": "MAERSK SHEKOU",
+    "weight": 40
+  },
+  {
+    "imo": 9728253,
+    "name": "MAERSK SHIVLING",
+    "weight": 40
+  },
+  {
+    "imo": 9308649,
+    "name": "MAERSK SINGAPORE",
+    "weight": 90
+  },
+  {
+    "imo": 9725718,
+    "name": "MAERSK SIRAC",
+    "weight": 40
+  },
+  {
+    "imo": 9740457,
+    "name": "MAERSK SKARSTIND",
+    "weight": 40
+  },
+  {
+    "imo": 9308637,
+    "name": "MAERSK SOFIA",
+    "weight": 8
+  },
+  {
+    "imo": 9352004,
+    "name": "MAERSK STEPNICA",
+    "weight": 40
+  },
+  {
+    "imo": 9303522,
+    "name": "MAERSK STRALSUND",
+    "weight": 40
+  },
+  {
+    "imo": 9289958,
+    "name": "MAERSK SYDNEY",
+    "weight": 40
+  },
+  {
+    "imo": 9332511,
+    "name": "MAERSK TANJONG",
+    "weight": 90
+  },
+  {
+    "imo": 9433054,
+    "name": "MAERSK VALPARAISO",
+    "weight": 90
+  },
+  {
+    "imo": 9344681,
+    "name": "MAERSK VENEZIA",
+    "weight": 90
+  },
+  {
+    "imo": 9550357,
+    "name": "MAERSK WAKAYAMA",
+    "weight": 90
+  },
+  {
+    "imo": 9459632,
+    "name": "MAERSK WALLIS",
+    "weight": 90
+  },
+  {
+    "imo": 7907996,
+    "name": "MAHIMAHI",
+    "weight": 90
+  },
+  {
+    "imo": 9323027,
+    "name": "MAJD",
+    "weight": 18
+  },
+  {
+    "imo": 9464247,
+    "name": "MALIAKOS",
+    "weight": 90
+  },
+  {
+    "imo": 8613310,
+    "name": "MANDRA",
+    "weight": 90
+  },
+  {
+    "imo": 7907984,
+    "name": "MANOA",
+    "weight": 18
+  },
+  {
+    "imo": 9244130,
+    "name": "MANUKAI",
+    "weight": 90
+  },
+  {
+    "imo": 9273674,
+    "name": "MANULANI",
+    "weight": 90
+  },
+  {
+    "imo": 9144756,
+    "name": "MAPLE",
+    "weight": 18
+  },
+  {
+    "imo": 9477804,
+    "name": "MARATHOPOLIS",
+    "weight": 90
+  },
+  {
+    "imo": 9193226,
+    "name": "MARE PHOENICIUM",
+    "weight": 8
+  },
+  {
+    "imo": 9302944,
+    "name": "MARGARETE SCHULTE",
+    "weight": 90
+  },
+  {
+    "imo": 9406764,
+    "name": "MARIA C",
+    "weight": 8
+  },
+  {
+    "imo": 9247754,
+    "name": "MARIA H",
+    "weight": 8
+  },
+  {
+    "imo": 9260445,
+    "name": "MARIA Y",
+    "weight": 8
+  },
+  {
+    "imo": 9360269,
+    "name": "MARINA ONE",
+    "weight": 8
+  },
+  {
+    "imo": 9301445,
+    "name": "MARSA PRIDE",
+    "weight": 40
+  },
+  {
+    "imo": 9477347,
+    "name": "MARTI SPIRIT",
+    "weight": 8
+  },
+  {
+    "imo": 9694414,
+    "name": "MARY SCHULTE",
+    "weight": 8
+  },
+  {
+    "imo": 9644990,
+    "name": "MATE",
+    "weight": 18
+  },
+  {
+    "imo": 8419142,
+    "name": "MATSON ANCHORAGE",
+    "weight": 40
+  },
+  {
+    "imo": 9353278,
+    "name": "MATSON KAUAI",
+    "weight": 40
+  },
+  {
+    "imo": 9334143,
+    "name": "MATSON LANAI",
+    "weight": 40
+  },
+  {
+    "imo": 9302578,
+    "name": "MATSON MAGNOLIA",
+    "weight": 40
+  },
+  {
+    "imo": 7116315,
+    "name": "MATSON NAVIGATOR",
+    "weight": 90
+  },
+  {
+    "imo": 9349801,
+    "name": "MATSON WAIKIKI",
+    "weight": 90
+  },
+  {
+    "imo": 7334204,
+    "name": "MATSONIA",
+    "weight": 90
+  },
+  {
+    "imo": 7602338,
+    "name": "MAUI",
+    "weight": 18
+  },
+  {
+    "imo": 9273686,
+    "name": "MAUNALEI",
+    "weight": 90
+  },
+  {
+    "imo": 9268538,
+    "name": "MAUNAWILI",
+    "weight": 90
+  },
+  {
+    "imo": 9622019,
+    "name": "MEDITERRANEAN EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9401075,
+    "name": "MELINA",
+    "weight": 90
+  },
+  {
+    "imo": 9213117,
+    "name": "MERATUS JAYAGIRI",
+    "weight": 40
+  },
+  {
+    "imo": 9305881,
+    "name": "MERATUS JAYAWIJAYA",
+    "weight": 40
+  },
+  {
+    "imo": 9620607,
+    "name": "MERKUR FJORD",
+    "weight": 8
+  },
+  {
+    "imo": 9456989,
+    "name": "MERKUR HORIZON",
+    "weight": 40
+  },
+  {
+    "imo": 9620619,
+    "name": "MERKUR OCEAN",
+    "weight": 8
+  },
+  {
+    "imo": 8904111,
+    "name": "MERLION",
+    "weight": 90
+  },
+  {
+    "imo": 9256755,
+    "name": "METHONI",
+    "weight": 90
+  },
+  {
+    "imo": 9112296,
+    "name": "MILAN EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9128037,
+    "name": "MING HANG 7",
+    "weight": 8
+  },
+  {
+    "imo": 7908005,
+    "name": "MOKIHANA",
+    "weight": 90
+  },
+  {
+    "imo": 9321251,
+    "name": "MOL CELEBRATION",
+    "weight": 8
+  },
+  {
+    "imo": 9321249,
+    "name": "MOL CHARISMA",
+    "weight": 8
+  },
+  {
+    "imo": 9321263,
+    "name": "MOL COURAGE",
+    "weight": 8
+  },
+  {
+    "imo": 9321237,
+    "name": "MOL CREATION",
+    "weight": 8
+  },
+  {
+    "imo": 9333840,
+    "name": "MOL EARNEST",
+    "weight": 8
+  },
+  {
+    "imo": 9251365,
+    "name": "MOL EFFICIENCY",
+    "weight": 8
+  },
+  {
+    "imo": 9333852,
+    "name": "MOL ENDOWMENT",
+    "weight": 90
+  },
+  {
+    "imo": 9333838,
+    "name": "MOL EXPERIENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9251391,
+    "name": "MOL EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9403619,
+    "name": "MOL PROFICIENCY",
+    "weight": 90
+  },
+  {
+    "imo": 9309277,
+    "name": "MONA LISA",
+    "weight": 40
+  },
+  {
+    "imo": 9175975,
+    "name": "MONIA",
+    "weight": 18
+  },
+  {
+    "imo": 9848766,
+    "name": "MORESBY CHIEF",
+    "weight": 90
+  },
+  {
+    "imo": 9618264,
+    "name": "MSC ABIDJAN",
+    "weight": 90
+  },
+  {
+    "imo": 9307059,
+    "name": "MSC ABUJA VI",
+    "weight": 90
+  },
+  {
+    "imo": 9404209,
+    "name": "MSC ACCRA IV",
+    "weight": 40
+  },
+  {
+    "imo": 9235581,
+    "name": "MSC ADITI",
+    "weight": 40
+  },
+  {
+    "imo": 9293466,
+    "name": "MSC ADU V",
+    "weight": 8
+  },
+  {
+    "imo": 9315381,
+    "name": "MSC AGAMEMNON VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9785483,
+    "name": "MSC ALANYA",
+    "weight": 40
+  },
+  {
+    "imo": 9129873,
+    "name": "MSC ALEXA",
+    "weight": 40
+  },
+  {
+    "imo": 9695016,
+    "name": "MSC ALINA",
+    "weight": 40
+  },
+  {
+    "imo": 9465277,
+    "name": "MSC ALTAIR",
+    "weight": 40
+  },
+  {
+    "imo": 9261827,
+    "name": "MSC ANA CAMILA III",
+    "weight": 8
+  },
+  {
+    "imo": 9302085,
+    "name": "MSC ANAHITA",
+    "weight": 40
+  },
+  {
+    "imo": 9351593,
+    "name": "MSC ANGELA",
+    "weight": 40
+  },
+  {
+    "imo": 9227297,
+    "name": "MSC ANISHA R.",
+    "weight": 40
+  },
+  {
+    "imo": 9169122,
+    "name": "MSC ANNICK",
+    "weight": 40
+  },
+  {
+    "imo": 9282261,
+    "name": "MSC ANS",
+    "weight": 8
+  },
+  {
+    "imo": 9254848,
+    "name": "MSC ANSHIKA VI",
+    "weight": 40
+  },
+  {
+    "imo": 9702273,
+    "name": "MSC ANTONELLA",
+    "weight": 90
+  },
+  {
+    "imo": 9398216,
+    "name": "MSC ANTONIA",
+    "weight": 40
+  },
+  {
+    "imo": 9304746,
+    "name": "MSC ANTWERP III",
+    "weight": 8
+  },
+  {
+    "imo": 9323041,
+    "name": "MSC ANUSHA III",
+    "weight": 40
+  },
+  {
+    "imo": 9297864,
+    "name": "MSC ANYA V",
+    "weight": 8
+  },
+  {
+    "imo": 9247730,
+    "name": "MSC APOLLO",
+    "weight": 40
+  },
+  {
+    "imo": 9262704,
+    "name": "MSC AQUARIUS VII",
+    "weight": 40
+  },
+  {
+    "imo": 9315379,
+    "name": "MSC ARCHIMIDIS VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9484443,
+    "name": "MSC ARIANE",
+    "weight": 40
+  },
+  {
+    "imo": 9339296,
+    "name": "MSC ASYA",
+    "weight": 9
+  },
+  {
+    "imo": 9618317,
+    "name": "MSC ATHOS",
+    "weight": 90
+  },
+  {
+    "imo": 9303792,
+    "name": "MSC AUGUSTA III",
+    "weight": 90
+  },
+  {
+    "imo": 9484481,
+    "name": "MSC AURORA",
+    "weight": 90
+  },
+  {
+    "imo": 8300121,
+    "name": "MSC AUSTRIA",
+    "weight": 40
+  },
+  {
+    "imo": 9241475,
+    "name": "MSC BALTIC III",
+    "weight": 90
+  },
+  {
+    "imo": 9253296,
+    "name": "MSC BANJUL IV",
+    "weight": 8
+  },
+  {
+    "imo": 9289544,
+    "name": "MSC BARBADOS",
+    "weight": 40
+  },
+  {
+    "imo": 9238777,
+    "name": "MSC BAY IV",
+    "weight": 8
+  },
+  {
+    "imo": 9399014,
+    "name": "MSC BEATRICE",
+    "weight": 40
+  },
+  {
+    "imo": 9467392,
+    "name": "MSC BERYL",
+    "weight": 40
+  },
+  {
+    "imo": 9399038,
+    "name": "MSC BETTINA",
+    "weight": 40
+  },
+  {
+    "imo": 9297876,
+    "name": "MSC BHAVYA V",
+    "weight": 8
+  },
+  {
+    "imo": 9247742,
+    "name": "MSC BOSPHORUS",
+    "weight": 90
+  },
+  {
+    "imo": 9720495,
+    "name": "MSC BRANKA",
+    "weight": 90
+  },
+  {
+    "imo": 9369734,
+    "name": "MSC BREMEN",
+    "weight": 90
+  },
+  {
+    "imo": 9243409,
+    "name": "MSC BRIDGEPORT",
+    "weight": 90
+  },
+  {
+    "imo": 9702106,
+    "name": "MSC BRUNELLA",
+    "weight": 90
+  },
+  {
+    "imo": 9289087,
+    "name": "MSC BUSAN",
+    "weight": 40
+  },
+  {
+    "imo": 9224324,
+    "name": "MSC CAIRO IV",
+    "weight": 8
+  },
+  {
+    "imo": 9404651,
+    "name": "MSC CAMILLE",
+    "weight": 40
+  },
+  {
+    "imo": 9339284,
+    "name": "MSC CANDICE",
+    "weight": 40
+  },
+  {
+    "imo": 9360271,
+    "name": "MSC CAPE III",
+    "weight": 8
+  },
+  {
+    "imo": 8618308,
+    "name": "MSC CAROLE",
+    "weight": 40
+  },
+  {
+    "imo": 9705005,
+    "name": "MSC CATERINA",
+    "weight": 90
+  },
+  {
+    "imo": 9229300,
+    "name": "MSC CATHERINE VI",
+    "weight": 8
+  },
+  {
+    "imo": 9330238,
+    "name": "MSC CHARLOTTE",
+    "weight": 90
+  },
+  {
+    "imo": 9113446,
+    "name": "MSC CLAUDIA",
+    "weight": 90
+  },
+  {
+    "imo": 9720524,
+    "name": "MSC CLEA",
+    "weight": 90
+  },
+  {
+    "imo": 9484429,
+    "name": "MSC CLORINDA",
+    "weight": 90
+  },
+  {
+    "imo": 9307267,
+    "name": "MSC CORINNA",
+    "weight": 90
+  },
+  {
+    "imo": 9465241,
+    "name": "MSC CRISTINA",
+    "weight": 40
+  },
+  {
+    "imo": 9295165,
+    "name": "MSC DAISY",
+    "weight": 90
+  },
+  {
+    "imo": 9605231,
+    "name": "MSC DAKAR X",
+    "weight": 90
+  },
+  {
+    "imo": 9399002,
+    "name": "MSC DANIELA",
+    "weight": 90
+  },
+  {
+    "imo": 9404649,
+    "name": "MSC DANIT",
+    "weight": 90
+  },
+  {
+    "imo": 9243394,
+    "name": "MSC DARIEN",
+    "weight": 40
+  },
+  {
+    "imo": 9231250,
+    "name": "MSC DENMARK VI",
+    "weight": 8
+  },
+  {
+    "imo": 9120841,
+    "name": "MSC DOMNA X",
+    "weight": 90
+  },
+  {
+    "imo": 9237151,
+    "name": "MSC DONATA",
+    "weight": 40
+  },
+  {
+    "imo": 9301495,
+    "name": "MSC DORADO VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9301328,
+    "name": "MSC DORINE V",
+    "weight": 8
+  },
+  {
+    "imo": 9444285,
+    "name": "MSC DUBAI VII",
+    "weight": 90
+  },
+  {
+    "imo": 9282259,
+    "name": "MSC ELA",
+    "weight": 90
+  },
+  {
+    "imo": 9393321,
+    "name": "MSC ELAINE",
+    "weight": 90
+  },
+  {
+    "imo": 9463059,
+    "name": "MSC ELISA XIII",
+    "weight": 8
+  },
+  {
+    "imo": 9215892,
+    "name": "MSC ELIZABETH III",
+    "weight": 90
+  },
+  {
+    "imo": 9166780,
+    "name": "MSC ELLEN",
+    "weight": 90
+  },
+  {
+    "imo": 9735218,
+    "name": "MSC ELMA",
+    "weight": 90
+  },
+  {
+    "imo": 9755957,
+    "name": "MSC ELOANE",
+    "weight": 90
+  },
+  {
+    "imo": 9704972,
+    "name": "MSC ELODIE",
+    "weight": 40
+  },
+  {
+    "imo": 9399052,
+    "name": "MSC EMANUELA",
+    "weight": 40
+  },
+  {
+    "imo": 9463047,
+    "name": "MSC EMMA",
+    "weight": 8
+  },
+  {
+    "imo": 9304411,
+    "name": "MSC ESTHI",
+    "weight": 40
+  },
+  {
+    "imo": 9401130,
+    "name": "MSC EVA",
+    "weight": 9
+  },
+  {
+    "imo": 9279965,
+    "name": "MSC FABIENNE",
+    "weight": 40
+  },
+  {
+    "imo": 9302633,
+    "name": "MSC FAIRFIELD",
+    "weight": 40
+  },
+  {
+    "imo": 9299032,
+    "name": "MSC FALCON III",
+    "weight": 90
+  },
+  {
+    "imo": 8715869,
+    "name": "MSC FEDERICA",
+    "weight": 90
+  },
+  {
+    "imo": 9290402,
+    "name": "MSC FELIXSTOWE",
+    "weight": 90
+  },
+  {
+    "imo": 9168831,
+    "name": "MSC FLORIANA VI",
+    "weight": 90
+  },
+  {
+    "imo": 9247560,
+    "name": "MSC FOLEGANDROS VI",
+    "weight": 8
+  },
+  {
+    "imo": 9401116,
+    "name": "MSC FRANCESCA",
+    "weight": 90
+  },
+  {
+    "imo": 9301330,
+    "name": "MSC FREEPORT",
+    "weight": 90
+  },
+  {
+    "imo": 9401142,
+    "name": "MSC GAIA",
+    "weight": 90
+  },
+  {
+    "imo": 9720196,
+    "name": "MSC GISELLE",
+    "weight": 90
+  },
+  {
+    "imo": 9770737,
+    "name": "MSC GIULIA",
+    "weight": 90
+  },
+  {
+    "imo": 9210062,
+    "name": "MSC GLORY R",
+    "weight": 90
+  },
+  {
+    "imo": 9286267,
+    "name": "MSC GREENWICH",
+    "weight": 90
+  },
+  {
+    "imo": 9261815,
+    "name": "MSC HAILEY ANN III",
+    "weight": 90
+  },
+  {
+    "imo": 9647461,
+    "name": "MSC HAMBURG",
+    "weight": 90
+  },
+  {
+    "imo": 9309473,
+    "name": "MSC HEIDI",
+    "weight": 90
+  },
+  {
+    "imo": 9231810,
+    "name": "MSC HONG KONG V",
+    "weight": 90
+  },
+  {
+    "imo": 9463281,
+    "name": "MSC HOUSTON V",
+    "weight": 90
+  },
+  {
+    "imo": 9261449,
+    "name": "MSC IKARIA VI",
+    "weight": 9
+  },
+  {
+    "imo": 9962548,
+    "name": "MSC ILENIA",
+    "weight": 90
+  },
+  {
+    "imo": 9336191,
+    "name": "MSC INDEPENDENT III",
+    "weight": 90
+  },
+  {
+    "imo": 9231248,
+    "name": "MSC INDIA",
+    "weight": 90
+  },
+  {
+    "imo": 9305714,
+    "name": "MSC INES",
+    "weight": 90
+  },
+  {
+    "imo": 9154206,
+    "name": "MSC ISHYKA",
+    "weight": 90
+  },
+  {
+    "imo": 9398371,
+    "name": "MSC IVANA",
+    "weight": 90
+  },
+  {
+    "imo": 9450363,
+    "name": "MSC JAMBOREE IX",
+    "weight": 8
+  },
+  {
+    "imo": 9110975,
+    "name": "MSC JAPAN III",
+    "weight": 8
+  },
+  {
+    "imo": 9466960,
+    "name": "MSC JASPER VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9465095,
+    "name": "MSC JAVELIN IX",
+    "weight": 90
+  },
+  {
+    "imo": 8709169,
+    "name": "MSC JENNY",
+    "weight": 9
+  },
+  {
+    "imo": 9720471,
+    "name": "MSC JEONGMIN",
+    "weight": 9
+  },
+  {
+    "imo": 9842073,
+    "name": "MSC JEWEL",
+    "weight": 9
+  },
+  {
+    "imo": 9304435,
+    "name": "MSC JOANNA",
+    "weight": 90
+  },
+  {
+    "imo": 9450337,
+    "name": "MSC JUBILEE IX",
+    "weight": 90
+  },
+  {
+    "imo": 9299549,
+    "name": "MSC JUDITH",
+    "weight": 90
+  },
+  {
+    "imo": 9227338,
+    "name": "MSC JULIA R.",
+    "weight": 90
+  },
+  {
+    "imo": 9704996,
+    "name": "MSC JULIE",
+    "weight": 90
+  },
+  {
+    "imo": 9450351,
+    "name": "MSC JUSTICE VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9399026,
+    "name": "MSC KALINA",
+    "weight": 90
+  },
+  {
+    "imo": 9842102,
+    "name": "MSC KANOKO",
+    "weight": 90
+  },
+  {
+    "imo": 9467457,
+    "name": "MSC KATIE",
+    "weight": 90
+  },
+  {
+    "imo": 9467445,
+    "name": "MSC KATRINA",
+    "weight": 90
+  },
+  {
+    "imo": 9227302,
+    "name": "MSC KATYA R.",
+    "weight": 8
+  },
+  {
+    "imo": 9110389,
+    "name": "MSC KATYAYNI VI",
+    "weight": 8
+  },
+  {
+    "imo": 9123154,
+    "name": "MSC KOREA III",
+    "weight": 90
+  },
+  {
+    "imo": 9305506,
+    "name": "MSC KUMSAL",
+    "weight": 90
+  },
+  {
+    "imo": 9226413,
+    "name": "MSC KUWAIT III",
+    "weight": 8
+  },
+  {
+    "imo": 7825411,
+    "name": "MSC KYOTO",
+    "weight": 8
+  },
+  {
+    "imo": 9461403,
+    "name": "MSC LA SPEZIA",
+    "weight": 90
+  },
+  {
+    "imo": 9605152,
+    "name": "MSC LAGOS X",
+    "weight": 90
+  },
+  {
+    "imo": 9215696,
+    "name": "MSC LANA IV",
+    "weight": 8
+  },
+  {
+    "imo": 9467407,
+    "name": "MSC LAUREN",
+    "weight": 9
+  },
+  {
+    "imo": 9467419,
+    "name": "MSC LAURENCE",
+    "weight": 9
+  },
+  {
+    "imo": 9320398,
+    "name": "MSC LAUSANNE VI",
+    "weight": 8
+  },
+  {
+    "imo": 8618310,
+    "name": "MSC LEANNE",
+    "weight": 9
+  },
+  {
+    "imo": 9320439,
+    "name": "MSC LEIGH",
+    "weight": 8
+  },
+  {
+    "imo": 9229312,
+    "name": "MSC LEO VI",
+    "weight": 8
+  },
+  {
+    "imo": 9334349,
+    "name": "MSC LILOU III",
+    "weight": 8
+  },
+  {
+    "imo": 9704960,
+    "name": "MSC LILY",
+    "weight": 8
+  },
+  {
+    "imo": 9281279,
+    "name": "MSC LISA",
+    "weight": 8
+  },
+  {
+    "imo": 9304459,
+    "name": "MSC LISBON IX",
+    "weight": 90
+  },
+  {
+    "imo": 9606302,
+    "name": "MSC LONDON",
+    "weight": 8
+  },
+  {
+    "imo": 9327803,
+    "name": "MSC LONG BEACH VI",
+    "weight": 8
+  },
+  {
+    "imo": 9327798,
+    "name": "MSC LOS ANGELES",
+    "weight": 40
+  },
+  {
+    "imo": 9301471,
+    "name": "MSC LUANDA VIII",
+    "weight": 8
+  },
+  {
+    "imo": 9398383,
+    "name": "MSC LUCIANA",
+    "weight": 8
+  },
+  {
+    "imo": 9251690,
+    "name": "MSC LUDOVICA",
+    "weight": 90
+  },
+  {
+    "imo": 9225677,
+    "name": "MSC LUISA",
+    "weight": 90
+  },
+  {
+    "imo": 9400148,
+    "name": "MSC LYSE V",
+    "weight": 90
+  },
+  {
+    "imo": 9305702,
+    "name": "MSC MADELEINE",
+    "weight": 8
+  },
+  {
+    "imo": 9289128,
+    "name": "MSC MAEVA",
+    "weight": 8
+  },
+  {
+    "imo": 9252553,
+    "name": "MSC MAGNITUDE VII",
+    "weight": 8
+  },
+  {
+    "imo": 8613322,
+    "name": "MSC MANU",
+    "weight": 8
+  },
+  {
+    "imo": 9465318,
+    "name": "MSC MARGRIT XIII",
+    "weight": 90
+  },
+  {
+    "imo": 9287900,
+    "name": "MSC MARIA CLARA",
+    "weight": 90
+  },
+  {
+    "imo": 9304423,
+    "name": "MSC MARIA ELENA",
+    "weight": 90
+  },
+  {
+    "imo": 9467421,
+    "name": "MSC MARIA SAVERIA",
+    "weight": 90
+  },
+  {
+    "imo": 9226920,
+    "name": "MSC MARIANNA",
+    "weight": 8
+  },
+  {
+    "imo": 9720287,
+    "name": "MSC MAXINE",
+    "weight": 8
+  },
+  {
+    "imo": 9702077,
+    "name": "MSC MELINE",
+    "weight": 90
+  },
+  {
+    "imo": 9231779,
+    "name": "MSC MEXICO V",
+    "weight": 8
+  },
+  {
+    "imo": 9839466,
+    "name": "MSC MIA",
+    "weight": 9
+  },
+  {
+    "imo": 9720512,
+    "name": "MSC MICHELA",
+    "weight": 90
+  },
+  {
+    "imo": 9293179,
+    "name": "MSC MIRELLA R",
+    "weight": 8
+  },
+  {
+    "imo": 9349796,
+    "name": "MSC MONTEREY V",
+    "weight": 8
+  },
+  {
+    "imo": 9294549,
+    "name": "MSC MONTSERRAT III",
+    "weight": 8
+  },
+  {
+    "imo": 9294989,
+    "name": "MSC MUNDRA VIII",
+    "weight": 8
+  },
+  {
+    "imo": 9321897,
+    "name": "MSC NADIA IV",
+    "weight": 90
+  },
+  {
+    "imo": 9605243,
+    "name": "MSC NAIROBI X",
+    "weight": 90
+  },
+  {
+    "imo": 9463035,
+    "name": "MSC NATASHA XIII",
+    "weight": 8
+  },
+  {
+    "imo": 9278155,
+    "name": "MSC NERISSA V",
+    "weight": 90
+  },
+  {
+    "imo": 9293777,
+    "name": "MSC NEW HAVEN",
+    "weight": 90
+  },
+  {
+    "imo": 9606314,
+    "name": "MSC NEW YORK",
+    "weight": 90
+  },
+  {
+    "imo": 9214898,
+    "name": "MSC NICOLE X",
+    "weight": 90
+  },
+  {
+    "imo": 9315886,
+    "name": "MSC NIMISHA III",
+    "weight": 8
+  },
+  {
+    "imo": 9778117,
+    "name": "MSC NITYA B",
+    "weight": 8
+  },
+  {
+    "imo": 9398228,
+    "name": "MSC NOA",
+    "weight": 18
+  },
+  {
+    "imo": 9327671,
+    "name": "MSC NORA III",
+    "weight": 8
+  },
+  {
+    "imo": 9281267,
+    "name": "MSC ORNELLA",
+    "weight": 90
+  },
+  {
+    "imo": 9703291,
+    "name": "MSC OSCAR",
+    "weight": 90
+  },
+  {
+    "imo": 9441001,
+    "name": "MSC PALOMA",
+    "weight": 90
+  },
+  {
+    "imo": 9290531,
+    "name": "MSC PAMELA",
+    "weight": 90
+  },
+  {
+    "imo": 9239903,
+    "name": "MSC PAMIRA III",
+    "weight": 90
+  },
+  {
+    "imo": 9231781,
+    "name": "MSC PANAMA",
+    "weight": 90
+  },
+  {
+    "imo": 9161297,
+    "name": "MSC PAOLA",
+    "weight": 8
+  },
+  {
+    "imo": 9267637,
+    "name": "MSC PEGASUS VII",
+    "weight": 90
+  },
+  {
+    "imo": 9222302,
+    "name": "MSC PETRA",
+    "weight": 8
+  },
+  {
+    "imo": 9267649,
+    "name": "MSC PHOENIX",
+    "weight": 8
+  },
+  {
+    "imo": 8715871,
+    "name": "MSC PILAR",
+    "weight": 8
+  },
+  {
+    "imo": 9339272,
+    "name": "MSC PINA",
+    "weight": 90
+  },
+  {
+    "imo": 9279977,
+    "name": "MSC POH LIN",
+    "weight": 8
+  },
+  {
+    "imo": 9219379,
+    "name": "MSC POLONIA III",
+    "weight": 8
+  },
+  {
+    "imo": 9280861,
+    "name": "MSC PRATITI",
+    "weight": 8
+  },
+  {
+    "imo": 9450296,
+    "name": "MSC PRECISION V",
+    "weight": 8
+  },
+  {
+    "imo": 9344679,
+    "name": "MSC PRETORIA II",
+    "weight": 8
+  },
+  {
+    "imo": 9256470,
+    "name": "MSC QINGDAO",
+    "weight": 90
+  },
+  {
+    "imo": 9946881,
+    "name": "MSC QUITTERIE",
+    "weight": 90
+  },
+  {
+    "imo": 9290282,
+    "name": "MSC RACHELE",
+    "weight": 8
+  },
+  {
+    "imo": 9129885,
+    "name": "MSC RAFAELA",
+    "weight": 8
+  },
+  {
+    "imo": 9309447,
+    "name": "MSC RANIA VIII",
+    "weight": 8
+  },
+  {
+    "imo": 9484455,
+    "name": "MSC RAPALLO",
+    "weight": 8
+  },
+  {
+    "imo": 9484431,
+    "name": "MSC RAVENNA",
+    "weight": 8
+  },
+  {
+    "imo": 9465291,
+    "name": "MSC REGULUS",
+    "weight": 90
+  },
+  {
+    "imo": 9252230,
+    "name": "MSC REN V",
+    "weight": 8
+  },
+  {
+    "imo": 9465306,
+    "name": "MSC RENEE XIII",
+    "weight": 8
+  },
+  {
+    "imo": 9240873,
+    "name": "MSC RESILIENT III",
+    "weight": 90
+  },
+  {
+    "imo": 9393307,
+    "name": "MSC RIDA VIII",
+    "weight": 8
+  },
+  {
+    "imo": 9393319,
+    "name": "MSC RIKKU",
+    "weight": 8
+  },
+  {
+    "imo": 9419644,
+    "name": "MSC RINI III",
+    "weight": 8
+  },
+  {
+    "imo": 9038907,
+    "name": "MSC ROBERTA V",
+    "weight": 90
+  },
+  {
+    "imo": 9141297,
+    "name": "MSC ROCHELLE",
+    "weight": 90
+  },
+  {
+    "imo": 9304447,
+    "name": "MSC ROMA",
+    "weight": 90
+  },
+  {
+    "imo": 9745653,
+    "name": "MSC ROMANE",
+    "weight": 90
+  },
+  {
+    "imo": 9337676,
+    "name": "MSC ROSHNEY V",
+    "weight": 8
+  },
+  {
+    "imo": 8714205,
+    "name": "MSC SABRINA III",
+    "weight": 8
+  },
+  {
+    "imo": 9440150,
+    "name": "MSC SALINA III",
+    "weight": 8
+  },
+  {
+    "imo": 9203954,
+    "name": "MSC SANDRA",
+    "weight": 90
+  },
+  {
+    "imo": 9290426,
+    "name": "MSC SANTA MARIA",
+    "weight": 90
+  },
+  {
+    "imo": 9702261,
+    "name": "MSC SARA ELENA",
+    "weight": 90
+  },
+  {
+    "imo": 9181675,
+    "name": "MSC SARAH V",
+    "weight": 90
+  },
+  {
+    "imo": 9241451,
+    "name": "MSC SARYA III",
+    "weight": 8
+  },
+  {
+    "imo": 9720500,
+    "name": "MSC SASHA",
+    "weight": 8
+  },
+  {
+    "imo": 9460356,
+    "name": "MSC SAVONA",
+    "weight": 8
+  },
+  {
+    "imo": 9292175,
+    "name": "MSC SHANELLE V",
+    "weight": 8
+  },
+  {
+    "imo": 9036002,
+    "name": "MSC SHAULA",
+    "weight": 90
+  },
+  {
+    "imo": 9393022,
+    "name": "MSC SHAY",
+    "weight": 8
+  },
+  {
+    "imo": 9290452,
+    "name": "MSC SHINA V",
+    "weight": 8
+  },
+  {
+    "imo": 9778105,
+    "name": "MSC SHREYA B",
+    "weight": 8
+  },
+  {
+    "imo": 9293442,
+    "name": "MSC SHRISTI",
+    "weight": 8
+  },
+  {
+    "imo": 9309459,
+    "name": "MSC SILVANA VIII",
+    "weight": 8
+  },
+  {
+    "imo": 9720457,
+    "name": "MSC SILVIA",
+    "weight": 8
+  },
+  {
+    "imo": 9336048,
+    "name": "MSC SINDY",
+    "weight": 8
+  },
+  {
+    "imo": 9793947,
+    "name": "MSC SIYA B",
+    "weight": 90
+  },
+  {
+    "imo": 9162277,
+    "name": "MSC SKY II",
+    "weight": 8
+  },
+  {
+    "imo": 9695028,
+    "name": "MSC SOFIA PAZ",
+    "weight": 8
+  },
+  {
+    "imo": 9401104,
+    "name": "MSC SOLA",
+    "weight": 9
+  },
+  {
+    "imo": 9330068,
+    "name": "MSC SURABAYA VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9231262,
+    "name": "MSC SWEDEN VI",
+    "weight": 8
+  },
+  {
+    "imo": 9317925,
+    "name": "MSC TAMPA",
+    "weight": 9
+  },
+  {
+    "imo": 9317937,
+    "name": "MSC TAMPICO V",
+    "weight": 8
+  },
+  {
+    "imo": 9247766,
+    "name": "MSC TAURUS VII",
+    "weight": 90
+  },
+  {
+    "imo": 9318058,
+    "name": "MSC TEXAS",
+    "weight": 8
+  },
+  {
+    "imo": 9285471,
+    "name": "MSC TIANJIN",
+    "weight": 9
+  },
+  {
+    "imo": 9305489,
+    "name": "MSC TIANPING",
+    "weight": 9
+  },
+  {
+    "imo": 9305477,
+    "name": "MSC TIANSHAN",
+    "weight": 90
+  },
+  {
+    "imo": 9309461,
+    "name": "MSC TOMOKO",
+    "weight": 90
+  },
+  {
+    "imo": 9299525,
+    "name": "MSC TORONTO",
+    "weight": 90
+  },
+  {
+    "imo": 9295177,
+    "name": "MSC TRACY V",
+    "weight": 90
+  },
+  {
+    "imo": 9484479,
+    "name": "MSC TRIESTE",
+    "weight": 90
+  },
+  {
+    "imo": 9289972,
+    "name": "MSC TUXPAN V",
+    "weight": 8
+  },
+  {
+    "imo": 9337444,
+    "name": "MSC UBERTY VIII",
+    "weight": 40
+  },
+  {
+    "imo": 9305001,
+    "name": "MSC ULSAN III",
+    "weight": 90
+  },
+  {
+    "imo": 9168843,
+    "name": "MSC UNIFIC VI",
+    "weight": 90
+  },
+  {
+    "imo": 9116589,
+    "name": "MSC UNITE VI",
+    "weight": 90
+  },
+  {
+    "imo": 9302619,
+    "name": "MSC UNITED VIII",
+    "weight": 90
+  },
+  {
+    "imo": 9169158,
+    "name": "MSC UNITY VI",
+    "weight": 90
+  },
+  {
+    "imo": 9168867,
+    "name": "MSC URSULA VI",
+    "weight": 8
+  },
+  {
+    "imo": 9302621,
+    "name": "MSC UTMOST VIII",
+    "weight": 90
+  },
+  {
+    "imo": 9461439,
+    "name": "MSC VALERIA",
+    "weight": 8
+  },
+  {
+    "imo": 9285691,
+    "name": "MSC VANCOUVER",
+    "weight": 90
+  },
+  {
+    "imo": 9465265,
+    "name": "MSC VEGA",
+    "weight": 9
+  },
+  {
+    "imo": 9287924,
+    "name": "MSC VERACRUZ V",
+    "weight": 90
+  },
+  {
+    "imo": 8618293,
+    "name": "MSC VERONIQUE",
+    "weight": 90
+  },
+  {
+    "imo": 9227326,
+    "name": "MSC VIDISHA R.",
+    "weight": 90
+  },
+  {
+    "imo": 9304708,
+    "name": "MSC VIGOUR III",
+    "weight": 90
+  },
+  {
+    "imo": 9146479,
+    "name": "MSC VILDA X",
+    "weight": 90
+  },
+  {
+    "imo": 8300145,
+    "name": "MSC WASHINGTON",
+    "weight": 90
+  },
+  {
+    "imo": 9288409,
+    "name": "MSC YAMUNA VI",
+    "weight": 90
+  },
+  {
+    "imo": 9285665,
+    "name": "MSC YOKOHAMA",
+    "weight": 90
+  },
+  {
+    "imo": 9227314,
+    "name": "MSC ZLATA R.",
+    "weight": 90
+  },
+  {
+    "imo": 9233844,
+    "name": "NAGOYA TOWER",
+    "weight": 90
+  },
+  {
+    "imo": 9333072,
+    "name": "NATAL",
+    "weight": 18
+  },
+  {
+    "imo": 9400289,
+    "name": "NAVARINO",
+    "weight": 90
+  },
+  {
+    "imo": 9345960,
+    "name": "NAVIOS CHRYSALIS",
+    "weight": 40
+  },
+  {
+    "imo": 9345958,
+    "name": "NAVIOS JASMINE",
+    "weight": 40
+  },
+  {
+    "imo": 9332250,
+    "name": "NAVIOS MAGNOLIA",
+    "weight": 40
+  },
+  {
+    "imo": 9445588,
+    "name": "NAVIOS MIAMI",
+    "weight": 40
+  },
+  {
+    "imo": 9345972,
+    "name": "NAVIOS NERINE",
+    "weight": 90
+  },
+  {
+    "imo": 9308003,
+    "name": "NAVIOS SUMMER",
+    "weight": 40
+  },
+  {
+    "imo": 9400215,
+    "name": "NEOKASTRO",
+    "weight": 90
+  },
+  {
+    "imo": 9689952,
+    "name": "NEW GUINEA CHIEF",
+    "weight": 8
+  },
+  {
+    "imo": 8714229,
+    "name": "NEW ORLEANS EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9209104,
+    "name": "NEWYORKER",
+    "weight": 90
+  },
+  {
+    "imo": 9406738,
+    "name": "NHAVA SHEVA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9203526,
+    "name": "NIKOLAS",
+    "weight": 90
+  },
+  {
+    "imo": 9398400,
+    "name": "NINGBO",
+    "weight": 18
+  },
+  {
+    "imo": 9229843,
+    "name": "NINGBO EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9265586,
+    "name": "NOAH",
+    "weight": 18
+  },
+  {
+    "imo": 9001215,
+    "name": "NORTH",
+    "weight": 18
+  },
+  {
+    "imo": 8913435,
+    "name": "NORTH SEA",
+    "weight": 8
+  },
+  {
+    "imo": 9466972,
+    "name": "NORTHERN JAGUAR",
+    "weight": 8
+  },
+  {
+    "imo": 9450349,
+    "name": "NORTHERN JUVENILE",
+    "weight": 8
+  },
+  {
+    "imo": 9252565,
+    "name": "NORTHERN MAJESTIC",
+    "weight": 8
+  },
+  {
+    "imo": 9252577,
+    "name": "NORTHERN MONUMENT",
+    "weight": 8
+  },
+  {
+    "imo": 9450301,
+    "name": "NORTHERN PRACTISE",
+    "weight": 8
+  },
+  {
+    "imo": 9064865,
+    "name": "NORTHERN RELIANCE",
+    "weight": 8
+  },
+  {
+    "imo": 9222118,
+    "name": "NORTHWOOD",
+    "weight": 90
+  },
+  {
+    "imo": 9290464,
+    "name": "NORWALK",
+    "weight": 90
+  },
+  {
+    "imo": 9675822,
+    "name": "NPDL CALIFORNIA",
+    "weight": 40
+  },
+  {
+    "imo": 9337626,
+    "name": "NYK CONSTELLATION",
+    "weight": 8
+  },
+  {
+    "imo": 9337614,
+    "name": "NYK DAEDALUS",
+    "weight": 90
+  },
+  {
+    "imo": 9337664,
+    "name": "NYK DEMETER",
+    "weight": 90
+  },
+  {
+    "imo": 9337688,
+    "name": "NYK DIANA",
+    "weight": 90
+  },
+  {
+    "imo": 9387449,
+    "name": "NYK JOANNA",
+    "weight": 90
+  },
+  {
+    "imo": 9406752,
+    "name": "NYK LAURA",
+    "weight": 90
+  },
+  {
+    "imo": 9337638,
+    "name": "NYK METEOR",
+    "weight": 90
+  },
+  {
+    "imo": 9337640,
+    "name": "NYK NEBULA",
+    "weight": 90
+  },
+  {
+    "imo": 9312975,
+    "name": "NYK OCEANUS",
+    "weight": 90
+  },
+  {
+    "imo": 9312999,
+    "name": "NYK ORION",
+    "weight": 90
+  },
+  {
+    "imo": 9419632,
+    "name": "NYK PAULA",
+    "weight": 90
+  },
+  {
+    "imo": 9416965,
+    "name": "NYK REMUS",
+    "weight": 8
+  },
+  {
+    "imo": 9416977,
+    "name": "NYK RIGEL",
+    "weight": 8
+  },
+  {
+    "imo": 9416989,
+    "name": "NYK ROMULUS",
+    "weight": 90
+  },
+  {
+    "imo": 9416991,
+    "name": "NYK RUMINA",
+    "weight": 90
+  },
+  {
+    "imo": 9419656,
+    "name": "NYK SILVIA",
+    "weight": 8
+  },
+  {
+    "imo": 9312781,
+    "name": "NYK VEGA",
+    "weight": 8
+  },
+  {
+    "imo": 9312793,
+    "name": "NYK VENUS",
+    "weight": 8
+  },
+  {
+    "imo": 9312808,
+    "name": "NYK VESTA",
+    "weight": 8
+  },
+  {
+    "imo": 9312810,
+    "name": "NYK VIRGO",
+    "weight": 90
+  },
+  {
+    "imo": 9303778,
+    "name": "OEL RUDRA",
+    "weight": 8
+  },
+  {
+    "imo": 9320013,
+    "name": "OEL SURYA",
+    "weight": 9
+  },
+  {
+    "imo": 9468310,
+    "name": "ONE ARCADIA",
+    "weight": 90
+  },
+  {
+    "imo": 9116591,
+    "name": "ONE BRIDGE",
+    "weight": 90
+  },
+  {
+    "imo": 9355408,
+    "name": "ONE CLARA",
+    "weight": 90
+  },
+  {
+    "imo": 9629902,
+    "name": "ONE COMMITMENT",
+    "weight": 90
+  },
+  {
+    "imo": 9339662,
+    "name": "ONE COMPETENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9388352,
+    "name": "ONE CONTINUITY",
+    "weight": 90
+  },
+  {
+    "imo": 9629914,
+    "name": "ONE CONTRIBUTION",
+    "weight": 90
+  },
+  {
+    "imo": 9388340,
+    "name": "ONE COSMOS",
+    "weight": 90
+  },
+  {
+    "imo": 9395159,
+    "name": "ONE HAMBURG",
+    "weight": 8
+  },
+  {
+    "imo": 9395147,
+    "name": "ONE HAMMERSMITH",
+    "weight": 8
+  },
+  {
+    "imo": 9566394,
+    "name": "ONE HANGZHOU BAY",
+    "weight": 90
+  },
+  {
+    "imo": 9302138,
+    "name": "ONE HANNOVER",
+    "weight": 8
+  },
+  {
+    "imo": 9302152,
+    "name": "ONE HARBOUR",
+    "weight": 8
+  },
+  {
+    "imo": 9588081,
+    "name": "ONE HELSINKI",
+    "weight": 8
+  },
+  {
+    "imo": 9302176,
+    "name": "ONE HENRY HUDSON",
+    "weight": 8
+  },
+  {
+    "imo": 9395161,
+    "name": "ONE HONG KONG",
+    "weight": 90
+  },
+  {
+    "imo": 9588079,
+    "name": "ONE HONOLULU",
+    "weight": 90
+  },
+  {
+    "imo": 9566382,
+    "name": "ONE HOUSTON",
+    "weight": 90
+  },
+  {
+    "imo": 9302140,
+    "name": "ONE HUMBER",
+    "weight": 90
+  },
+  {
+    "imo": 9302164,
+    "name": "ONE HUMEN",
+    "weight": 90
+  },
+  {
+    "imo": 9424900,
+    "name": "ONE MAGNIFICENCE",
+    "weight": 8
+  },
+  {
+    "imo": 9424912,
+    "name": "ONE MAJESTY",
+    "weight": 8
+  },
+  {
+    "imo": 9475648,
+    "name": "ONE MANEUVER",
+    "weight": 8
+  },
+  {
+    "imo": 9689615,
+    "name": "ONE MANHATTAN",
+    "weight": 8
+  },
+  {
+    "imo": 9475612,
+    "name": "ONE MARVEL",
+    "weight": 8
+  },
+  {
+    "imo": 9424924,
+    "name": "ONE MATRIX",
+    "weight": 8
+  },
+  {
+    "imo": 9475650,
+    "name": "ONE MISSION",
+    "weight": 8
+  },
+  {
+    "imo": 9475636,
+    "name": "ONE MODERN",
+    "weight": 8
+  },
+  {
+    "imo": 9475624,
+    "name": "ONE MOTIVATOR",
+    "weight": 8
+  },
+  {
+    "imo": 9312987,
+    "name": "ONE OLYMPUS",
+    "weight": 90
+  },
+  {
+    "imo": 9313008,
+    "name": "ONE ORPHEUS",
+    "weight": 90
+  },
+  {
+    "imo": 9444261,
+    "name": "ONE PREMIUM",
+    "weight": 90
+  },
+  {
+    "imo": 9444273,
+    "name": "ONE PRESENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9952684,
+    "name": "ONE READINESS",
+    "weight": 90
+  },
+  {
+    "imo": 9560376,
+    "name": "ONE SAN DIEGO",
+    "weight": 90
+  },
+  {
+    "imo": 9356701,
+    "name": "ONE THESEUS",
+    "weight": 90
+  },
+  {
+    "imo": 9356713,
+    "name": "ONE TRITON",
+    "weight": 90
+  },
+  {
+    "imo": 9300790,
+    "name": "OOCL ASIA",
+    "weight": 90
+  },
+  {
+    "imo": 9285005,
+    "name": "OOCL ATLANTA",
+    "weight": 90
+  },
+  {
+    "imo": 9477878,
+    "name": "OOCL BEIJING",
+    "weight": 90
+  },
+  {
+    "imo": 9495038,
+    "name": "OOCL BRAZIL",
+    "weight": 90
+  },
+  {
+    "imo": 9102318,
+    "name": "OOCL BRITIAN",
+    "weight": 90
+  },
+  {
+    "imo": 9477880,
+    "name": "OOCL CANADA",
+    "weight": 90
+  },
+  {
+    "imo": 9461790,
+    "name": "OOCL CHARLESTON",
+    "weight": 90
+  },
+  {
+    "imo": 9199270,
+    "name": "OOCL CHICAGO",
+    "weight": 90
+  },
+  {
+    "imo": 9567673,
+    "name": "OOCL DURBAN",
+    "weight": 90
+  },
+  {
+    "imo": 9300805,
+    "name": "OOCL EUROPE",
+    "weight": 90
+  },
+  {
+    "imo": 9613587,
+    "name": "OOCL GENOA",
+    "weight": 90
+  },
+  {
+    "imo": 9613599,
+    "name": "OOCL HO CHI MINH CITY",
+    "weight": 90
+  },
+  {
+    "imo": 9367205,
+    "name": "OOCL ITALY",
+    "weight": 90
+  },
+  {
+    "imo": 9367176,
+    "name": "OOCL KUALA LUMPUR",
+    "weight": 90
+  },
+  {
+    "imo": 9417268,
+    "name": "OOCL LONDON",
+    "weight": 90
+  },
+  {
+    "imo": 9417270,
+    "name": "OOCL LUXEMBOURG",
+    "weight": 8
+  },
+  {
+    "imo": 9627980,
+    "name": "OOCL MALAYSIA",
+    "weight": 8
+  },
+  {
+    "imo": 9486075,
+    "name": "OOCL MEMPHIS",
+    "weight": 8
+  },
+  {
+    "imo": 9477892,
+    "name": "OOCL MIAMI",
+    "weight": 90
+  },
+  {
+    "imo": 9367190,
+    "name": "OOCL OAKLAND",
+    "weight": 90
+  },
+  {
+    "imo": 9251999,
+    "name": "OOCL ROTTERDAM",
+    "weight": 90
+  },
+  {
+    "imo": 9199268,
+    "name": "OOCL SAN FRANCISCO",
+    "weight": 90
+  },
+  {
+    "imo": 9404871,
+    "name": "OOCL SAVANNAH",
+    "weight": 90
+  },
+  {
+    "imo": 9310240,
+    "name": "OOCL SOUTHAMPTON",
+    "weight": 90
+  },
+  {
+    "imo": 9290414,
+    "name": "OOCL ST. LAWRENCE",
+    "weight": 8
+  },
+  {
+    "imo": 9477907,
+    "name": "OOCL TAIPEI",
+    "weight": 8
+  },
+  {
+    "imo": 9310238,
+    "name": "OOCL TOKYO",
+    "weight": 8
+  },
+  {
+    "imo": 9486087,
+    "name": "OOCL UTAH",
+    "weight": 8
+  },
+  {
+    "imo": 9417256,
+    "name": "OOCL WASHINGTON",
+    "weight": 90
+  },
+  {
+    "imo": 9320697,
+    "name": "OSAKA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9080613,
+    "name": "OTSE",
+    "weight": 18
+  },
+  {
+    "imo": 9641223,
+    "name": "PANAMA EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9290787,
+    "name": "PANDA 001",
+    "weight": 8
+  },
+  {
+    "imo": 9793909,
+    "name": "PARANA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9447902,
+    "name": "PARIS EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9038919,
+    "name": "PARIS EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9005560,
+    "name": "PATAI",
+    "weight": 18
+  },
+  {
+    "imo": 9626560,
+    "name": "PELICAN",
+    "weight": 90
+  },
+  {
+    "imo": 9203631,
+    "name": "PINE",
+    "weight": 18
+  },
+  {
+    "imo": 9077276,
+    "name": "PINEZA",
+    "weight": 90
+  },
+  {
+    "imo": 9400112,
+    "name": "PINOCCHIO",
+    "weight": 90
+  },
+  {
+    "imo": 9280847,
+    "name": "PIRAEUS",
+    "weight": 90
+  },
+  {
+    "imo": 9288394,
+    "name": "PL GERMANY",
+    "weight": 8
+  },
+  {
+    "imo": 9294874,
+    "name": "PORT KELANG EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9481520,
+    "name": "PORTO",
+    "weight": 18
+  },
+  {
+    "imo": 9221839,
+    "name": "PORTO CHELI",
+    "weight": 40
+  },
+  {
+    "imo": 9260902,
+    "name": "PORTO GERMENO",
+    "weight": 40
+  },
+  {
+    "imo": 9349887,
+    "name": "POSEN",
+    "weight": 18
+  },
+  {
+    "imo": 9938353,
+    "name": "PRESIDENT BUSH",
+    "weight": 8
+  },
+  {
+    "imo": 9938389,
+    "name": "PRESIDENT CARTER",
+    "weight": 40
+  },
+  {
+    "imo": 9938339,
+    "name": "PRESIDENT GRANT",
+    "weight": 40
+  },
+  {
+    "imo": 9938377,
+    "name": "PRESIDENT LB JOHNSON",
+    "weight": 8
+  },
+  {
+    "imo": 9938341,
+    "name": "PRESIDENT REAGAN",
+    "weight": 90
+  },
+  {
+    "imo": 9321029,
+    "name": "PRESTIGE",
+    "weight": 90
+  },
+  {
+    "imo": 9302566,
+    "name": "PUMBA",
+    "weight": 18
+  },
+  {
+    "imo": 9307229,
+    "name": "PUSAN C",
+    "weight": 18
+  },
+  {
+    "imo": 9233832,
+    "name": "QINGDAO TOWER",
+    "weight": 90
+  },
+  {
+    "imo": 9002037,
+    "name": "R. J. PFEIFFER",
+    "weight": 8
+  },
+  {
+    "imo": 9055474,
+    "name": "RADIANT",
+    "weight": 90
+  },
+  {
+    "imo": 9303754,
+    "name": "RAMA 3",
+    "weight": 9
+  },
+  {
+    "imo": 9779771,
+    "name": "RDO ACE",
+    "weight": 8
+  },
+  {
+    "imo": 9401283,
+    "name": "RDO CONCORD",
+    "weight": 8
+  },
+  {
+    "imo": 9302102,
+    "name": "RDO ENDEAVOUR",
+    "weight": 9
+  },
+  {
+    "imo": 9088122,
+    "name": "REACH",
+    "weight": 18
+  },
+  {
+    "imo": 9326744,
+    "name": "REN JIAN 10",
+    "weight": 18
+  },
+  {
+    "imo": 9459278,
+    "name": "REN JIAN 15",
+    "weight": 18
+  },
+  {
+    "imo": 9484510,
+    "name": "REN JIAN 27",
+    "weight": 18
+  },
+  {
+    "imo": 9301859,
+    "name": "RENA P",
+    "weight": 18
+  },
+  {
+    "imo": 9061112,
+    "name": "RESOLVE",
+    "weight": 90
+  },
+  {
+    "imo": 9061136,
+    "name": "RESPECT",
+    "weight": 90
+  },
+  {
+    "imo": 9247950,
+    "name": "RICH",
+    "weight": 18
+  },
+  {
+    "imo": 9419773,
+    "name": "RIO KOBE",
+    "weight": 9
+  },
+  {
+    "imo": 9399806,
+    "name": "RIYADH MUKAAB",
+    "weight": 40
+  },
+  {
+    "imo": 9398450,
+    "name": "ROTTERDAM",
+    "weight": 90
+  },
+  {
+    "imo": 9618276,
+    "name": "RUBY TOWER",
+    "weight": 8
+  },
+  {
+    "imo": 9116577,
+    "name": "S ULTRA",
+    "weight": 8
+  },
+  {
+    "imo": 9603594,
+    "name": "SAFEEN PRIZE",
+    "weight": 40
+  },
+  {
+    "imo": 9603609,
+    "name": "SAFEEN PROSPER",
+    "weight": 40
+  },
+  {
+    "imo": 9123609,
+    "name": "SALAM MULIA",
+    "weight": 40
+  },
+  {
+    "imo": 9139488,
+    "name": "SAN",
+    "weight": 18
+  },
+  {
+    "imo": 9344643,
+    "name": "SAN ALBERTO",
+    "weight": 8
+  },
+  {
+    "imo": 9344667,
+    "name": "SAN ALFONSO",
+    "weight": 90
+  },
+  {
+    "imo": 9398412,
+    "name": "SAN DIEGO",
+    "weight": 90
+  },
+  {
+    "imo": 9698628,
+    "name": "SAN FELIPE",
+    "weight": 8
+  },
+  {
+    "imo": 9698630,
+    "name": "SAN FELIX",
+    "weight": 8
+  },
+  {
+    "imo": 9698642,
+    "name": "SAN FERNANDO",
+    "weight": 8
+  },
+  {
+    "imo": 9698654,
+    "name": "SAN FRANCISCA",
+    "weight": 8
+  },
+  {
+    "imo": 9560364,
+    "name": "SAN FRANCISCO BRIDGE",
+    "weight": 8
+  },
+  {
+    "imo": 9105126,
+    "name": "SANA",
+    "weight": 18
+  },
+  {
+    "imo": 9430399,
+    "name": "SANTA BARBARA",
+    "weight": 8
+  },
+  {
+    "imo": 9793911,
+    "name": "SANTA CATARINA EXPRESS",
+    "weight": 8
+  },
+  {
+    "imo": 9444845,
+    "name": "SANTA INES",
+    "weight": 8
+  },
+  {
+    "imo": 9290567,
+    "name": "SANTA LORETTA",
+    "weight": 8
+  },
+  {
+    "imo": 9430387,
+    "name": "SANTA URSULA",
+    "weight": 8
+  },
+  {
+    "imo": 9295361,
+    "name": "SANTA VANESSA",
+    "weight": 8
+  },
+  {
+    "imo": 9618290,
+    "name": "SAPPHIRE TOWER",
+    "weight": 90
+  },
+  {
+    "imo": 9315927,
+    "name": "SASKIA A",
+    "weight": 8
+  },
+  {
+    "imo": 9250971,
+    "name": "SAVANNAH",
+    "weight": 90
+  },
+  {
+    "imo": 9324174,
+    "name": "SC MEMPHIS",
+    "weight": 8
+  },
+  {
+    "imo": 9307279,
+    "name": "SCORPIUS",
+    "weight": 90
+  },
+  {
+    "imo": 9376012,
+    "name": "SEALAND BALBOA",
+    "weight": 40
+  },
+  {
+    "imo": 9106182,
+    "name": "SEALAND COMET",
+    "weight": 40
+  },
+  {
+    "imo": 9143025,
+    "name": "SEALAND INTREPID",
+    "weight": 40
+  },
+  {
+    "imo": 9143037,
+    "name": "SEALAND LIGHTNING",
+    "weight": 40
+  },
+  {
+    "imo": 9383235,
+    "name": "SEALAND LOS ANGELES",
+    "weight": 40
+  },
+  {
+    "imo": 9383247,
+    "name": "SEALAND PHILADELPHIA",
+    "weight": 40
+  },
+  {
+    "imo": 9468293,
+    "name": "SEASPAN ADONIS",
+    "weight": 90
+  },
+  {
+    "imo": 9630391,
+    "name": "SEASPAN AMAZON",
+    "weight": 90
+  },
+  {
+    "imo": 9713337,
+    "name": "SEASPAN BEACON",
+    "weight": 90
+  },
+  {
+    "imo": 9713349,
+    "name": "SEASPAN BEAUTY",
+    "weight": 90
+  },
+  {
+    "imo": 9713363,
+    "name": "SEASPAN BELLWETHER",
+    "weight": 90
+  },
+  {
+    "imo": 9739666,
+    "name": "SEASPAN BENEFACTOR",
+    "weight": 90
+  },
+  {
+    "imo": 9685322,
+    "name": "SEASPAN BRAVO",
+    "weight": 90
+  },
+  {
+    "imo": 9685358,
+    "name": "SEASPAN BREEZE",
+    "weight": 40
+  },
+  {
+    "imo": 9685346,
+    "name": "SEASPAN BRIGHTNESS",
+    "weight": 90
+  },
+  {
+    "imo": 9407134,
+    "name": "SEASPAN EMERALD",
+    "weight": 90
+  },
+  {
+    "imo": 9407158,
+    "name": "SEASPAN EMISSARY",
+    "weight": 90
+  },
+  {
+    "imo": 9407160,
+    "name": "SEASPAN EMPIRE",
+    "weight": 90
+  },
+  {
+    "imo": 9251377,
+    "name": "SEASPAN EXCELLENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9251389,
+    "name": "SEASPAN EXPEDITOR",
+    "weight": 8
+  },
+  {
+    "imo": 9630365,
+    "name": "SEASPAN GANGES",
+    "weight": 90
+  },
+  {
+    "imo": 9224300,
+    "name": "SEASPAN HAMBURG",
+    "weight": 8
+  },
+  {
+    "imo": 9301794,
+    "name": "SEASPAN JAKARTA",
+    "weight": 90
+  },
+  {
+    "imo": 9492696,
+    "name": "SEASPAN KYOTO",
+    "weight": 90
+  },
+  {
+    "imo": 9301770,
+    "name": "SEASPAN NEW DELHI",
+    "weight": 90
+  },
+  {
+    "imo": 9286009,
+    "name": "SEASPAN OCEANIA",
+    "weight": 90
+  },
+  {
+    "imo": 9486116,
+    "name": "SEASPAN OSAKA",
+    "weight": 90
+  },
+  {
+    "imo": 9301847,
+    "name": "SEASPAN RIO DE JANEIRO",
+    "weight": 8
+  },
+  {
+    "imo": 9301835,
+    "name": "SEASPAN SANTOS",
+    "weight": 8
+  },
+  {
+    "imo": 9630377,
+    "name": "SEASPAN THAMES",
+    "weight": 8
+  },
+  {
+    "imo": 9494280,
+    "name": "SEASPAN TOKYO",
+    "weight": 8
+  },
+  {
+    "imo": 9630389,
+    "name": "SEASPAN YANGTZE",
+    "weight": 90
+  },
+  {
+    "imo": 9193305,
+    "name": "SEOUL EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9567661,
+    "name": "SEROJA LIMA",
+    "weight": 8
+  },
+  {
+    "imo": 9305570,
+    "name": "SHANGHAI",
+    "weight": 90
+  },
+  {
+    "imo": 9461491,
+    "name": "SHENZHEN",
+    "weight": 90
+  },
+  {
+    "imo": 9348663,
+    "name": "SHIJING",
+    "weight": 90
+  },
+  {
+    "imo": 9106780,
+    "name": "SHIRO",
+    "weight": 18
+  },
+  {
+    "imo": 9196917,
+    "name": "SIA",
+    "weight": 18
+  },
+  {
+    "imo": 9719862,
+    "name": "SIMBA",
+    "weight": 18
+  },
+  {
+    "imo": 9074547,
+    "name": "SINGAPORE",
+    "weight": 90
+  },
+  {
+    "imo": 9200809,
+    "name": "SINGAPORE EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9166792,
+    "name": "SKAGEN MAERSK",
+    "weight": 90
+  },
+  {
+    "imo": 9312767,
+    "name": "SM BUSAN",
+    "weight": 90
+  },
+  {
+    "imo": 9347425,
+    "name": "SM KWANGYANG",
+    "weight": 8
+  },
+  {
+    "imo": 9312755,
+    "name": "SM LONG BEACH",
+    "weight": 8
+  },
+  {
+    "imo": 9305635,
+    "name": "SM NEYYAR",
+    "weight": 8
+  },
+  {
+    "imo": 9312937,
+    "name": "SM NINGBO",
+    "weight": 8
+  },
+  {
+    "imo": 9395939,
+    "name": "SM QINGDAO",
+    "weight": 8
+  },
+  {
+    "imo": 9456953,
+    "name": "SM SEOUL",
+    "weight": 8
+  },
+  {
+    "imo": 9312779,
+    "name": "SM SHANGHAI",
+    "weight": 8
+  },
+  {
+    "imo": 9464704,
+    "name": "SM TIANJIN",
+    "weight": 8
+  },
+  {
+    "imo": 9189495,
+    "name": "SM VANCOUVER",
+    "weight": 8
+  },
+  {
+    "imo": 9312949,
+    "name": "SM YANTIAN",
+    "weight": 8
+  },
+  {
+    "imo": 9475698,
+    "name": "SPEED",
+    "weight": 18
+  },
+  {
+    "imo": 9353254,
+    "name": "SPIL KARTIKA",
+    "weight": 8
+  },
+  {
+    "imo": 9353266,
+    "name": "SPIL KARTINI",
+    "weight": 8
+  },
+  {
+    "imo": 9362413,
+    "name": "SPIRIT OF MELBOURNE",
+    "weight": 8
+  },
+  {
+    "imo": 9346005,
+    "name": "SSF DREAM",
+    "weight": 8
+  },
+  {
+    "imo": 9137533,
+    "name": "SSL GUJARAT",
+    "weight": 8
+  },
+  {
+    "imo": 9363429,
+    "name": "SSL KAVERI",
+    "weight": 9
+  },
+  {
+    "imo": 9280811,
+    "name": "STAMATIS B",
+    "weight": 8
+  },
+  {
+    "imo": 9436484,
+    "name": "STAR",
+    "weight": 18
+  },
+  {
+    "imo": 9215684,
+    "name": "STEWART",
+    "weight": 90
+  },
+  {
+    "imo": 9332858,
+    "name": "SUAPE EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9230311,
+    "name": "SUEZ CANAL",
+    "weight": 8
+  },
+  {
+    "imo": 9227027,
+    "name": "SUNNY PHOENIX",
+    "weight": 40
+  },
+  {
+    "imo": 9450595,
+    "name": "SYNERGY KEELUNG",
+    "weight": 40
+  },
+  {
+    "imo": 9450583,
+    "name": "SYNERGY OAKLAND",
+    "weight": 40
+  },
+  {
+    "imo": 9525900,
+    "name": "TANGIER EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9143116,
+    "name": "TB JINJIANG",
+    "weight": 8
+  },
+  {
+    "imo": 9157648,
+    "name": "TB TAIYUAN",
+    "weight": 9
+  },
+  {
+    "imo": 9359727,
+    "name": "TEH TAICHUNG",
+    "weight": 9
+  },
+  {
+    "imo": 9728954,
+    "name": "THESEUS",
+    "weight": 90
+  },
+  {
+    "imo": 9300324,
+    "name": "TIAN CHANG HE",
+    "weight": 8
+  },
+  {
+    "imo": 9300300,
+    "name": "TIAN XIANG HE",
+    "weight": 8
+  },
+  {
+    "imo": 9282962,
+    "name": "TIANJIN BRIDGE",
+    "weight": 90
+  },
+  {
+    "imo": 9415844,
+    "name": "TIMON",
+    "weight": 18
+  },
+  {
+    "imo": 9267156,
+    "name": "TINA I",
+    "weight": 18
+  },
+  {
+    "imo": 9215842,
+    "name": "TIO",
+    "weight": 18
+  },
+  {
+    "imo": 9612882,
+    "name": "TIRUA",
+    "weight": 18
+  },
+  {
+    "imo": 9193290,
+    "name": "TOKYO EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9278105,
+    "name": "TONGALA",
+    "weight": 90
+  },
+  {
+    "imo": 9218650,
+    "name": "TORRANCE",
+    "weight": 90
+  },
+  {
+    "imo": 9447914,
+    "name": "TORRENTE",
+    "weight": 90
+  },
+  {
+    "imo": 9082336,
+    "name": "TOURMALINE",
+    "weight": 90
+  },
+  {
+    "imo": 9627916,
+    "name": "TRANCURA",
+    "weight": 90
+  },
+  {
+    "imo": 9728916,
+    "name": "TRITON",
+    "weight": 90
+  },
+  {
+    "imo": 9937529,
+    "name": "TS HONGKONG",
+    "weight": 8
+  },
+  {
+    "imo": 9757541,
+    "name": "TS KWANGYANG",
+    "weight": 8
+  },
+  {
+    "imo": 9960784,
+    "name": "TS MELBOURNE",
+    "weight": 8
+  },
+  {
+    "imo": 9951733,
+    "name": "TS TACOMA",
+    "weight": 8
+  },
+  {
+    "imo": 9784245,
+    "name": "TS TOKYO",
+    "weight": 8
+  },
+  {
+    "imo": 9321471,
+    "name": "TURKON RIZE",
+    "weight": 8
+  },
+  {
+    "imo": 9082348,
+    "name": "TURQUOISE",
+    "weight": 90
+  },
+  {
+    "imo": 9627928,
+    "name": "TYNDALL",
+    "weight": 90
+  },
+  {
+    "imo": 9248150,
+    "name": "UMA",
+    "weight": 18
+  },
+  {
+    "imo": 9168855,
+    "name": "URANUS",
+    "weight": 90
+  },
+  {
+    "imo": 9320685,
+    "name": "UTE",
+    "weight": 18
+  },
+  {
+    "imo": 9628180,
+    "name": "VALENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9108130,
+    "name": "VALENCIA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9628154,
+    "name": "VALOR",
+    "weight": 18
+  },
+  {
+    "imo": 9628166,
+    "name": "VALUE",
+    "weight": 18
+  },
+  {
+    "imo": 9363364,
+    "name": "VANCOUVER",
+    "weight": 90
+  },
+  {
+    "imo": 9667186,
+    "name": "VANCOUVER EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9628192,
+    "name": "VANTAGE",
+    "weight": 18
+  },
+  {
+    "imo": 9395044,
+    "name": "VARAMO",
+    "weight": 90
+  },
+  {
+    "imo": 9406180,
+    "name": "VELA",
+    "weight": 18
+  },
+  {
+    "imo": 9122473,
+    "name": "VELON 1",
+    "weight": 90
+  },
+  {
+    "imo": 9116618,
+    "name": "VERA",
+    "weight": 18
+  },
+  {
+    "imo": 9450416,
+    "name": "VIENNA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9289568,
+    "name": "VIRGIN STAR",
+    "weight": 8
+  },
+  {
+    "imo": 9429326,
+    "name": "VIVALDI",
+    "weight": 90
+  },
+  {
+    "imo": 9294850,
+    "name": "WAN HAI 502",
+    "weight": 8
+  },
+  {
+    "imo": 9294862,
+    "name": "WAN HAI 503",
+    "weight": 8
+  },
+  {
+    "imo": 9294886,
+    "name": "WAN HAI 506",
+    "weight": 8
+  },
+  {
+    "imo": 9326433,
+    "name": "WAN HAI 510",
+    "weight": 8
+  },
+  {
+    "imo": 9457622,
+    "name": "WAN HAI 512",
+    "weight": 8
+  },
+  {
+    "imo": 9457634,
+    "name": "WAN HAI 513",
+    "weight": 8
+  },
+  {
+    "imo": 9457646,
+    "name": "WAN HAI 515",
+    "weight": 8
+  },
+  {
+    "imo": 9224506,
+    "name": "WAN HAI 611",
+    "weight": 8
+  },
+  {
+    "imo": 9224518,
+    "name": "WAN HAI 612",
+    "weight": 8
+  },
+  {
+    "imo": 9224520,
+    "name": "WAN HAI 613",
+    "weight": 8
+  },
+  {
+    "imo": 9385025,
+    "name": "WAN HAI 621",
+    "weight": 8
+  },
+  {
+    "imo": 9321017,
+    "name": "WAN HAI 623",
+    "weight": 8
+  },
+  {
+    "imo": 9298997,
+    "name": "WAN HAI 625",
+    "weight": 8
+  },
+  {
+    "imo": 9398242,
+    "name": "WAN HAI 721",
+    "weight": 8
+  },
+  {
+    "imo": 9398230,
+    "name": "WAN HAI 722",
+    "weight": 8
+  },
+  {
+    "imo": 9398254,
+    "name": "WAN HAI 723",
+    "weight": 8
+  },
+  {
+    "imo": 9935117,
+    "name": "WAN HAI A05",
+    "weight": 90
+  },
+  {
+    "imo": 9793935,
+    "name": "WAN HAI V01",
+    "weight": 90
+  },
+  {
+    "imo": 9786724,
+    "name": "WAN HAI V02",
+    "weight": 90
+  },
+  {
+    "imo": 9162497,
+    "name": "WANA",
+    "weight": 18
+  },
+  {
+    "imo": 9302645,
+    "name": "WESTPORT",
+    "weight": 90
+  },
+  {
+    "imo": 9226047,
+    "name": "WESTWOOD COLUMBIA",
+    "weight": 8
+  },
+  {
+    "imo": 9226061,
+    "name": "WESTWOOD OLYMPIA",
+    "weight": 8
+  },
+  {
+    "imo": 9226035,
+    "name": "WESTWOOD RAINIER",
+    "weight": 8
+  },
+  {
+    "imo": 9226059,
+    "name": "WESTWOOD VICTORIA",
+    "weight": 8
+  },
+  {
+    "imo": 9288904,
+    "name": "WINNER",
+    "weight": 90
+  },
+  {
+    "imo": 9231793,
+    "name": "WOOLAMAI",
+    "weight": 90
+  },
+  {
+    "imo": 9348912,
+    "name": "X-PRESS KAILASH",
+    "weight": 40
+  },
+  {
+    "imo": 9967524,
+    "name": "X-PRESS PISCES",
+    "weight": 40
+  },
+  {
+    "imo": 9318151,
+    "name": "XIAMEN",
+    "weight": 90
+  },
+  {
+    "imo": 9314246,
+    "name": "XIN BEIJING",
+    "weight": 90
+  },
+  {
+    "imo": 9262118,
+    "name": "XIN CHONG QING",
+    "weight": 90
+  },
+  {
+    "imo": 9337949,
+    "name": "XIN DA YANG ZHOU",
+    "weight": 8
+  },
+  {
+    "imo": 9312597,
+    "name": "XIN DAN DONG",
+    "weight": 90
+  },
+  {
+    "imo": 9337937,
+    "name": "XIN FEI ZHOU",
+    "weight": 90
+  },
+  {
+    "imo": 9304796,
+    "name": "XIN FU ZHOU",
+    "weight": 90
+  },
+  {
+    "imo": 9309954,
+    "name": "XIN HAI KOU",
+    "weight": 90
+  },
+  {
+    "imo": 9400124,
+    "name": "XIN HE LU 6",
+    "weight": 90
+  },
+  {
+    "imo": 9314222,
+    "name": "XIN HONG KONG",
+    "weight": 90
+  },
+  {
+    "imo": 9307217,
+    "name": "XIN LOS ANGELES",
+    "weight": 90
+  },
+  {
+    "imo": 9337925,
+    "name": "XIN MEI ZHOU",
+    "weight": 90
+  },
+  {
+    "imo": 9310056,
+    "name": "XIN NAN SHA",
+    "weight": 90
+  },
+  {
+    "imo": 9262132,
+    "name": "XIN NAN TONG",
+    "weight": 8
+  },
+  {
+    "imo": 9337913,
+    "name": "XIN OU ZHOU",
+    "weight": 8
+  },
+  {
+    "imo": 9312561,
+    "name": "XIN RI ZHAO",
+    "weight": 8
+  },
+  {
+    "imo": 9309942,
+    "name": "XIN SHAN TOU",
+    "weight": 8
+  },
+  {
+    "imo": 9307231,
+    "name": "XIN SHANGHAI",
+    "weight": 90
+  },
+  {
+    "imo": 9262144,
+    "name": "XIN SU ZHOU",
+    "weight": 90
+  },
+  {
+    "imo": 9320465,
+    "name": "XIN TAI CANG",
+    "weight": 90
+  },
+  {
+    "imo": 9312573,
+    "name": "XIN WEI HAI",
+    "weight": 90
+  },
+  {
+    "imo": 9334935,
+    "name": "XIN YA ZHOU",
+    "weight": 90
+  },
+  {
+    "imo": 9320477,
+    "name": "XIN YANG PU",
+    "weight": 90
+  },
+  {
+    "imo": 9262120,
+    "name": "XIN YANG ZHOU",
+    "weight": 8
+  },
+  {
+    "imo": 9312585,
+    "name": "XIN YING KOU",
+    "weight": 8
+  },
+  {
+    "imo": 9378814,
+    "name": "XIN ZHAN JIANG",
+    "weight": 8
+  },
+  {
+    "imo": 9328601,
+    "name": "XIN ZHANG ZHOU",
+    "weight": 8
+  },
+  {
+    "imo": 9523029,
+    "name": "XIN ZHENG ZHOU",
+    "weight": 8
+  },
+  {
+    "imo": 9305594,
+    "name": "YANTIAN",
+    "weight": 90
+  },
+  {
+    "imo": 9229831,
+    "name": "YANTIAN EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9198288,
+    "name": "YM COSMOS",
+    "weight": 8
+  },
+  {
+    "imo": 9353280,
+    "name": "YM EFFICIENCY",
+    "weight": 8
+  },
+  {
+    "imo": 9496604,
+    "name": "YM ENLIGHTENMENT",
+    "weight": 8
+  },
+  {
+    "imo": 9496599,
+    "name": "YM ESSENCE",
+    "weight": 8
+  },
+  {
+    "imo": 9353292,
+    "name": "YM ETERNITY",
+    "weight": 90
+  },
+  {
+    "imo": 9496460,
+    "name": "YM EVOLUTION",
+    "weight": 90
+  },
+  {
+    "imo": 9496616,
+    "name": "YM EXCELLENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9496628,
+    "name": "YM EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9301275,
+    "name": "YM HEIGHTS",
+    "weight": 90
+  },
+  {
+    "imo": 9319131,
+    "name": "YM IMMENSE",
+    "weight": 90
+  },
+  {
+    "imo": 9319155,
+    "name": "YM INCEPTION",
+    "weight": 90
+  },
+  {
+    "imo": 9319143,
+    "name": "YM INCREMENT",
+    "weight": 90
+  },
+  {
+    "imo": 9143166,
+    "name": "YM KAOHSIUNG",
+    "weight": 90
+  },
+  {
+    "imo": 9438523,
+    "name": "YM MANDATE",
+    "weight": 90
+  },
+  {
+    "imo": 9485007,
+    "name": "YM MASCULINITY",
+    "weight": 90
+  },
+  {
+    "imo": 9438535,
+    "name": "YM MATURITY",
+    "weight": 90
+  },
+  {
+    "imo": 9484998,
+    "name": "YM MILESTONE",
+    "weight": 8
+  },
+  {
+    "imo": 9457737,
+    "name": "YM MOBILITY",
+    "weight": 90
+  },
+  {
+    "imo": 9664897,
+    "name": "YM MODERATION",
+    "weight": 8
+  },
+  {
+    "imo": 9664885,
+    "name": "YM MODESTY",
+    "weight": 8
+  },
+  {
+    "imo": 9660011,
+    "name": "YM MOVEMENT",
+    "weight": 8
+  },
+  {
+    "imo": 9455870,
+    "name": "YM MUTUALITY",
+    "weight": 8
+  },
+  {
+    "imo": 9198276,
+    "name": "YM ORCHID",
+    "weight": 8
+  },
+  {
+    "imo": 9198264,
+    "name": "YM PLUM",
+    "weight": 8
+  },
+  {
+    "imo": 9792694,
+    "name": "YM THRONE",
+    "weight": 8
+  },
+  {
+    "imo": 9789984,
+    "name": "YM TOGETHER",
+    "weight": 8
+  },
+  {
+    "imo": 9878515,
+    "name": "YM TOPMOST",
+    "weight": 8
+  },
+  {
+    "imo": 9792682,
+    "name": "YM TRANQUILITY",
+    "weight": 8
+  },
+  {
+    "imo": 9462706,
+    "name": "YM UBIQUITY",
+    "weight": 90
+  },
+  {
+    "imo": 9462718,
+    "name": "YM UNANIMITY",
+    "weight": 8
+  },
+  {
+    "imo": 9462732,
+    "name": "YM UNICORN",
+    "weight": 8
+  },
+  {
+    "imo": 9337482,
+    "name": "YM UNIFORM",
+    "weight": 90
+  },
+  {
+    "imo": 9462691,
+    "name": "YM UNIFORMITY",
+    "weight": 90
+  },
+  {
+    "imo": 9462720,
+    "name": "YM UPSURGENCE",
+    "weight": 90
+  },
+  {
+    "imo": 9337468,
+    "name": "YM UPWARD",
+    "weight": 90
+  },
+  {
+    "imo": 9337470,
+    "name": "YM UTILITY",
+    "weight": 90
+  },
+  {
+    "imo": 9278088,
+    "name": "YM WEALTH",
+    "weight": 90
+  },
+  {
+    "imo": 9704623,
+    "name": "YM WELLNESS",
+    "weight": 8
+  },
+  {
+    "imo": 9757230,
+    "name": "YM WELLSPRING",
+    "weight": 90
+  },
+  {
+    "imo": 9118317,
+    "name": "YM ZENITH",
+    "weight": 90
+  },
+  {
+    "imo": 9307009,
+    "name": "YOGI",
+    "weight": 18
+  },
+  {
+    "imo": 9630418,
+    "name": "YOKOHAMA EXPRESS",
+    "weight": 90
+  },
+  {
+    "imo": 9120750,
+    "name": "YUE HE",
+    "weight": 8
+  },
+  {
+    "imo": 9333060,
+    "name": "ZHONG GU SHAN DONG",
+    "weight": 90
+  },
+  {
+    "imo": 9120762,
+    "name": "ZHONG YUAN QING DAO",
+    "weight": 8
+  },
+  {
+    "imo": 9244934,
+    "name": "ZIM AMERICA",
+    "weight": 90
+  },
+  {
+    "imo": 9395953,
+    "name": "ZIM BALTIMORE",
+    "weight": 8
+  },
+  {
+    "imo": 9960514,
+    "name": "ZIM FALCON",
+    "weight": 8
+  },
+  {
+    "imo": 9431719,
+    "name": "ZIM IBERIA",
+    "weight": 8
+  },
+  {
+    "imo": 9440837,
+    "name": "ZIM PACIFIC",
+    "weight": 8
+  },
+  {
+    "imo": 9282974,
+    "name": "ZIM SAVANNAH",
+    "weight": 8
+  },
+  {
+    "imo": 9216987,
+    "name": "ZOI",
+    "weight": 18
+  }
+]
