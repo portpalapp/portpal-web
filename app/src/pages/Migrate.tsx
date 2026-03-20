@@ -59,6 +59,7 @@ export function Migrate() {
   const [codeError, setCodeError] = useState<string | null>(null);
   const [codeSuccess, setCodeSuccess] = useState(false);
   const [codeEmail, setCodeEmail] = useState('');
+  const [codePassword, setCodePassword] = useState('');
 
   // -----------------------------------------------------------------------
   // Tab 1 handler: migrate with existing email
@@ -298,17 +299,23 @@ export function Migrate() {
         return;
       }
 
-      // Create Supabase Auth account
-      const tempPassword = generateTempPassword();
+      // Code + matching email = verified identity. Let them set password now.
+      if (!codePassword || codePassword.length < 6) {
+        setCodeError('Please enter a password (at least 6 characters).');
+        setCodeLoading(false);
+        return;
+      }
+
+      // Create Supabase Auth account with their chosen password
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: codeEmail.trim(),
-        password: tempPassword,
+        password: codePassword,
       });
 
       if (signUpError) {
         if (signUpError.message?.includes('already registered')) {
           setCodeError(
-            'This email is already registered. Try signing in with this email, or use a different one.'
+            'This email is already registered. Try signing in instead.'
           );
         } else {
           setCodeError(signUpError.message);
@@ -328,18 +335,6 @@ export function Migrate() {
           console.warn('[Migrate] claim_migration_code error:', claimErr.message);
         }
       }
-
-      // Send password reset email
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-        codeEmail.trim(),
-        { redirectTo: window.location.origin + '/#/reset-password' }
-      );
-
-      if (resetError) {
-        console.warn('[Migrate] Password reset email error:', resetError.message);
-      }
-
-      await supabase.auth.signOut();
 
       setCodeSuccess(true);
     } catch (err: any) {
@@ -725,8 +720,24 @@ export function Migrate() {
                     />
                   </div>
                   <p className="text-slate-500 text-xs mt-1">
-                    We'll send a password setup link to this address.
+                    Use the same email from your PORTPAL account, or a new one.
                   </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Choose a Password
+                  </label>
+                  <div className="relative">
+                    <KeyRound size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="password"
+                      placeholder="At least 6 characters"
+                      value={codePassword}
+                      onChange={e => setCodePassword(e.target.value)}
+                      className="w-full bg-slate-900/50 border border-slate-600/50 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                    />
+                  </div>
                 </div>
 
                 <button
