@@ -273,81 +273,45 @@ export function Migrate() {
 
     setCodeLoading(true);
     try {
-      // Validate the migration code against the migration_codes table
-      const { data: codeData, error: codeErr } = await supabase
-        .from('migration_codes')
-        .select('id, bubble_user_id, claimed, email')
-        .eq('code', code.toUpperCase())
-        .eq('claimed', false)
-        .maybeSingle();
-
-      if (codeErr) {
-        setCodeError('Unable to validate your code. Please try again.');
-        setCodeLoading(false);
-        return;
-      }
-
-      if (!codeData) {
-        setCodeError('Invalid migration code. Please check and try again.');
-        setCodeLoading(false);
-        return;
-      }
-
-      if (codeData.claimed) {
-        setCodeError('This migration code has already been used.');
-        setCodeLoading(false);
-        return;
-      }
-
-      // Code + matching email = verified identity. Let them set password now.
+      // Validate password
       if (!codePassword || codePassword.length < 6) {
         setCodeError('Please enter a password (at least 6 characters).');
         setCodeLoading(false);
         return;
       }
 
-      // Create Supabase Auth account with their chosen password
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: codeEmail.trim(),
-        password: codePassword,
+      // Single server-side call: creates user, claims code, transfers shifts, creates profile
+      const { data: migrateResult, error: migrateErr } = await (supabase.rpc as any)('migrate_with_code', {
+        p_code: code.trim(),
+        p_email: codeEmail.trim(),
+        p_password: codePassword,
       });
 
-      if (signUpError) {
-        if (signUpError.message?.includes('already registered')) {
-          setCodeError(
-            'This email is already registered. Try signing in instead.'
-          );
-        } else {
-          setCodeError(signUpError.message);
-        }
+      if (migrateErr) {
+        setCodeError('Migration failed. Please try again or contact support.');
+        console.warn('[Migrate] RPC error:', migrateErr.message);
         setCodeLoading(false);
         return;
       }
 
-      // Claim the code — this links the Bubble user, marks code claimed, AND transfers shifts
-      if (signUpData.user) {
-        const { error: claimErr } = await (supabase.rpc as any)('claim_migration_code', {
-          p_code: code.toUpperCase(),
-          p_supabase_uid: signUpData.user.id,
-        });
-
-        if (claimErr) {
-          console.warn('[Migrate] claim_migration_code error:', claimErr.message);
-        }
+      if (migrateResult?.error) {
+        setCodeError(migrateResult.error);
+        setCodeLoading(false);
+        return;
       }
 
-      // Sign them in immediately with the credentials they just created
+      console.log('[Migrate] Success:', migrateResult.shifts_transferred, 'shifts transferred');
+
+      // Sign in immediately with the credentials they just set
       const { error: signInErr } = await supabase.auth.signInWithPassword({
         email: codeEmail.trim(),
         password: codePassword,
       });
 
       if (signInErr) {
-        // Account created but sign-in failed — fall back to login page
         console.warn('[Migrate] Auto sign-in failed:', signInErr.message);
         setCodeSuccess(true);
       } else {
-        // Signed in — go straight to the app
         navigate('/');
       }
     } catch (err: any) {
