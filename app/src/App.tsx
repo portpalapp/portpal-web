@@ -1,4 +1,5 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './lib/auth'
 import { Navigation } from './components/Navigation'
 import { Home } from './pages/Home'
 import { Shifts } from './pages/Shifts'
@@ -7,12 +8,31 @@ import { Analytics } from './pages/Analytics'
 import { Chat } from './pages/Chat'
 import { Subscribe } from './pages/Subscribe'
 import { Landing } from './pages/Landing'
+import { Login } from './pages/Login'
+import { Migrate } from './pages/Migrate'
+import { Onboarding } from './pages/Onboarding'
 import { Dashboard } from './pages/Dashboard'
 import { CommandCenter } from './pages/CommandCenter'
 import { SocialPreview } from './social/SocialPreview'
 import { InstagramMockup } from './social/InstagramMockup'
 
 function MobileApp() {
+  const { session, loading, demoMode } = useAuth();
+
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated and not in demo mode
+  if (!session && !demoMode) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="h-full flex flex-col bg-slate-50">
       {/* Status bar spacer — respects device safe area */}
@@ -42,6 +62,9 @@ function App() {
       <Routes>
         <Route path="/landing" element={<Landing />} />
         <Route path="/signup" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/migrate" element={<Migrate />} />
+        <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/social" element={<SocialPreview />} />
         <Route path="/instagram" element={<InstagramMockup />} />
         <Route path="/dashboard" element={<Dashboard />} />
