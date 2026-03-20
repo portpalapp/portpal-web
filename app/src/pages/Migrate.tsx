@@ -336,7 +336,20 @@ export function Migrate() {
         }
       }
 
-      setCodeSuccess(true);
+      // Sign them in immediately with the credentials they just created
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email: codeEmail.trim(),
+        password: codePassword,
+      });
+
+      if (signInErr) {
+        // Account created but sign-in failed — fall back to login page
+        console.warn('[Migrate] Auto sign-in failed:', signInErr.message);
+        setCodeSuccess(true);
+      } else {
+        // Signed in — go straight to the app
+        navigate('/');
+      }
     } catch (err: any) {
       setCodeError(err.message || 'Something went wrong. Please try again.');
     }
@@ -357,36 +370,49 @@ export function Migrate() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-[#1e3a5f] to-slate-900 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl text-center">
-            {/* Success icon */}
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 mb-5">
               <CheckCircle2 size={40} className="text-green-400" />
             </div>
 
-            <h2 className="text-xl font-bold text-white mb-2">Check your email</h2>
-            <p className="text-slate-400 text-sm mb-1">We sent a password setup link to</p>
-            <p className="text-white font-semibold text-sm mb-6">{displayEmail}</p>
+            {codeSuccess ? (
+              <>
+                <h2 className="text-xl font-bold text-white mb-2">Account migrated!</h2>
+                <p className="text-slate-400 text-sm mb-6">Your shifts have been transferred. Sign in to get started.</p>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-all"
+                >
+                  Sign In
+                </button>
+              </>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold text-white mb-2">Check your email</h2>
+                <p className="text-slate-400 text-sm mb-1">We sent a password setup link to</p>
+                <p className="text-white font-semibold text-sm mb-6">{displayEmail}</p>
 
-            {/* Instructions */}
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6 text-left">
-              <div className="flex items-start gap-2.5">
-                <Info size={18} className="text-blue-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-blue-300 text-sm font-medium mb-1">What happens next?</p>
-                  <ol className="text-blue-300/80 text-xs space-y-1 list-decimal list-inside">
-                    <li>Open the link in your email</li>
-                    <li>Set a new password</li>
-                    <li>Come back and sign in with your email and new password</li>
-                  </ol>
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6 text-left">
+                  <div className="flex items-start gap-2.5">
+                    <Info size={18} className="text-blue-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-blue-300 text-sm font-medium mb-1">What happens next?</p>
+                      <ol className="text-blue-300/80 text-xs space-y-1 list-decimal list-inside">
+                        <li>Open the link in your email</li>
+                        <li>Set a new password</li>
+                        <li>Come back and sign in with your email and new password</li>
+                      </ol>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-all"
-            >
-              Back to Sign In
-            </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-all"
+                >
+                  Back to Sign In
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
