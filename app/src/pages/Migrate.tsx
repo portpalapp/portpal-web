@@ -275,8 +275,9 @@ export function Migrate() {
       // Validate the migration code against the migration_codes table
       const { data: codeData, error: codeErr } = await supabase
         .from('migration_codes')
-        .select('id, bubble_id, used')
-        .eq('code', code)
+        .select('id, bubble_user_id, claimed, email')
+        .eq('code', code.toUpperCase())
+        .eq('claimed', false)
         .maybeSingle();
 
       if (codeErr) {
@@ -291,7 +292,7 @@ export function Migrate() {
         return;
       }
 
-      if (codeData.used) {
+      if (codeData.claimed) {
         setCodeError('This migration code has already been used.');
         setCodeLoading(false);
         return;
@@ -316,18 +317,16 @@ export function Migrate() {
         return;
       }
 
-      // Link the Bubble user and mark the code as used
+      // Claim the code — this links the Bubble user, marks code claimed, AND transfers shifts
       if (signUpData.user) {
-        await (supabase.rpc as any)('link_bubble_user', {
-          p_email: codeEmail.trim(),
+        const { error: claimErr } = await (supabase.rpc as any)('claim_migration_code', {
+          p_code: code.toUpperCase(),
           p_supabase_uid: signUpData.user.id,
         });
 
-        // Mark code as used
-        await supabase
-          .from('migration_codes')
-          .update({ used: true, used_at: new Date().toISOString(), used_by: signUpData.user.id })
-          .eq('id', codeData.id);
+        if (claimErr) {
+          console.warn('[Migrate] claim_migration_code error:', claimErr.message);
+        }
       }
 
       // Send password reset email
