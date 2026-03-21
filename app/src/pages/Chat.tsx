@@ -20,6 +20,8 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
+import { useShifts } from '../hooks/useShifts'
+import type { Shift } from '../hooks/useShifts'
 import {
   WAGE_TABLES,
   SHIFT_MULTIPLIERS,
@@ -155,6 +157,64 @@ function getTopPayingJobs(shift: 'DAY' | 'NIGHT' | 'GRAVEYARD', dayType: 'MON-FR
 }
 
 // ---------------------------------------------------------------------------
+// Summarize user's shifts for AI context
+// ---------------------------------------------------------------------------
+
+function summarizeShifts(shifts: Shift[]) {
+  if (!shifts.length) return undefined
+
+  const totalPay = shifts.reduce((sum, s) => sum + s.totalPay, 0)
+
+  // YTD = pension year starting Jan 4
+  const pensionYearStart = '2026-01-04'
+  const ytdShifts = shifts.filter(s => s.date.slice(0, 10) >= pensionYearStart)
+  const ytdEarnings = ytdShifts.reduce((sum, s) => sum + s.totalPay, 0)
+
+  // Recent = last 7 days
+  const now = new Date()
+  const weekAgo = new Date(now.getTime() - 7 * 86400000)
+  const weekAgoStr = weekAgo.toISOString().slice(0, 10)
+  const recentShifts = shifts.filter(s => s.date.slice(0, 10) >= weekAgoStr).length
+
+  // Top jobs by frequency
+  const jobCounts = new Map<string, number>()
+  const locCounts = new Map<string, number>()
+  const shiftBreakdown = { DAY: 0, NIGHT: 0, GRAVEYARD: 0 }
+  for (const s of shifts) {
+    jobCounts.set(s.job, (jobCounts.get(s.job) || 0) + 1)
+    locCounts.set(s.location, (locCounts.get(s.location) || 0) + 1)
+    if (s.shift in shiftBreakdown) shiftBreakdown[s.shift]++
+  }
+
+  const topJobs = [...jobCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => e[0])
+  const topLocations = [...locCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0])
+
+  // Avg shifts per week (based on date range)
+  const dates = shifts.map(s => s.date.slice(0, 10)).sort()
+  const firstDate = new Date(dates[0])
+  const lastDate = new Date(dates[dates.length - 1])
+  const weeks = Math.max(1, (lastDate.getTime() - firstDate.getTime()) / (7 * 86400000))
+  const avgShiftsPerWeek = Math.round((shifts.length / weeks) * 10) / 10
+
+  // Recent shift details (last 5)
+  const recentDetails = shifts.slice(0, 5).map(s =>
+    `${s.date.slice(0, 10)}: ${s.job} ${s.shift} @ ${s.location} — $${s.totalPay.toFixed(2)}`
+  )
+
+  return {
+    totalShifts: shifts.length,
+    totalPay: Math.round(totalPay),
+    ytdEarnings: Math.round(ytdEarnings),
+    recentShifts,
+    topJobs,
+    topLocations,
+    avgShiftsPerWeek,
+    shiftBreakdown,
+    recentShiftDetails: recentDetails,
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Formatted text renderer - converts **bold** markdown to HTML spans
 // ---------------------------------------------------------------------------
 function FormattedText({ content, isUser }: { content: string; isUser: boolean }) {
@@ -228,6 +288,7 @@ type ChatTab = 'chat' | 'resources'
 
 export function Chat() {
   const { profile } = useProfile()
+  const { shifts } = useShifts()
   const navigate = useNavigate()
 
   const makeGreeting = (name: string) =>
@@ -242,8 +303,10 @@ export function Chat() {
     },
   ])
   const [input, setInput] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
 
   // Update greeting when profile loads
   useEffect(() => {
@@ -367,7 +430,7 @@ export function Chat() {
   // -------------------------------------------------------------------------
   // Build a response using real contract data
   // -------------------------------------------------------------------------
-  const generateResponse = useCallback((userInput: string): string => {
+  const generateLocalResponse = useCallback((userInput: string): string => {
     const lower = userInput.toLowerCase()
     const yi = getCurrentYearIndex()
     const yearData = WAGE_TABLES.years[yi]
@@ -873,26 +936,106 @@ export function Chat() {
     )
   }, [profile.pensionGoal, profile.seniority])
 
+  const sendToAI = useCallback(async (userInput: string, currentMessages: Message[]) => {
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: userInput }
+    const assistantMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: '' }
+    const updated = [...currentMessages, userMsg, assistantMsg]
+    setMessages(updated)
+    setIsStreaming(true)
+
+    // Build history (last 10 messages, excluding the empty assistant placeholder)
+    const history = updated
+      .filter(m => m.content)
+      .slice(-10)
+      .map(m => ({ role: m.role, content: m.content }))
+
+    const shiftSummary = summarizeShifts(shifts)
+
+    const controller = new AbortController()
+    abortRef.current = controller
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userInput,
+          history,
+          context: {
+            profile: {
+              name: profile.name,
+              board: profile.board,
+              seniority: profile.seniority,
+              pensionGoal: profile.pensionGoal,
+              union_local: profile.union_local,
+            },
+            shiftSummary,
+          },
+        }),
+        signal: controller.signal,
+      })
+
+      if (!res.ok || !res.body) {
+        throw new Error(`API returned ${res.status}`)
+      }
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let fullText = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value, { stream: true })
+        const lines = chunk.split('\n')
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const data = line.slice(6)
+          if (data === '[DONE]') continue
+
+          try {
+            const parsed = JSON.parse(data)
+            if (parsed.error) throw new Error(parsed.error)
+            if (parsed.text) {
+              fullText += parsed.text
+              setMessages(prev =>
+                prev.map(m => m.id === assistantMsg.id ? { ...m, content: fullText } : m)
+              )
+            }
+          } catch {
+            // skip unparseable chunks
+          }
+        }
+      }
+
+      // If we got no text from the API, fall back to local
+      if (!fullText) {
+        const fallback = generateLocalResponse(userInput)
+        setMessages(prev =>
+          prev.map(m => m.id === assistantMsg.id ? { ...m, content: fallback } : m)
+        )
+      }
+    } catch (err: any) {
+      if (err?.name === 'AbortError') return
+      console.warn('[Chat] API failed, using local fallback:', err)
+      const fallback = generateLocalResponse(userInput)
+      setMessages(prev =>
+        prev.map(m => m.id === assistantMsg.id ? { ...m, content: fallback } : m)
+      )
+    } finally {
+      setIsStreaming(false)
+      abortRef.current = null
+    }
+  }, [shifts, profile, generateLocalResponse])
+
   const handleSend = () => {
-    if (!input.trim()) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input,
-    }
-
-    const responseContent = generateResponse(input)
-
-    const assistantMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: responseContent,
-    }
-
-    setMessages([...messages, userMessage, assistantMessage])
+    if (!input.trim() || isStreaming) return
+    const text = input
     setInput('')
     setSelectedCategory(null)
+    sendToAI(text, messages)
   }
 
   return (
@@ -1075,6 +1218,21 @@ export function Chat() {
               </div>
             )}
 
+            {isStreaming && messages[messages.length - 1]?.content === '' && (
+              <div className="flex gap-2 justify-start">
+                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                  <Bot size={16} className="text-white" />
+                </div>
+                <div className="bg-white border border-slate-200 rounded-2xl rounded-bl-sm px-4 py-3">
+                  <div className="flex gap-1">
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         </>
@@ -1099,7 +1257,7 @@ export function Chat() {
             </div>
             <button
               onClick={handleSend}
-              disabled={!input.trim()}
+              disabled={!input.trim() || isStreaming}
               className="p-3 rounded-xl bg-blue-600 text-white disabled:opacity-50"
             >
               <Send size={20} />

@@ -13,3 +13,4 @@ Thumbs.db
 *.log
 /prediction/model.json
 /prediction/model-v2.json
+.gstack/

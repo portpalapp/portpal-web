@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Anchor, Flame, Trophy, TrendingUp, AlertCircle, ChevronRight, Sparkles, Target, Calendar, Brain, Loader2 } from 'lucide-react'
+import { Anchor, Flame, Trophy, TrendingUp, ChevronRight, Sparkles, Target, Calendar, Loader2 } from 'lucide-react'
 import {
   calculateWeeklyEarnings,
   calculateYTDEarnings,
@@ -101,27 +101,6 @@ export function Home() {
         </div>
       </div>
 
-      {/* AI Prediction Card - Clickable */}
-      <button
-        onClick={() => navigate('/chat')}
-        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-4 text-white text-left"
-      >
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-white/20 rounded-xl">
-            <Brain size={24} />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <Sparkles size={14} />
-              <span className="text-xs font-medium text-purple-200">AI Prediction</span>
-            </div>
-            <p className="font-semibold mt-1">Tomorrow: 73% chance of Ship Gantry</p>
-            <p className="text-purple-200 text-xs mt-1">Based on your seniority and recent dispatch patterns</p>
-          </div>
-          <ChevronRight size={20} className="text-purple-200" />
-        </div>
-      </button>
-
       {/* Earnings Cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-4 text-white">
@@ -208,23 +187,6 @@ export function Home() {
               <p className="text-xs text-amber-600">Shifts Logged</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Pay Alert (example) */}
-      <div className="bg-red-50 rounded-2xl p-4 border border-red-100 flex items-start gap-3">
-        <div className="p-2 bg-red-100 rounded-xl">
-          <AlertCircle className="text-red-500" size={20} />
-        </div>
-        <div className="flex-1">
-          <h4 className="font-semibold text-red-800">Pay Discrepancy Detected</h4>
-          <p className="text-xs text-red-600 mt-1">
-            Jan 15 shift shows $52.17/hr but should be $55.95/hr for TT Day.
-            Shortage: $34.02
-          </p>
-          <button className="mt-2 text-xs font-medium text-red-700 flex items-center gap-1">
-            Report Shortage <ChevronRight size={14} />
-          </button>
         </div>
       </div>
 
