@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './lib/auth'
 import { Navigation } from './components/Navigation'
+import { Sidebar, MobileDrawer } from './components/Sidebar'
 import { Home } from './pages/Home'
 import { Shifts } from './pages/Shifts'
 import { Calendar } from './pages/Calendar'
@@ -41,31 +42,42 @@ function MobileApp() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-slate-50">
-      {/* Status bar spacer — respects device safe area */}
-      <div className="safe-top bg-slate-50" />
+    <div className="h-full flex bg-slate-50">
+      {/* Desktop sidebar */}
+      <Sidebar />
 
-      {/* Scrollable content area */}
-      <div className="flex-1 overflow-y-auto no-scrollbar">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shifts" element={<Shifts />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/holidays" element={<Holidays />} />
-          <Route path="/pension" element={<Pension />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/subscribe" element={<Subscribe />} />
-          <Route path="/template-builder" element={<TemplateBuilder />} />
-          <Route path="/vessels" element={<Vessels />} />
-          <Route path="/pay-stubs" element={<PayStubs />} />
-          <Route path="/contract" element={<Contract />} />
-        </Routes>
+      {/* Main content column */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Mobile header with hamburger */}
+        <div className="md:hidden flex items-center gap-2 px-3 py-2 bg-white border-b border-slate-200 safe-top">
+          <MobileDrawer />
+          <span className="text-sm font-bold text-slate-800">PORTPAL</span>
+        </div>
+
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto no-scrollbar">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shifts" element={<Shifts />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/holidays" element={<Holidays />} />
+            <Route path="/pension" element={<Pension />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/subscribe" element={<Subscribe />} />
+            <Route path="/template-builder" element={<TemplateBuilder />} />
+            <Route path="/vessels" element={<Vessels />} />
+            <Route path="/pay-stubs" element={<PayStubs />} />
+            <Route path="/contract" element={<Contract />} />
+          </Routes>
+        </div>
+
+        {/* Bottom navigation — mobile only */}
+        <div className="md:hidden">
+          <Navigation />
+        </div>
       </div>
-
-      {/* Bottom navigation — respects device safe area */}
-      <Navigation />
     </div>
   )
 }

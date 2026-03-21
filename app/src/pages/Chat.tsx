@@ -304,9 +304,11 @@ export function Chat() {
   ])
   const [input, setInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
+  const [pendingFile, setPendingFile] = useState<{ data: string; mediaType: string; fileName: string } | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const abortRef = useRef<AbortController | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Update greeting when profile loads
   useEffect(() => {
@@ -936,8 +938,11 @@ export function Chat() {
     )
   }, [profile.pensionGoal, profile.seniority])
 
-  const sendToAI = useCallback(async (userInput: string, currentMessages: Message[]) => {
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: userInput }
+  const sendToAI = useCallback(async (userInput: string, currentMessages: Message[], fileAttachment?: typeof pendingFile) => {
+    const displayText = fileAttachment
+      ? `${userInput}\n\n[Attached: ${fileAttachment.fileName}]`
+      : userInput
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: displayText }
     const assistantMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: '' }
     const updated = [...currentMessages, userMsg, assistantMsg]
     setMessages(updated)
@@ -954,24 +959,34 @@ export function Chat() {
     const controller = new AbortController()
     abortRef.current = controller
 
+    const requestBody: any = {
+      message: userInput,
+      history,
+      context: {
+        profile: {
+          name: profile.name,
+          board: profile.board,
+          seniority: profile.seniority,
+          pensionGoal: profile.pensionGoal,
+          union_local: profile.union_local,
+        },
+        shiftSummary,
+      },
+    }
+
+    if (fileAttachment) {
+      requestBody.attachment = {
+        data: fileAttachment.data,
+        mediaType: fileAttachment.mediaType,
+        fileName: fileAttachment.fileName,
+      }
+    }
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: userInput,
-          history,
-          context: {
-            profile: {
-              name: profile.name,
-              board: profile.board,
-              seniority: profile.seniority,
-              pensionGoal: profile.pensionGoal,
-              union_local: profile.union_local,
-            },
-            shiftSummary,
-          },
-        }),
+        body: JSON.stringify(requestBody),
         signal: controller.signal,
       })
 
@@ -1030,12 +1045,40 @@ export function Chat() {
     }
   }, [shifts, profile, generateLocalResponse])
 
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // reset so same file can be re-selected
+    if (!file) return
+
+    const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowed.includes(file.type)) {
+      alert('Please select a PDF or image file (JPG, PNG, WebP).')
+      return
+    }
+
+    // 10MB limit
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File is too large. Maximum size is 10MB.')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(',')[1]
+      setPendingFile({ data: base64, mediaType: file.type, fileName: file.name })
+      setInput(prev => prev || 'Analyze this pay stub and compare it against my logged shifts. Flag any discrepancies in rates or hours.')
+    }
+    reader.readAsDataURL(file)
+  }, [])
+
   const handleSend = () => {
     if (!input.trim() || isStreaming) return
     const text = input
+    const file = pendingFile
     setInput('')
+    setPendingFile(null)
     setSelectedCategory(null)
-    sendToAI(text, messages)
+    sendToAI(text, messages, file ?? undefined)
   }
 
   return (
@@ -1227,8 +1270,26 @@ export function Chat() {
       {/* Input - only show in chat tab */}
       {chatTab === 'chat' && (
         <div className="px-4 py-3 border-t border-slate-200 bg-white">
+          {/* Pending file indicator */}
+          {pendingFile && (
+            <div className="flex items-center gap-2 mb-2 px-3 py-2 bg-blue-50 rounded-lg">
+              <FileText size={16} className="text-blue-600 flex-shrink-0" />
+              <span className="text-xs text-blue-700 truncate flex-1">{pendingFile.fileName}</span>
+              <button onClick={() => setPendingFile(null)} className="text-blue-400 hover:text-blue-600 text-xs font-medium">Remove</button>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/pdf,image/jpeg,image/png,image/webp"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
           <div className="flex gap-2">
-            <button className="p-3 rounded-xl bg-slate-100 text-slate-500">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="p-3 rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors"
+            >
               <Upload size={20} />
             </button>
             <div className="flex-1">
@@ -1237,7 +1298,7 @@ export function Chat() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask about rates, rules, or upload a pay stub..."
+                placeholder={pendingFile ? "Add a message about your pay stub..." : "Ask anything, or paste pay stub text..."}
                 className="w-full px-4 py-3 bg-slate-100 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

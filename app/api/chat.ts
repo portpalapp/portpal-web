@@ -77,8 +77,15 @@ const SYSTEM_PROMPT = `You are PORTPAL AI, a knowledgeable assistant for BC long
 - Never fabricate data about the user's shifts — only reference what's provided.
 - Format currency as $X.XX. Use markdown bold sparingly for key numbers only.`;
 
+interface FileAttachment {
+  data: string; // base64
+  mediaType: string; // image/jpeg, image/png, application/pdf
+  fileName?: string;
+}
+
 interface ChatRequest {
   message: string;
+  attachment?: FileAttachment;
   history?: { role: 'user' | 'assistant'; content: string }[];
   context?: {
     profile?: {
@@ -150,7 +157,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const body = req.body as ChatRequest;
 
-    if (!body.message || typeof body.message !== 'string' || body.message.length > 2000) {
+    if (!body.message || typeof body.message !== 'string' || body.message.length > 10000) {
       return res.status(400).json({ error: 'Invalid message' });
     }
 
@@ -158,9 +165,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const systemPrompt = SYSTEM_PROMPT + userContext;
 
     // Build messages array: history + current message
-    const messages: { role: 'user' | 'assistant'; content: string }[] = [];
+    const messages: Anthropic.MessageParam[] = [];
     if (body.history?.length) {
-      // Keep last 10 messages (5 turns)
       const recent = body.history.slice(-10);
       for (const msg of recent) {
         if (msg.role === 'user' || msg.role === 'assistant') {
@@ -168,7 +174,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       }
     }
-    messages.push({ role: 'user', content: body.message });
+
+    // Build the current user message — may include file attachment
+    if (body.attachment?.data) {
+      const att = body.attachment;
+      const contentParts: Anthropic.ContentBlockParam[] = [];
+
+      if (att.mediaType === 'application/pdf') {
+        contentParts.push({
+          type: 'document',
+          source: { type: 'base64', media_type: 'application/pdf', data: att.data },
+        } as any);
+      } else if (att.mediaType.startsWith('image/')) {
+        contentParts.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: att.mediaType as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
+            data: att.data,
+          },
+        });
+      }
+
+      contentParts.push({ type: 'text', text: body.message });
+      messages.push({ role: 'user', content: contentParts });
+    } else {
+      messages.push({ role: 'user', content: body.message });
+    }
 
     const client = new Anthropic({ apiKey });
 
@@ -179,7 +211,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const stream = await client.messages.stream({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
+      max_tokens: 2048,
       system: systemPrompt,
       messages,
     });
