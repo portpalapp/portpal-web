@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Anchor, Flame, Trophy, TrendingUp, ChevronRight, Sparkles, Target, Calendar, Loader2 } from 'lucide-react'
+import { Anchor, Flame, Trophy, TrendingUp, ChevronRight, Sparkles, Target, Calendar, Loader2, Gift, Info, BarChart3 } from 'lucide-react'
 import {
   calculateWeeklyEarnings,
   calculateYTDEarnings,
@@ -7,7 +7,8 @@ import {
 import { useShifts } from '../hooks/useShifts'
 import type { Shift } from '../hooks/useShifts'
 import { useProfile } from '../hooks/useProfile'
-import { formatDateRelative, formatCurrency, getLocalDateStr } from '../lib/formatters'
+import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr } from '../lib/formatters'
+import { getUpcomingHolidays, daysUntil, type StatHoliday } from '../data/holidayData'
 
 // Streak: counts consecutive shifts where each gap is <= 48 hours.
 // Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
@@ -86,6 +87,40 @@ export function Home() {
   // Calculate streaks and total shifts from real data
   const currentStreak = calculateStreak(shifts)
   const totalShiftsLogged = shifts.length
+
+  // Upcoming stat holidays with qualifying info
+  const upcomingHolidays = getUpcomingHolidays(3)
+  const todayStr = getLocalDateStr(new Date())
+
+  function getShiftsInPeriod(h: StatHoliday): number {
+    return shifts.filter(s => {
+      const d = s.date.slice(0, 10)
+      return d >= h.countingPeriodStart && d <= h.countingPeriodEnd
+    }).length
+  }
+
+  function getHolidayStatus(h: StatHoliday): 'qualifying' | 'in-progress' | 'at-risk' {
+    const worked = getShiftsInPeriod(h)
+    if (worked >= 15) return 'qualifying'
+    if (todayStr <= h.countingPeriodEnd) return 'in-progress'
+    return 'at-risk'
+  }
+
+  // Monthly earnings
+  const monthStart = todayStr.slice(0, 7) + '-01'
+  const thisMonthShifts = shifts.filter(s => s.date.slice(0, 10) >= monthStart)
+  const thisMonthEarnings = thisMonthShifts.reduce((sum, s) => sum + s.totalPay, 0)
+  const avgPerShift = thisMonthShifts.length > 0 ? thisMonthEarnings / thisMonthShifts.length : 0
+
+  // Top jobs this month
+  const monthJobCounts = new Map<string, { count: number; pay: number }>()
+  for (const s of thisMonthShifts) {
+    const prev = monthJobCounts.get(s.job) || { count: 0, pay: 0 }
+    monthJobCounts.set(s.job, { count: prev.count + 1, pay: prev.pay + s.totalPay })
+  }
+  const topMonthJobs = [...monthJobCounts.entries()]
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, 3)
 
   return (
     <div className="p-4 space-y-4">
@@ -188,6 +223,137 @@ export function Home() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Upcoming Stat Holidays */}
+      {upcomingHolidays.length > 0 && (
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Gift size={18} className="text-green-600" />
+              <h3 className="font-semibold text-slate-800">Stat Holidays</h3>
+            </div>
+            <button
+              onClick={() => navigate('/holidays')}
+              className="text-xs text-blue-600 font-medium flex items-center gap-1"
+            >
+              All Holidays <ChevronRight size={14} />
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {upcomingHolidays.map(h => {
+              const worked = getShiftsInPeriod(h)
+              const status = getHolidayStatus(h)
+              const days = daysUntil(h.date)
+              const progress = Math.min((worked / 15) * 100, 100)
+              const periodActive = todayStr >= h.countingPeriodStart && todayStr <= h.countingPeriodEnd
+
+              return (
+                <div key={h.date} className={`rounded-xl p-3 border ${
+                  status === 'qualifying' ? 'bg-green-50 border-green-100' :
+                  status === 'at-risk' ? 'bg-red-50 border-red-100' :
+                  'bg-slate-50 border-slate-100'
+                }`}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-semibold text-sm text-slate-800">{h.name}</span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                      status === 'qualifying' ? 'bg-green-100 text-green-700' :
+                      status === 'at-risk' ? 'bg-red-100 text-red-700' :
+                      'bg-blue-100 text-blue-700'
+                    }`}>
+                      {status === 'qualifying' ? 'Qualifying' :
+                       status === 'at-risk' ? 'Not Qualifying' :
+                       `${days} days away`}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+                    <span>{formatDateCompact(h.date)}</span>
+                    <span>
+                      {periodActive ? 'Counting period active' :
+                       todayStr < h.countingPeriodStart ? `Counting starts ${formatDateCompact(h.countingPeriodStart)}` :
+                       'Counting period ended'}
+                    </span>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="h-2 bg-white rounded-full overflow-hidden mb-1">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        status === 'qualifying' ? 'bg-green-500' :
+                        status === 'at-risk' ? 'bg-red-400' :
+                        'bg-blue-500'
+                      }`}
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className={`font-medium ${
+                      status === 'qualifying' ? 'text-green-700' :
+                      status === 'at-risk' ? 'text-red-600' :
+                      'text-slate-600'
+                    }`}>
+                      {worked}/15 shifts worked
+                    </span>
+                    {status === 'in-progress' && worked < 15 && (
+                      <span className="text-slate-500">{15 - worked} more needed</span>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Info note */}
+          <div className="mt-3 flex items-start gap-2 p-2.5 bg-blue-50 rounded-lg">
+            <Info size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-blue-700">
+              Work <strong>15+ shifts</strong> in the 4-week counting period before each holiday to receive full stat pay (8 hours). Fewer shifts = partial pay (1/20th per shift worked).
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Monthly Summary */}
+      <div className="bg-white rounded-2xl p-4 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <BarChart3 size={18} className="text-slate-600" />
+          <h3 className="font-semibold text-slate-800">
+            {new Date().toLocaleDateString('en-US', { month: 'long' })} Summary
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 mb-3">
+          <div className="text-center p-2 bg-slate-50 rounded-xl">
+            <p className="text-lg font-bold text-slate-800">{thisMonthShifts.length}</p>
+            <p className="text-[10px] text-slate-500">Shifts</p>
+          </div>
+          <div className="text-center p-2 bg-slate-50 rounded-xl">
+            <p className="text-lg font-bold text-slate-800">{formatCurrency(thisMonthEarnings)}</p>
+            <p className="text-[10px] text-slate-500">Earned</p>
+          </div>
+          <div className="text-center p-2 bg-slate-50 rounded-xl">
+            <p className="text-lg font-bold text-slate-800">{formatCurrency(avgPerShift)}</p>
+            <p className="text-[10px] text-slate-500">Avg/Shift</p>
+          </div>
+        </div>
+
+        {/* Top jobs this month */}
+        {topMonthJobs.length > 0 && (
+          <div className="space-y-1.5">
+            <p className="text-xs text-slate-500 font-medium">Top Jobs</p>
+            {topMonthJobs.map(([job, { count, pay }]) => (
+              <div key={job} className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span className="text-slate-700">{job}</span>
+                </div>
+                <span className="text-slate-500 text-xs">{count}x &middot; {formatCurrency(pay)}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* This Week's Shifts */}
