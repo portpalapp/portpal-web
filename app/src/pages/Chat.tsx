@@ -1158,7 +1158,7 @@ export function Chat() {
                       ?.questions.map((q) => (
                         <button
                           key={q}
-                          onClick={() => setInput(q)}
+                          onClick={() => { setSelectedCategory(null); sendToAI(q, messages) }}
                           className="w-full text-left px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 hover:border-blue-300 hover:bg-blue-50 transition-all"
                         >
                           {q}
@@ -1175,39 +1175,25 @@ export function Chat() {
                     </p>
                     <div className="space-y-2">
                       <button
-                        onClick={() =>
-                          setInput(
-                            "What's the fewest shifts I can work to hit my pension goal?"
-                          )
-                        }
+                        onClick={() => sendToAI("What's the fewest shifts I can work to hit my pension goal?", messages)}
                         className="w-full text-left px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 rounded-xl text-sm text-slate-700 hover:border-blue-300"
                       >
                         {'\ud83c\udfaf'} What's the fewest shifts I can work to hit my pension goal?
                       </button>
                       <button
-                        onClick={() =>
-                          setInput(
-                            'If I take August off, can I still make $120k?'
-                          )
-                        }
+                        onClick={() => sendToAI('If I take August off, can I still make $120k?', messages)}
                         className="w-full text-left px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 hover:border-blue-300"
                       >
                         {'\ud83c\udfd6\ufe0f'} If I take August off, can I still make $120k?
                       </button>
                       <button
-                        onClick={() =>
-                          setInput('What are the overtime rules?')
-                        }
+                        onClick={() => sendToAI('What are the overtime rules?', messages)}
                         className="w-full text-left px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 hover:border-blue-300"
                       >
                         {'\u23f0'} What are the overtime rules?
                       </button>
                       <button
-                        onClick={() =>
-                          setInput(
-                            "What's the best job for maximizing my weekly earnings?"
-                          )
-                        }
+                        onClick={() => sendToAI("What's the best job for maximizing my weekly earnings?", messages)}
                         className="w-full text-left px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 hover:border-blue-300"
                       >
                         {'\ud83d\udcb0'} What's the best job for maximizing my weekly earnings?
