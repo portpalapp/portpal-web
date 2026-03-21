@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Anchor, Flame, Trophy, TrendingUp, ChevronRight, Sparkles, Target, Calendar, Loader2, Gift, Info, BarChart3 } from 'lucide-react'
 import {
@@ -8,7 +9,7 @@ import { useShifts } from '../hooks/useShifts'
 import type { Shift } from '../hooks/useShifts'
 import { useProfile } from '../hooks/useProfile'
 import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr } from '../lib/formatters'
-import { getUpcomingHolidays, daysUntil, type StatHoliday } from '../data/holidayData'
+import { getUpcomingHolidays, getHolidayOnDate, daysUntil, type StatHoliday } from '../data/holidayData'
 
 // Streak: counts consecutive shifts where each gap is <= 48 hours.
 // Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
@@ -51,6 +52,7 @@ export function Home() {
   const navigate = useNavigate()
   const { shifts, loading: shiftsLoading } = useShifts()
   const { profile, loading: profileLoading } = useProfile()
+  const [showHolidayInfo, setShowHolidayInfo] = useState(false)
 
   const loading = shiftsLoading || profileLoading
 
@@ -91,6 +93,10 @@ export function Home() {
   // Upcoming stat holidays with qualifying info
   const upcomingHolidays = getUpcomingHolidays(3)
   const todayStr = getLocalDateStr(new Date())
+
+  // Check if today is a stat holiday and user hasn't logged a shift
+  const todayHoliday = getHolidayOnDate(todayStr)
+  const hasLoggedTodayShift = shifts.some(s => s.date.slice(0, 10) === todayStr)
 
   function getShiftsInPeriod(h: StatHoliday): number {
     return shifts.filter(s => {
@@ -135,6 +141,35 @@ export function Home() {
           <span className="text-sm font-medium">#{profile.seniority}</span>
         </div>
       </div>
+
+      {/* Stat Holiday Prompt — shows when today is a holiday */}
+      {todayHoliday && !hasLoggedTodayShift && (
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-200">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-amber-100 rounded-xl flex-shrink-0">
+              <Gift size={20} className="text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-amber-900">Happy {todayHoliday.name}!</p>
+              <p className="text-xs text-amber-700 mt-0.5">Working today? Holiday shifts pay <strong>2x rates</strong>.</p>
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => navigate('/shifts')}
+                  className="px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-700"
+                >
+                  Log Holiday Shift
+                </button>
+                <button
+                  onClick={() => navigate('/shifts')}
+                  className="px-3 py-1.5 bg-white text-amber-700 text-xs font-medium rounded-lg border border-amber-200 hover:bg-amber-50"
+                >
+                  Day Off
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Earnings Cards */}
       <div className="grid grid-cols-2 gap-3">
@@ -225,7 +260,7 @@ export function Home() {
         </div>
       </div>
 
-      {/* Upcoming Stat Holidays */}
+      {/* Upcoming Stat Holidays — compact */}
       {upcomingHolidays.length > 0 && (
         <div className="bg-white rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
@@ -241,77 +276,61 @@ export function Home() {
             </button>
           </div>
 
-          <div className="space-y-3">
-            {upcomingHolidays.map(h => {
+          <div className="space-y-2">
+            {upcomingHolidays.slice(0, 2).map(h => {
               const worked = getShiftsInPeriod(h)
               const status = getHolidayStatus(h)
               const days = daysUntil(h.date)
-              const progress = Math.min((worked / 15) * 100, 100)
-              const periodActive = todayStr >= h.countingPeriodStart && todayStr <= h.countingPeriodEnd
 
               return (
-                <div key={h.date} className={`rounded-xl p-3 border ${
-                  status === 'qualifying' ? 'bg-green-50 border-green-100' :
-                  status === 'at-risk' ? 'bg-red-50 border-red-100' :
-                  'bg-slate-50 border-slate-100'
-                }`}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-semibold text-sm text-slate-800">{h.name}</span>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      status === 'qualifying' ? 'bg-green-100 text-green-700' :
-                      status === 'at-risk' ? 'bg-red-100 text-red-700' :
-                      'bg-blue-100 text-blue-700'
-                    }`}>
-                      {status === 'qualifying' ? 'Qualifying' :
-                       status === 'at-risk' ? 'Not Qualifying' :
-                       `${days} days away`}
-                    </span>
+                <button
+                  key={h.date}
+                  onClick={() => navigate('/holidays')}
+                  className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"
+                >
+                  {/* Status dot */}
+                  <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
+                    status === 'qualifying' ? 'bg-green-500' :
+                    status === 'at-risk' ? 'bg-red-400' :
+                    'bg-blue-500'
+                  }`} />
+
+                  {/* Name + date */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-slate-800 truncate">{h.name}</p>
+                    <p className="text-xs text-slate-500">{formatDateCompact(h.date)} &middot; {days}d away</p>
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
-                    <span>{formatDateCompact(h.date)}</span>
-                    <span>
-                      {periodActive ? 'Counting period active' :
-                       todayStr < h.countingPeriodStart ? `Counting starts ${formatDateCompact(h.countingPeriodStart)}` :
-                       'Counting period ended'}
-                    </span>
+                  {/* Shifts count */}
+                  <div className="text-right flex-shrink-0">
+                    <p className={`text-sm font-bold ${
+                      status === 'qualifying' ? 'text-green-600' :
+                      worked > 0 ? 'text-blue-600' : 'text-slate-400'
+                    }`}>
+                      {worked}/15
+                    </p>
+                    <p className="text-[10px] text-slate-400">shifts</p>
                   </div>
 
-                  {/* Progress bar */}
-                  <div className="h-2 bg-white rounded-full overflow-hidden mb-1">
-                    <div
-                      className={`h-full rounded-full transition-all ${
-                        status === 'qualifying' ? 'bg-green-500' :
-                        status === 'at-risk' ? 'bg-red-400' :
-                        'bg-blue-500'
-                      }`}
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className={`font-medium ${
-                      status === 'qualifying' ? 'text-green-700' :
-                      status === 'at-risk' ? 'text-red-600' :
-                      'text-slate-600'
-                    }`}>
-                      {worked}/15 shifts worked
-                    </span>
-                    {status === 'in-progress' && worked < 15 && (
-                      <span className="text-slate-500">{15 - worked} more needed</span>
-                    )}
-                  </div>
-                </div>
+                  <ChevronRight size={16} className="text-slate-300 flex-shrink-0" />
+                </button>
               )
             })}
           </div>
 
-          {/* Info note */}
-          <div className="mt-3 flex items-start gap-2 p-2.5 bg-blue-50 rounded-lg">
-            <Info size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-blue-700">
-              Work <strong>15+ shifts</strong> in the 4-week counting period before each holiday to receive full stat pay (8 hours). Fewer shifts = partial pay (1/20th per shift worked).
+          {/* Collapsible info */}
+          <button
+            onClick={() => setShowHolidayInfo(v => !v)}
+            className="mt-2 flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            <Info size={12} />
+            <span>{showHolidayInfo ? 'Hide info' : 'How does stat pay work?'}</span>
+          </button>
+          {showHolidayInfo && (
+            <p className="mt-1.5 text-xs text-slate-500 leading-relaxed">
+              Work <strong className="text-slate-700">15+ shifts</strong> in the 4-week counting period before each holiday for full stat pay (8 hours). Fewer shifts = partial pay (1/20th per shift).
             </p>
-          </div>
+          )}
         </div>
       )}
 
