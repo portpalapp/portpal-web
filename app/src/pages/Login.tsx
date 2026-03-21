@@ -42,6 +42,9 @@ export function Login() {
       setError(authErr.message);
     } else if (mode === 'signup') {
       setSuccessMessage('Check your email to confirm your account');
+    } else {
+      // Login succeeded — go to dashboard
+      navigate('/');
     }
   };
 
