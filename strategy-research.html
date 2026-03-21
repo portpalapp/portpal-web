@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PORTPAL Strategy Research Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0b10;
+    color: #e8eaf4;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #12131a 0%, #181a24 100%);
+    border-bottom: 1px solid rgba(124,132,252,0.15);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .logo {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, #7c84fc, #a78bfa);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px; color: #fff;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .header h1 span { color: #7c84fc; }
+  .header-right { font-size: 13px; color: #8b8fa8; }
+  .header-right strong { color: #34d399; }
+
+  /* Tab Navigation */
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+    padding: 12px 32px;
+    background: #0d0e14;
+    border-bottom: 1px solid rgba(124,132,252,0.08);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #7c84fc30 transparent;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: #8b8fa8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab-btn:hover {
+    background: rgba(124,132,252,0.08);
+    color: #c4c8f0;
+  }
+  .tab-btn.active {
+    background: rgba(124,132,252,0.12);
+    border-color: rgba(124,132,252,0.3);
+    color: #7c84fc;
+  }
+
+  /* Content */
+  .content { max-width: 1280px; margin: 0 auto; padding: 32px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: #12131a;
+    border: 1px solid rgba(124,132,252,0.08);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(124,132,252,0.2); }
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 16px;
+    border-bottom: 1px solid rgba(124,132,252,0.06);
+  }
+  .card-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .card-icon.purple { background: rgba(124,132,252,0.12); }
+  .card-icon.green { background: rgba(52,211,153,0.12); }
+  .card-icon.amber { background: rgba(251,191,36,0.12); }
+  .card-icon.red { background: rgba(248,113,113,0.12); }
+  .card-icon.blue { background: rgba(96,165,250,0.12); }
+  .card h2 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .card h3 { font-size: 15px; font-weight: 700; color: #c4c8f0; margin: 20px 0 12px; }
+  .card h4 { font-size: 13px; font-weight: 700; color: #7c84fc; text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 8px; }
+  .card p { color: #a0a4be; font-size: 14px; margin-bottom: 12px; }
+
+  /* Metric Row */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .metric-card {
+    background: #181a24;
+    border: 1px solid rgba(124,132,252,0.06);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .metric-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124,132,252,0.2);
+  }
+  .metric-value {
+    font-size: 32px; font-weight: 800; letter-spacing: -1px;
+    background: linear-gradient(135deg, #7c84fc, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .metric-value.green-val {
+    background: linear-gradient(135deg, #34d399, #6ee7b7);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .metric-value.amber-val {
+    background: linear-gradient(135deg, #fbbf24, #fcd34d);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .metric-label { font-size: 12px; color: #8b8fa8; margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric-sub { font-size: 11px; color: #6b6f88; margin-top: 2px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th {
+    text-align: left; padding: 10px 14px;
+    background: #181a24; color: #7c84fc;
+    font-weight: 700; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(124,132,252,0.1);
+  }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid rgba(124,132,252,0.04);
+    color: #c4c8f0;
+  }
+  tr:hover td { background: rgba(124,132,252,0.03); }
+
+  /* Badges */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 6px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .badge-purple { background: rgba(124,132,252,0.15); color: #a5abfc; }
+  .badge-green { background: rgba(52,211,153,0.15); color: #34d399; }
+  .badge-amber { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+  .badge-blue { background: rgba(96,165,250,0.15); color: #60a5fa; }
+
+  /* Progress Bars */
+  .progress-bar { background: #1e2030; border-radius: 6px; height: 8px; overflow: hidden; margin: 6px 0; }
+  .progress-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+  .fill-purple { background: linear-gradient(90deg, #7c84fc, #a78bfa); }
+  .fill-green { background: linear-gradient(90deg, #34d399, #6ee7b7); }
+  .fill-amber { background: linear-gradient(90deg, #fbbf24, #fcd34d); }
+
+  /* Lists */
+  .feature-list { list-style: none; padding: 0; }
+  .feature-list li {
+    padding: 10px 0; border-bottom: 1px solid rgba(124,132,252,0.04);
+    display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #c4c8f0;
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .check { color: #34d399; font-weight: 700; flex-shrink: 0; }
+  .cross { color: #f87171; font-weight: 700; flex-shrink: 0; }
+  .dot { color: #7c84fc; font-weight: 700; flex-shrink: 0; }
+
+  /* Grid Layouts */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 900px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .tab-nav { padding: 12px 16px; }
+    .content { padding: 20px 16px; }
+  }
+
+  /* Badge Grid */
+  .badge-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px; margin: 16px 0;
+  }
+  .badge-item {
+    background: #181a24; border-radius: 10px; padding: 16px;
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid rgba(124,132,252,0.06);
+    transition: border-color 0.2s;
+  }
+  .badge-item:hover { border-color: rgba(124,132,252,0.2); }
+  .badge-emoji { font-size: 28px; flex-shrink: 0; }
+  .badge-info h4 { margin: 0; font-size: 14px; color: #e8eaf4; text-transform: none; letter-spacing: 0; }
+  .badge-info p { margin: 0; font-size: 12px; color: #8b8fa8; }
+  .badge-info .badge { margin-top: 4px; }
+
+  /* Experiment Cards */
+  .experiment {
+    background: #181a24; border-radius: 10px; padding: 20px;
+    border-left: 3px solid #7c84fc; margin-bottom: 16px;
+  }
+  .experiment h4 { margin: 0 0 8px; font-size: 15px; color: #e8eaf4; text-transform: none; letter-spacing: 0; }
+  .experiment-meta { display: flex; gap: 12px; margin: 8px 0; flex-wrap: wrap; }
+
+  /* Competitor Cards */
+  .competitor {
+    background: #181a24; border-radius: 10px; padding: 20px;
+    border: 1px solid rgba(124,132,252,0.06); margin-bottom: 12px;
+  }
+  .competitor h4 { margin: 0 0 4px; color: #e8eaf4; text-transform: none; letter-spacing: 0; }
+  .competitor .category { font-size: 11px; color: #7c84fc; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+
+  /* Callout Boxes */
+  .callout {
+    border-radius: 10px; padding: 20px; margin: 16px 0;
+    border-left: 3px solid;
+  }
+  .callout-purple { background: rgba(124,132,252,0.06); border-color: #7c84fc; }
+  .callout-green { background: rgba(52,211,153,0.06); border-color: #34d399; }
+  .callout-amber { background: rgba(251,191,36,0.06); border-color: #fbbf24; }
+  .callout-red { background: rgba(248,113,113,0.06); border-color: #f87171; }
+  .callout strong { color: #e8eaf4; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; margin: 16px 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: rgba(124,132,252,0.15);
+  }
+  .timeline-item { position: relative; margin-bottom: 20px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -24px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #7c84fc; border: 2px solid #0a0b10;
+  }
+  .timeline-item h4 { margin: 0 0 4px; color: #e8eaf4; text-transform: none; letter-spacing: 0; font-size: 14px; }
+  .timeline-item p { margin: 0; font-size: 13px; color: #a0a4be; }
+
+  /* Separator */
+  .sep { height: 1px; background: rgba(124,132,252,0.06); margin: 24px 0; }
+
+  /* Section Title */
+  .section-title {
+    font-size: 13px; font-weight: 700; color: #7c84fc;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 20px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(124,132,252,0.1);
+  }
+
+  /* Funnel Chart Rows */
+  .funnel { margin: 16px 0; }
+  .funnel-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  }
+  .funnel-label { width: 140px; font-size: 13px; color: #a0a4be; text-align: right; }
+  .funnel-bar-wrap { flex: 1; }
+  .funnel-bar {
+    height: 32px; border-radius: 6px; display: flex;
+    align-items: center; padding: 0 12px;
+    font-size: 13px; font-weight: 700; color: #fff;
+    transition: width 0.6s ease;
+  }
+  .funnel-num { width: 80px; font-size: 13px; color: #c4c8f0; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">PP</div>
+    <div>
+      <h1>PORT<span>PAL</span> Strategy Research</h1>
+      <div style="font-size:12px;color:#8b8fa8;">Comprehensive Growth & Monetization Playbook</div>
+    </div>
+  </div>
+  <div class="header-right">
+    Last Updated: <strong>March 20, 2026</strong> &nbsp;|&nbsp; v1.2.0 Live
+  </div>
+</div>
+
+<div class="tab-nav" id="tabNav">
+  <button class="tab-btn active" onclick="switchTab('metrics')">Key Metrics</button>
+  <button class="tab-btn" onclick="switchTab('gamification')">Gamification</button>
+  <button class="tab-btn" onclick="switchTab('monetization')">Monetization</button>
+  <button class="tab-btn" onclick="switchTab('users')">User Research</button>
+  <button class="tab-btn" onclick="switchTab('retention')">Retention Experiments</button>
+  <button class="tab-btn" onclick="switchTab('competitive')">Competitive Landscape</button>
+  <button class="tab-btn" onclick="switchTab('growth')">Growth Playbook</button>
+</div>
+
+<div class="content">
+
+<!-- ============================================================ -->
+<!-- TAB 7: KEY METRICS -->
+<!-- ============================================================ -->
+<div id="tab-metrics" class="tab-content active">
+  <div class="section-title">Live Platform Metrics</div>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-value">957</div>
+      <div class="metric-label">Total Users</div>
+      <div class="metric-sub">BC Local 500 primary</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">73,683</div>
+      <div class="metric-label">Shifts Tracked</div>
+      <div class="metric-sub">~77 shifts/user avg</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value green-val">$41M</div>
+      <div class="metric-label">Pay Tracked</div>
+      <div class="metric-sub">$556/shift average</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value amber-val">67.9%</div>
+      <div class="metric-label">30-Day Retention</div>
+      <div class="metric-sub">Industry avg: 25-35%</div>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-value green-val">62.5%</div>
+      <div class="metric-label">90-Day Retention</div>
+      <div class="metric-sub">Exceptional for utilities</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">10</div>
+      <div class="metric-label">Magic Number</div>
+      <div class="metric-sub">Shifts in month 1 = retained</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value amber-val">7,200</div>
+      <div class="metric-label">BC Market Size</div>
+      <div class="metric-sub">6 ILWU Locals</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">$12.6M</div>
+      <div class="metric-label">TAM (ARR)</div>
+      <div class="metric-sub">127,000 workers x $99/yr</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon purple">&#9878;</div>
+        <h2>Market Penetration</h2>
+      </div>
+
+      <h4>BC Local 500 (Current Focus)</h4>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#a0a4be;margin-bottom:4px;">
+        <span>957 of 2,740 workers</span>
+        <span style="color:#34d399;font-weight:700;">34.9%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-green" style="width:34.9%"></div></div>
+
+      <h4>All BC Locals (TAM)</h4>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#a0a4be;margin-bottom:4px;">
+        <span>957 of 7,200 workers</span>
+        <span style="color:#7c84fc;font-weight:700;">13.3%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-purple" style="width:13.3%"></div></div>
+
+      <h4>ILWU (Serviceable Market)</h4>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#a0a4be;margin-bottom:4px;">
+        <span>957 of 42,000 workers</span>
+        <span style="color:#fbbf24;font-weight:700;">2.3%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-amber" style="width:2.3%"></div></div>
+
+      <h4>North America (Total)</h4>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#a0a4be;margin-bottom:4px;">
+        <span>957 of 127,000 workers</span>
+        <span style="color:#f87171;font-weight:700;">0.75%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:0.75%;background:#f87171;"></div></div>
+
+      <div class="sep"></div>
+      <table>
+        <tr><th>BC Local</th><th>Workers</th><th>Status</th></tr>
+        <tr><td>500 (Vancouver)</td><td>2,740</td><td><span class="badge badge-green">LIVE - 957 users</span></td></tr>
+        <tr><td>502 (New West)</td><td>3,000+</td><td><span class="badge badge-amber">NEXT TARGET</span></td></tr>
+        <tr><td>505 (Prince Rupert)</td><td>~750</td><td><span class="badge badge-purple">PLANNED</span></td></tr>
+        <tr><td>508 (Chemainus)</td><td>~400</td><td><span class="badge badge-purple">PLANNED</span></td></tr>
+        <tr><td>514 (Burnaby)</td><td>~300</td><td><span class="badge badge-purple">PLANNED</span></td></tr>
+        <tr><td>517 (Vancouver)</td><td>~200</td><td><span class="badge badge-purple">PLANNED</span></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon green">&#9650;</div>
+        <h2>Revenue Projections</h2>
+      </div>
+      <p>Based on $99/year pricing, reverse trial model with 30-day full Pro access.</p>
+
+      <table>
+        <tr><th>Year</th><th>Market</th><th>Workers</th><th>Users</th><th>Paying</th><th>ARR</th></tr>
+        <tr><td>Y1</td><td>BC All</td><td>7,200</td><td>2,500</td><td>875</td><td style="color:#34d399;font-weight:700;">$87K</td></tr>
+        <tr><td>Y2</td><td>+PNW</td><td>14,200</td><td>4,000</td><td>1,400</td><td style="color:#34d399;font-weight:700;">$139K</td></tr>
+        <tr><td>Y3</td><td>+California</td><td>28,200</td><td>7,000</td><td>2,450</td><td style="color:#34d399;font-weight:700;">$243K</td></tr>
+        <tr><td>Y4</td><td>+HI/MTL</td><td>36,000</td><td>9,500</td><td>3,325</td><td style="color:#34d399;font-weight:700;">$329K</td></tr>
+        <tr><td>Y5</td><td>+ILA East</td><td>61,000</td><td>14,000</td><td>4,900</td><td style="color:#34d399;font-weight:700;">$485K</td></tr>
+      </table>
+
+      <div class="sep"></div>
+      <h3>Validated Statistical Findings</h3>
+      <table>
+        <tr><th>Finding</th><th>Proof</th><th>p-value</th></tr>
+        <tr><td>3+ shifts in week 1 = retained</td><td>Chi-squared</td><td style="color:#34d399;">&lt; 0.0001</td></tr>
+        <tr><td>Location variety = retention</td><td>Correlation</td><td style="color:#34d399;">r=0.644</td></tr>
+        <tr><td>Job pay rates differ</td><td>ANOVA</td><td style="color:#34d399;">F=770.16</td></tr>
+        <tr><td>10+ shifts/mo1 = 69.9% retain</td><td>Cohort</td><td style="color:#34d399;">Validated</td></tr>
+        <tr><td>One-and-done rate</td><td>Cohort</td><td style="color:#fbbf24;">9.0%</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 1: GAMIFICATION SYSTEM -->
+<!-- ============================================================ -->
+<div id="tab-gamification" class="tab-content">
+  <div class="section-title">Gamification System Design</div>
+
+  <div class="callout callout-purple">
+    <strong>Design Principle:</strong> Longshoremen are competitive, practical, and community-oriented. The gamification system must feel like a natural extension of work culture, not a childish game. Think union hall bragging rights, not Candy Crush. Every element must tie directly to the value proposition: accurate pay tracking and career progression.
+  </div>
+
+  <!-- STREAKS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#9733;</div>
+      <h2>Streak System</h2>
+    </div>
+    <p>Streaks leverage loss aversion, the most powerful behavioral hook. Once a worker has a 15-day streak, the psychological cost of breaking it drives daily logging even on off days (logging "no work" counts).</p>
+
+    <div class="two-col">
+      <div>
+        <h3>Streak Types</h3>
+        <table>
+          <tr><th>Streak</th><th>How It Works</th><th>Behavioral Hook</th></tr>
+          <tr><td><strong>Daily Log Streak</strong></td><td>Log a shift (or mark "off") every calendar day</td><td>Loss aversion: "Don't break your 23-day streak!"</td></tr>
+          <tr><td><strong>Work Week Streak</strong></td><td>Log at least 1 shift per Mon-Fri work week</td><td>Forgiving: missing a day doesn't kill it</td></tr>
+          <tr><td><strong>Consecutive Work Days</strong></td><td>Work days in a row without a day off</td><td>Bragging rights: "Pulled 12 days straight"</td></tr>
+          <tr><td><strong>Pay Stub Streak</strong></td><td>Upload pay stub every pay period (bi-weekly)</td><td>Tied to core value: pay accuracy</td></tr>
+          <tr><td><strong>Terminal Tour</strong></td><td>Work at a new terminal each week</td><td>Encourages data diversity for casuals</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Streak Recovery Mechanics</h3>
+        <table>
+          <tr><th>Recovery Option</th><th>Cost</th><th>Limit</th></tr>
+          <tr><td>Streak Shield (pre-set)</td><td>Free (1 per 30 days)</td><td>Must activate before missing</td></tr>
+          <tr><td>Streak Heal</td><td>50 points</td><td>Within 24 hours of break</td></tr>
+          <tr><td>Weekend Pass</td><td>Free</td><td>Sat/Sun don't break daily streaks</td></tr>
+          <tr><td>Stat Holiday Grace</td><td>Free</td><td>Auto-applied on 13 ILWU holidays</td></tr>
+        </table>
+        <div class="callout callout-amber" style="margin-top:16px;">
+          <strong>Why recovery matters:</strong> Without streak recovery, 73% of Duolingo users who break a streak never return. Recovery turns a frustrating loss into re-engagement friction that still feels fair.
+        </div>
+      </div>
+    </div>
+
+    <h3>Streak Milestones</h3>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+      <div style="background:#181a24;padding:12px 20px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;font-weight:800;color:#fbbf24;">7</div>
+        <div style="font-size:11px;color:#8b8fa8;">DAYS</div>
+        <div style="font-size:11px;color:#fbbf24;">+25 pts</div>
+      </div>
+      <div style="background:#181a24;padding:12px 20px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;font-weight:800;color:#fbbf24;">14</div>
+        <div style="font-size:11px;color:#8b8fa8;">DAYS</div>
+        <div style="font-size:11px;color:#fbbf24;">+50 pts</div>
+      </div>
+      <div style="background:#181a24;padding:12px 20px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;font-weight:800;color:#fbbf24;">30</div>
+        <div style="font-size:11px;color:#8b8fa8;">DAYS</div>
+        <div style="font-size:11px;color:#fbbf24;">+100 pts</div>
+      </div>
+      <div style="background:#181a24;padding:12px 20px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;font-weight:800;color:#34d399;">60</div>
+        <div style="font-size:11px;color:#8b8fa8;">DAYS</div>
+        <div style="font-size:11px;color:#34d399;">+200 pts</div>
+      </div>
+      <div style="background:#181a24;padding:12px 20px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;font-weight:800;color:#7c84fc;">100</div>
+        <div style="font-size:11px;color:#8b8fa8;">DAYS</div>
+        <div style="font-size:11px;color:#7c84fc;">Badge unlock</div>
+      </div>
+      <div style="background:#181a24;padding:12px 20px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;font-weight:800;color:#f87171;">365</div>
+        <div style="font-size:11px;color:#8b8fa8;">DAYS</div>
+        <div style="font-size:11px;color:#f87171;">Legend status</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POINTS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#9679;</div>
+      <h2>Points Economy</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Earning Points</h3>
+        <table>
+          <tr><th>Action</th><th>Points</th><th>Rationale</th></tr>
+          <tr><td>Log a shift</td><td style="color:#34d399;font-weight:700;">+10</td><td>Core loop, easy daily action</td></tr>
+          <tr><td>Log overtime shift</td><td style="color:#34d399;font-weight:700;">+25</td><td>More complex entry, more valuable data</td></tr>
+          <tr><td>Upload pay stub</td><td style="color:#34d399;font-weight:700;">+50</td><td>Highest value: enables pay verification</td></tr>
+          <tr><td>Add subjob detail</td><td style="color:#34d399;font-weight:700;">+5</td><td>Improves data quality</td></tr>
+          <tr><td>Add shift notes</td><td style="color:#34d399;font-weight:700;">+5</td><td>Context for anomaly detection</td></tr>
+          <tr><td>Rate a terminal</td><td style="color:#34d399;font-weight:700;">+10</td><td>Community data contribution</td></tr>
+          <tr><td>Log at new terminal</td><td style="color:#34d399;font-weight:700;">+15</td><td>Data coverage expansion</td></tr>
+          <tr><td>Refer a coworker</td><td style="color:#34d399;font-weight:700;">+100</td><td>Growth engine</td></tr>
+          <tr><td>Find pay discrepancy</td><td style="color:#34d399;font-weight:700;">+75</td><td>Validates core value prop</td></tr>
+          <tr><td>Complete weekly review</td><td style="color:#34d399;font-weight:700;">+20</td><td>Engagement with analytics</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Streak Multipliers</h3>
+        <table>
+          <tr><th>Streak Length</th><th>Multiplier</th><th>Example</th></tr>
+          <tr><td>0-4 days</td><td>1.0x</td><td>10 pts/shift = 10 pts</td></tr>
+          <tr><td style="color:#fbbf24;">5-9 days</td><td style="color:#fbbf24;font-weight:700;">1.5x</td><td>10 pts/shift = 15 pts</td></tr>
+          <tr><td style="color:#34d399;">10-19 days</td><td style="color:#34d399;font-weight:700;">2.0x</td><td>10 pts/shift = 20 pts</td></tr>
+          <tr><td style="color:#7c84fc;">20+ days</td><td style="color:#7c84fc;font-weight:700;">3.0x</td><td>10 pts/shift = 30 pts</td></tr>
+        </table>
+
+        <h3>Spending Points</h3>
+        <table>
+          <tr><th>Reward</th><th>Cost</th></tr>
+          <tr><td>Streak Heal (recover broken streak)</td><td style="color:#f87171;">50 pts</td></tr>
+          <tr><td>Custom profile theme</td><td style="color:#f87171;">200 pts</td></tr>
+          <tr><td>Early access to new features</td><td style="color:#f87171;">500 pts</td></tr>
+          <tr><td>1 week Pro trial gift (for a friend)</td><td style="color:#f87171;">300 pts</td></tr>
+          <tr><td>Unlock special badge frame</td><td style="color:#f87171;">150 pts</td></tr>
+        </table>
+
+        <div class="callout callout-green" style="margin-top:12px;">
+          <strong>Earn rate target:</strong> An active daily user should accumulate ~250-350 points/week. This means the Streak Heal (50 pts) is affordable but not free, and profile themes (200 pts) take ~1 week of dedicated use.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon purple">&#9812;</div>
+      <h2>Badge System (20 Badges)</h2>
+    </div>
+    <p>Badges are permanent, displayed on profile, and visible on leaderboard. Each badge name references real longshoreman culture and port terminology. Organized by difficulty tier.</p>
+
+    <h3>Tier 1: Getting Started (First 2 Weeks)</h3>
+    <div class="badge-grid">
+      <div class="badge-item">
+        <div class="badge-emoji">&#9875;</div>
+        <div class="badge-info">
+          <h4>First Dispatch</h4>
+          <p>Log your first shift</p>
+          <span class="badge badge-green">Easy</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#9874;</div>
+        <div class="badge-info">
+          <h4>Dockhand</h4>
+          <p>Log 10 shifts</p>
+          <span class="badge badge-green">Easy</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128340;</div>
+        <div class="badge-info">
+          <h4>Early Bird</h4>
+          <p>Log a shift before 7:00 AM (20 times)</p>
+          <span class="badge badge-green">Easy</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128203;</div>
+        <div class="badge-info">
+          <h4>Paper Trail</h4>
+          <p>Upload your first pay stub</p>
+          <span class="badge badge-green">Easy</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Tier 2: Building Habits (First 2 Months)</h3>
+    <div class="badge-grid">
+      <div class="badge-item">
+        <div class="badge-emoji">&#128293;</div>
+        <div class="badge-info">
+          <h4>On Fire</h4>
+          <p>Maintain a 7-day logging streak</p>
+          <span class="badge badge-amber">Medium</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#127769;</div>
+        <div class="badge-info">
+          <h4>Night Owl</h4>
+          <p>Log 50 night or graveyard shifts</p>
+          <span class="badge badge-amber">Medium</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128176;</div>
+        <div class="badge-info">
+          <h4>Pay Detective</h4>
+          <p>Identify 5 pay discrepancies via stub comparison</p>
+          <span class="badge badge-amber">Medium</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128666;</div>
+        <div class="badge-info">
+          <h4>Terminal Hopper</h4>
+          <p>Log shifts at 5 different terminals</p>
+          <span class="badge badge-amber">Medium</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#9881;</div>
+        <div class="badge-info">
+          <h4>Versatile Operator</h4>
+          <p>Log 10 different job classifications</p>
+          <span class="badge badge-amber">Medium</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128200;</div>
+        <div class="badge-info">
+          <h4>Number Cruncher</h4>
+          <p>Review weekly analytics 8 weeks in a row</p>
+          <span class="badge badge-amber">Medium</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Tier 3: Veteran Status (3-6 Months)</h3>
+    <div class="badge-grid">
+      <div class="badge-item">
+        <div class="badge-emoji">&#9935;</div>
+        <div class="badge-info">
+          <h4>Iron Worker</h4>
+          <p>Log 100 shifts total</p>
+          <span class="badge badge-purple">Hard</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#127757;</div>
+        <div class="badge-info">
+          <h4>Road Warrior</h4>
+          <p>Log shifts at every terminal in your local</p>
+          <span class="badge badge-purple">Hard</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128170;</div>
+        <div class="badge-info">
+          <h4>Overtime King</h4>
+          <p>Log 200+ overtime hours in a single year</p>
+          <span class="badge badge-purple">Hard</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#127942;</div>
+        <div class="badge-info">
+          <h4>Pension Pro</h4>
+          <p>Hit your WIPP pension hour target for the year</p>
+          <span class="badge badge-purple">Hard</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128172;</div>
+        <div class="badge-info">
+          <h4>Union Rep</h4>
+          <p>Refer 5 coworkers who each log 10+ shifts</p>
+          <span class="badge badge-purple">Hard</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128640;</div>
+        <div class="badge-info">
+          <h4>Streak Machine</h4>
+          <p>Maintain a 30-day logging streak</p>
+          <span class="badge badge-purple">Hard</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Tier 4: Legend (6+ Months)</h3>
+    <div class="badge-grid">
+      <div class="badge-item">
+        <div class="badge-emoji">&#128081;</div>
+        <div class="badge-info">
+          <h4>Century Club</h4>
+          <p>Maintain a 100-day consecutive logging streak</p>
+          <span class="badge badge-red">Legend</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#9878;</div>
+        <div class="badge-info">
+          <h4>Forty Grand</h4>
+          <p>Track $40,000+ in verified earnings</p>
+          <span class="badge badge-red">Legend</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#128142;</div>
+        <div class="badge-info">
+          <h4>Port Legend</h4>
+          <p>Earn all other 19 badges</p>
+          <span class="badge badge-red">Legend</span>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-emoji">&#127775;</div>
+        <div class="badge-info">
+          <h4>Year One</h4>
+          <p>Active user for 365 consecutive days</p>
+          <span class="badge badge-red">Legend</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARDS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">&#9881;</div>
+      <h2>Leaderboard Design</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Leaderboard Rules</h3>
+        <ul class="feature-list">
+          <li><span class="check">&#10003;</span> <strong>Anonymous by default.</strong> Users identified by board position (e.g., "B-Man #47") and badge count. No real names unless user opts in.</li>
+          <li><span class="check">&#10003;</span> <strong>Monthly reset.</strong> Fresh competition every month prevents runaway leaders from demoralizing newcomers. All-time stats shown separately.</li>
+          <li><span class="check">&#10003;</span> <strong>Board position grouping.</strong> A-Board vs B-Board vs Casual leaderboards so casuals aren't competing against full-timers who work 5x more shifts.</li>
+          <li><span class="check">&#10003;</span> <strong>Multiple categories.</strong> Shifts logged, streak length, badges earned, points total, pay stubs uploaded. Different people can lead different boards.</li>
+          <li><span class="check">&#10003;</span> <strong>No earnings displayed.</strong> Never show pay amounts on leaderboards. Privacy-first. Compete on activity, not income.</li>
+          <li><span class="check">&#10003;</span> <strong>Terminal leaderboards.</strong> "Top logger at Centennial this month" creates location-based competition and community.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Psychological Hooks</h3>
+        <table>
+          <tr><th>Hook</th><th>Mechanic</th><th>Example</th></tr>
+          <tr><td><strong>Loss Aversion</strong></td><td>Streak break warning</td><td>"Your 18-day streak ends at midnight!"</td></tr>
+          <tr><td><strong>Endowed Progress</strong></td><td>Pre-filled progress bar</td><td>New users start at 2/10 shifts for badge</td></tr>
+          <tr><td><strong>Variable Reward</strong></td><td>Random bonus points</td><td>"Bonus! Double points for this shift"</td></tr>
+          <tr><td><strong>Social Proof</strong></td><td>Activity counter</td><td>"312 workers logged shifts today"</td></tr>
+          <tr><td><strong>Near Miss</strong></td><td>Almost-unlocked badges</td><td>"2 more night shifts for Night Owl!"</td></tr>
+          <tr><td><strong>Commitment</strong></td><td>Weekly goals</td><td>"You set a goal of 5 shifts this week"</td></tr>
+          <tr><td><strong>Identity</strong></td><td>Profile titles</td><td>"Iron Worker" displayed under name</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPLEMENTATION -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#9881;</div>
+      <h2>Implementation Plan</h2>
+    </div>
+    <table>
+      <tr><th>Phase</th><th>Features</th><th>Effort</th><th>Impact</th><th>Priority</th></tr>
+      <tr><td><strong>Phase 1</strong><br><span style="font-size:11px;color:#8b8fa8;">Sprint 1-2</span></td><td>Points system, daily log streak, 5 starter badges</td><td>2 weeks</td><td style="color:#34d399;">High</td><td><span class="badge badge-red">P0</span></td></tr>
+      <tr><td><strong>Phase 2</strong><br><span style="font-size:11px;color:#8b8fa8;">Sprint 3-4</span></td><td>Streak multipliers, streak recovery, 10 more badges</td><td>2 weeks</td><td style="color:#34d399;">High</td><td><span class="badge badge-red">P0</span></td></tr>
+      <tr><td><strong>Phase 3</strong><br><span style="font-size:11px;color:#8b8fa8;">Sprint 5-6</span></td><td>Monthly leaderboards (anonymous), terminal boards</td><td>3 weeks</td><td style="color:#fbbf24;">Medium</td><td><span class="badge badge-amber">P1</span></td></tr>
+      <tr><td><strong>Phase 4</strong><br><span style="font-size:11px;color:#8b8fa8;">Sprint 7-8</span></td><td>Points store, remaining 5 legend badges, referral integration</td><td>2 weeks</td><td style="color:#fbbf24;">Medium</td><td><span class="badge badge-amber">P1</span></td></tr>
+      <tr><td><strong>Phase 5</strong><br><span style="font-size:11px;color:#8b8fa8;">Sprint 9+</span></td><td>Board position leagues, seasonal challenges, team competitions</td><td>3 weeks</td><td style="color:#8b8fa8;">Low initially</td><td><span class="badge badge-purple">P2</span></td></tr>
+    </table>
+    <p style="margin-top:12px;"><strong>Total estimated effort:</strong> 12 weeks for full system. Phase 1-2 (4 weeks) delivers 80% of retention impact.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 2: MONETIZATION -->
+<!-- ============================================================ -->
+<div id="tab-monetization" class="tab-content">
+  <div class="section-title">Monetization Strategy</div>
+
+  <div class="callout callout-green">
+    <strong>Core pricing insight:</strong> $99/year = $1.90/week. A longshoreman earning $400-700 per shift who catches even ONE pay discrepancy per year recovers 5-7x the annual cost. The ROI sells itself once they experience it.
+  </div>
+
+  <!-- FREE VS PRO -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#9878;</div>
+      <h2>Free vs Pro Feature Breakdown</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>FREE (Forever)</h3>
+        <p style="color:#34d399;font-weight:600;margin-bottom:12px;">Goal: Provide enough value to make PORTPAL indispensable</p>
+        <ul class="feature-list">
+          <li><span class="check">&#10003;</span> <strong>Shift logging</strong> -- unlimited shifts, all job types, all terminals</li>
+          <li><span class="check">&#10003;</span> <strong>Accurate pay rates</strong> -- BCMEA contract rates, all differentials, all shift types</li>
+          <li><span class="check">&#10003;</span> <strong>Basic dashboard</strong> -- current week earnings, last 4 shifts, total tracked</li>
+          <li><span class="check">&#10003;</span> <strong>Calendar view</strong> -- monthly view with shift markers</li>
+          <li><span class="check">&#10003;</span> <strong>Streaks & points</strong> -- full gamification system</li>
+          <li><span class="check">&#10003;</span> <strong>5 badges</strong> -- starter tier badges only</li>
+          <li><span class="check">&#10003;</span> <strong>1 AI question/week</strong> -- contract lookup, rate question</li>
+          <li><span class="check">&#10003;</span> <strong>Basic pension tracker</strong> -- hours logged toward WIPP target</li>
+          <li><span class="check">&#10003;</span> <strong>Stat holiday list</strong> -- upcoming holidays with dates</li>
+        </ul>
+      </div>
+      <div>
+        <h3>PRO ($99/year)</h3>
+        <p style="color:#7c84fc;font-weight:600;margin-bottom:12px;">Goal: Features that directly impact take-home pay and career</p>
+        <ul class="feature-list">
+          <li><span class="dot">&#9679;</span> <strong>Pay stub upload & OCR</strong> -- photograph stub, auto-extract, compare to logged shifts</li>
+          <li><span class="dot">&#9679;</span> <strong>AI pay reconciliation</strong> -- automatic line-by-line comparison, discrepancy flagging</li>
+          <li><span class="dot">&#9679;</span> <strong>Earnings predictions</strong> -- "At this pace, your annual gross will be $87,400"</li>
+          <li><span class="dot">&#9679;</span> <strong>Advanced analytics</strong> -- earnings by job, terminal, month; trend graphs; tax estimates</li>
+          <li><span class="dot">&#9679;</span> <strong>Unlimited AI chat</strong> -- contract questions, rate lookups, OT calculations anytime</li>
+          <li><span class="dot">&#9679;</span> <strong>Shift templates</strong> -- save and reuse common shift configurations</li>
+          <li><span class="dot">&#9679;</span> <strong>Seniority tracker</strong> -- hours toward next board level, projected promotion date</li>
+          <li><span class="dot">&#9679;</span> <strong>Pension planner</strong> -- goal setting, projections, retirement modeling</li>
+          <li><span class="dot">&#9679;</span> <strong>CSV/PDF export</strong> -- download shift history for tax prep or disputes</li>
+          <li><span class="dot">&#9679;</span> <strong>All 20 badges</strong> -- full badge system including Legend tier</li>
+          <li><span class="dot">&#9679;</span> <strong>Holiday qualifier</strong> -- "You need 2 more shifts to qualify for Easter stat pay"</li>
+          <li><span class="dot">&#9679;</span> <strong>Priority support</strong> -- email response within 24 hours</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVERSE TRIAL -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon purple">&#9776;</div>
+      <h2>Reverse Trial Model</h2>
+    </div>
+    <p>Every new user gets full Pro for 30 days with no credit card required. This lets them experience the "aha moment" (catching a pay discrepancy, seeing earnings predictions) before the paywall appears.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>Day 0: Sign Up</h4>
+        <p>Full Pro access activated. Subtle "Pro Trial: 30 days remaining" badge in header. No friction, no CC.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Days 1-7: Onboarding Week</h4>
+        <p>Guided to log shifts, upload first pay stub, explore analytics. First-week challenge (log 3 shifts) triggers badge. System learns their patterns.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Day 15: Mid-Trial Nudge</h4>
+        <p>"15 days of Pro left. You've tracked $4,200 in earnings and found 1 rate discrepancy worth $23." Value-focused, not pressure.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Day 21: Value Summary</h4>
+        <p>Full dashboard of what Pro has done: shifts logged, discrepancies caught, money insights generated. "Here's what you'll lose..."</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Day 28: Soft Countdown</h4>
+        <p>"2 days left. Lock in $99/year -- that's less than you make in the first 15 minutes of a day shift." Terminal-specific social proof.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Day 30: Paywall Activates</h4>
+        <p>Pro features locked. Free features remain fully functional. Data is never deleted. Upgrade prompt on locked features shows their personal stats.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Day 30+: Win-Back</h4>
+        <p>Next pay stub upload attempt shows: "Upgrade to compare this stub. Last time, we found $23 you were owed." Periodic re-trial offers (7-day) after 60 days.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING PSYCHOLOGY -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#128161;</div>
+      <h2>Pricing Psychology</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Anchoring & Framing</h3>
+        <table>
+          <tr><th>Frame</th><th>Message</th></tr>
+          <tr><td><strong>Weekly</strong></td><td>"$1.90/week -- less than a Tim Hortons coffee"</td></tr>
+          <tr><td><strong>Per-Shift</strong></td><td>"$0.38/shift if you work 5 days/week"</td></tr>
+          <tr><td><strong>ROI</strong></td><td>"One caught discrepancy pays for 5 years of Pro"</td></tr>
+          <tr><td><strong>Earnings %</strong></td><td>"0.1% of your annual earnings for full visibility"</td></tr>
+          <tr><td><strong>Comparison</strong></td><td>"Less than the parking at Centennial for one shift"</td></tr>
+        </table>
+
+        <h3>Why Not Monthly?</h3>
+        <p>Annual-only pricing because: (1) longshoremen think in yearly earnings and pension cycles, (2) reduces payment friction to once/year, (3) higher LTV than monthly churn, (4) aligns with contract year (Apr-Mar).</p>
+      </div>
+      <div>
+        <h3>Group & Employer Options</h3>
+        <table>
+          <tr><th>Plan</th><th>Price</th><th>Target</th></tr>
+          <tr><td>Individual Pro</td><td>$99/year</td><td>Standard worker</td></tr>
+          <tr><td>Crew Pack (5)</td><td>$449/year ($89.80 ea)</td><td>Work crews who share</td></tr>
+          <tr><td>Gang Rate (10+)</td><td>$79/year each</td><td>Organized groups</td></tr>
+          <tr><td>Union Endorsed</td><td>$69/year</td><td>If local officially partners</td></tr>
+          <tr><td>Employer Sponsored</td><td>$149/user/year</td><td>Terminal operators wanting data</td></tr>
+        </table>
+        <div class="callout callout-purple" style="margin-top:12px;">
+          <strong>Employer play (future):</strong> Terminal operators pay $149/user for anonymized workforce analytics: shift coverage prediction, labor demand forecasting. Workers get free Pro. Win-win-win.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVENUE PROJECTIONS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#128200;</div>
+      <h2>Revenue Projections (Current User Base)</h2>
+    </div>
+    <p>Based on 957 current users. Conservative to optimistic scenarios for conversion after reverse trial.</p>
+
+    <div class="funnel">
+      <div class="funnel-row">
+        <div class="funnel-label">957 Total Users</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:linear-gradient(90deg,#7c84fc,#a78bfa);">100%</div></div>
+        <div class="funnel-num">957</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">Active (30d)</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:67.9%;background:linear-gradient(90deg,#34d399,#6ee7b7);">67.9%</div></div>
+        <div class="funnel-num">650</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">Trial Exposed</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:55%;background:linear-gradient(90deg,#60a5fa,#93c5fd);">~55%</div></div>
+        <div class="funnel-num">~527</div>
+      </div>
+    </div>
+
+    <table>
+      <tr><th>Scenario</th><th>Conversion Rate</th><th>Paying Users</th><th>Annual Revenue</th><th>Monthly Revenue</th></tr>
+      <tr>
+        <td><span class="badge badge-red">Pessimistic</span></td>
+        <td>5%</td>
+        <td>48</td>
+        <td>$4,752</td>
+        <td>$396</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-amber">Conservative</span></td>
+        <td>10%</td>
+        <td>96</td>
+        <td>$9,504</td>
+        <td>$792</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">Base Case</span></td>
+        <td>20%</td>
+        <td>191</td>
+        <td>$18,909</td>
+        <td>$1,576</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">Optimistic</span></td>
+        <td>35%</td>
+        <td>335</td>
+        <td>$33,165</td>
+        <td>$2,764</td>
+      </tr>
+    </table>
+
+    <div class="sep"></div>
+    <h3>Expansion Revenue (5-Year)</h3>
+    <table>
+      <tr><th>Year</th><th>Market</th><th>Total Users</th><th>Conversion</th><th>Paying</th><th>ARR</th><th>Cumulative</th></tr>
+      <tr><td>Y1</td><td>BC (7,200)</td><td>2,500</td><td>35%</td><td>875</td><td style="color:#34d399;">$86,625</td><td>$86,625</td></tr>
+      <tr><td>Y2</td><td>+PNW (14,200)</td><td>4,970</td><td>30%</td><td>1,491</td><td style="color:#34d399;">$147,609</td><td>$234,234</td></tr>
+      <tr><td>Y3</td><td>+California (28,200)</td><td>8,460</td><td>28%</td><td>2,369</td><td style="color:#34d399;">$234,531</td><td>$468,765</td></tr>
+      <tr><td>Y4</td><td>+HI/MTL (36,000)</td><td>10,800</td><td>28%</td><td>3,024</td><td style="color:#34d399;">$299,376</td><td>$768,141</td></tr>
+      <tr><td>Y5</td><td>+ILA (61,000)</td><td>15,250</td><td>25%</td><td>3,813</td><td style="color:#34d399;">$377,487</td><td>$1,145,628</td></tr>
+    </table>
+    <div class="callout callout-green" style="margin-top:12px;">
+      <strong>$1M+ cumulative revenue by Year 5</strong> with organic ILWU-first expansion. This is the conservative path without employer sponsorship or ILA acceleration.
+    </div>
+  </div>
+
+  <!-- CONVERSION DRIVERS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon red">&#9888;</div>
+      <h2>Feature Gating That Drives Conversion</h2>
+    </div>
+    <p>Each gated feature is designed around a moment of high intent where the user most feels the value.</p>
+
+    <table>
+      <tr><th>Trigger Moment</th><th>Gated Feature</th><th>Free Experience</th><th>Pro Experience</th><th>Conversion Likelihood</th></tr>
+      <tr>
+        <td>Payday (bi-weekly)</td>
+        <td>Pay stub upload</td>
+        <td>See prompt "Compare your stub"</td>
+        <td>Photo upload, OCR, line-by-line match</td>
+        <td><span class="badge badge-green">Very High</span></td>
+      </tr>
+      <tr>
+        <td>End of week</td>
+        <td>Earnings prediction</td>
+        <td>See "this week: $2,340"</td>
+        <td>See yearly projection, tax estimate, trend</td>
+        <td><span class="badge badge-green">High</span></td>
+      </tr>
+      <tr>
+        <td>Contract question</td>
+        <td>Unlimited AI chat</td>
+        <td>1 question used, see "Upgrade for more"</td>
+        <td>Unlimited contract Q&A</td>
+        <td><span class="badge badge-amber">Medium</span></td>
+      </tr>
+      <tr>
+        <td>Tax season (Feb-Apr)</td>
+        <td>CSV/PDF export</td>
+        <td>See export button grayed out</td>
+        <td>Full shift history download for T4 prep</td>
+        <td><span class="badge badge-green">Very High (seasonal)</span></td>
+      </tr>
+      <tr>
+        <td>Board advancement</td>
+        <td>Seniority tracker</td>
+        <td>See total hours logged</td>
+        <td>Hours remaining, projected date, milestones</td>
+        <td><span class="badge badge-amber">Medium-High</span></td>
+      </tr>
+      <tr>
+        <td>Pension review</td>
+        <td>Pension planner</td>
+        <td>Basic hours count</td>
+        <td>Goal tracking, retirement projections</td>
+        <td><span class="badge badge-amber">Medium</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 3: USER RESEARCH -->
+<!-- ============================================================ -->
+<div id="tab-users" class="tab-content">
+  <div class="section-title">User Research: Canadian Longshoremen</div>
+
+  <!-- DEMOGRAPHICS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon purple">&#9786;</div>
+      <h2>Demographics & Culture</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Who They Are</h3>
+        <table>
+          <tr><th>Attribute</th><th>Detail</th></tr>
+          <tr><td>Age Range</td><td>25-60, median ~38</td></tr>
+          <tr><td>Gender</td><td>~90% male, growing female presence in recent years</td></tr>
+          <tr><td>Education</td><td>High school + trade certifications. Practical, hands-on.</td></tr>
+          <tr><td>Income</td><td>$75K-$140K/year depending on board, OT, and hours</td></tr>
+          <tr><td>Tech Comfort</td><td>Smartphone-first. Comfortable with WhatsApp, FB, basic apps. Not early adopters.</td></tr>
+          <tr><td>Union Identity</td><td>Strong. ILWU membership is a career identity, not just a job. Multi-generational.</td></tr>
+          <tr><td>Work Ethic</td><td>Pride in physical work. Skeptical of corporate/tech solutions.</td></tr>
+          <tr><td>Family</td><td>Often port families: father, brother, uncle also ILWU. Legacy entry.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Cultural Dynamics</h3>
+        <ul class="feature-list">
+          <li><span class="dot">&#9679;</span> <strong>Tight-knit community.</strong> Everyone knows everyone at the dispatch hall. Word travels fast, both good and bad.</li>
+          <li><span class="dot">&#9679;</span> <strong>Skeptical of outsiders.</strong> Initial trust barrier is high. But once in, loyalty is fierce. Need a "one of us" champion.</li>
+          <li><span class="dot">&#9679;</span> <strong>Competitive about earnings.</strong> Workers compare notes on best shifts, terminals, OT opportunities. They want to optimize.</li>
+          <li><span class="dot">&#9679;</span> <strong>Union solidarity.</strong> Any tool perceived as helping management or undermining the union will be rejected immediately.</li>
+          <li><span class="dot">&#9679;</span> <strong>Generational divide.</strong> Younger workers (25-35) are more tech-savvy and open to apps. Older workers need peer proof.</li>
+          <li><span class="dot">&#9679;</span> <strong>Shift talk culture.</strong> Workers discuss shifts, pay, and conditions constantly. PORTPAL data becomes conversation fuel.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORK PATTERNS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#128340;</div>
+      <h2>Work Patterns & Shift Structure</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Three Shifts</h3>
+        <table>
+          <tr><th>Shift</th><th>Hours</th><th>Character</th></tr>
+          <tr><td style="color:#fbbf24;"><strong>DAY</strong></td><td>0800-1630</td><td>Most common, standard 8 hrs. Centennial runs 9 hrs. Dispatch at 0730.</td></tr>
+          <tr><td style="color:#7c84fc;"><strong>NIGHT</strong></td><td>1630-0100</td><td>Premium rate (+26% Mon-Fri). Popular for extra pay. 8 or 9 hrs.</td></tr>
+          <tr><td style="color:#a78bfa;"><strong>GRAVEYARD</strong></td><td>0100-0730</td><td>Highest rate (+56% Mon-Fri). Only 6.5 hrs standard. Tough on body.</td></tr>
+        </table>
+
+        <h3>Dispatch Hall Culture</h3>
+        <p>Workers don't have fixed schedules. They go to the dispatch hall (physical building) and get assigned shifts based on seniority. This means:</p>
+        <ul class="feature-list">
+          <li><span class="dot">&#9679;</span> Workers don't know their shift until dispatch (sometimes night before via text)</li>
+          <li><span class="dot">&#9679;</span> Casuals may sit in the hall for hours hoping to get dispatched</li>
+          <li><span class="dot">&#9679;</span> A-Board workers get first pick, B-Board second, Casuals last</li>
+          <li><span class="dot">&#9679;</span> Terminal and job assignment varies daily</li>
+          <li><span class="dot">&#9679;</span> Missing a dispatch call can mean losing a day's pay ($400-700)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Seasonal Patterns</h3>
+        <table>
+          <tr><th>Period</th><th>Activity</th><th>PORTPAL Impact</th></tr>
+          <tr><td>Jan-Mar</td><td>Moderate. Grain season winding down.</td><td>Tax season = export feature demand spike</td></tr>
+          <tr><td>Apr-Jun</td><td>Picking up. New contract year starts April.</td><td>Rate changes = verification demand spike</td></tr>
+          <tr><td>Jul-Sep</td><td>Peak. Import season, cruise ships.</td><td>Highest OT, most shifts to track</td></tr>
+          <tr><td>Oct-Dec</td><td>Grain season begins. Pre-holiday rush.</td><td>Wheat terminal activity, holiday tracking</td></tr>
+        </table>
+
+        <h3>Weekly Rhythm</h3>
+        <table>
+          <tr><th>Day</th><th>Behavior</th></tr>
+          <tr><td>Mon-Fri</td><td>Standard dispatch, regular shifts, bulk of logging activity</td></tr>
+          <tr><td>Saturday</td><td>Premium rate. Motivated workers grab these. Good engagement day.</td></tr>
+          <tr><td>Sunday</td><td>Highest rate. "Review my week" behavior. Analytics usage peaks.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP USAGE WINDOWS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#128241;</div>
+      <h2>App Usage Windows</h2>
+    </div>
+    <p>Understanding when workers interact with PORTPAL is critical for notification timing, feature placement, and content delivery.</p>
+
+    <table>
+      <tr><th>Window</th><th>Time</th><th>Behavior</th><th>Design Implication</th></tr>
+      <tr>
+        <td style="color:#fbbf24;"><strong>Pre-Dispatch</strong></td>
+        <td>5:00-6:30 AM</td>
+        <td>Checking yesterday's logged shift, seeing earnings. Quick glance while having coffee before heading to hall.</td>
+        <td>Dashboard must load fast, show yesterday's shift prominently. Push notification at 5:30 AM: "Good morning. Your weekly total: $2,140"</td>
+      </tr>
+      <tr>
+        <td style="color:#34d399;"><strong>Post-Shift</strong></td>
+        <td>5:00-8:00 PM</td>
+        <td>Logging today's shift while it's fresh. Checking OT calculation. Primary data entry window.</td>
+        <td>Shift logger must be friction-free: 3 taps to log a standard shift. Smart defaults (same terminal/job as yesterday). Push at 6 PM: "How was the shift?"</td>
+      </tr>
+      <tr>
+        <td style="color:#7c84fc;"><strong>Evening Review</strong></td>
+        <td>8:00-10:00 PM</td>
+        <td>Deeper exploration: analytics, pension, comparing weeks. Browsing on couch.</td>
+        <td>Analytics and Pro features get most attention here. Discovery of advanced features happens in this window.</td>
+      </tr>
+      <tr>
+        <td style="color:#a78bfa;"><strong>Weekend Review</strong></td>
+        <td>Sat/Sun morning</td>
+        <td>Weekly summary, earnings review, maybe sharing stats with partner. "How much did I make this week?"</td>
+        <td>Weekly summary push on Saturday AM. Shareable earnings card for partner. Export for the organized.</td>
+      </tr>
+      <tr>
+        <td style="color:#f87171;"><strong>Payday</strong></td>
+        <td>Bi-weekly, varies</td>
+        <td>Pay stub comparison. "Did they pay me right?" Highest conversion moment.</td>
+        <td>Pay stub upload prompt on payday. Comparison UI must be instant and clear. Discrepancy = trust earned.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TRUST & PAIN POINTS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon red">&#9888;</div>
+      <h2>Trust Factors & Pain Points</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>What Builds Trust</h3>
+        <table>
+          <tr><th>Factor</th><th>Weight</th><th>How to Win</th></tr>
+          <tr><td><strong>Pay accuracy</strong></td><td style="color:#34d399;">Critical</td><td>One wrong rate calculation and they uninstall. Accuracy must be 100%.</td></tr>
+          <tr><td><strong>Peer recommendation</strong></td><td style="color:#34d399;">Very High</td><td>"My buddy at Centennial uses it" is 10x more effective than any ad.</td></tr>
+          <tr><td><strong>Union alignment</strong></td><td style="color:#34d399;">Very High</td><td>Never partner with employers visibly. Position as a worker tool, by workers.</td></tr>
+          <tr><td><strong>Data privacy</strong></td><td style="color:#fbbf24;">High</td><td>Earnings data is deeply personal. PIPEDA compliance is minimum. Clearly communicate: "We never share individual data."</td></tr>
+          <tr><td><strong>Free core features</strong></td><td style="color:#fbbf24;">High</td><td>If basic tracking ever gets paywalled, trust collapses. Free must stay generous.</td></tr>
+          <tr><td><strong>Speed & reliability</strong></td><td style="color:#7c84fc;">Medium</td><td>App must work at 5 AM on cellular. No loading spinners. Offline-first for logging.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Pain Points (Ranked by Intensity)</h3>
+        <table>
+          <tr><th>#</th><th>Pain Point</th><th>PORTPAL Solution</th></tr>
+          <tr><td>1</td><td><strong>Pay discrepancy fear.</strong> "Am I getting paid right?" haunts every payday.</td><td>Stub upload + OCR comparison</td></tr>
+          <tr><td>2</td><td><strong>Seniority anxiety.</strong> Casuals obsess over hours toward B-Board promotion.</td><td>Seniority tracker with projection</td></tr>
+          <tr><td>3</td><td><strong>Pension uncertainty.</strong> "Am I on track? What's my pension going to be?"</td><td>WIPP planner with retirement model</td></tr>
+          <tr><td>4</td><td><strong>Rate confusion.</strong> 990+ rate combinations. Nobody can calculate in their head.</td><td>Instant rate lookup by job/shift/day</td></tr>
+          <tr><td>5</td><td><strong>Tax surprises.</strong> Year-end tax bill shock from variable income.</td><td>Running tax estimate by bracket</td></tr>
+          <tr><td>6</td><td><strong>Commute waste.</strong> Going to hall and not getting dispatched.</td><td>Future: dispatch prediction AI</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h3>Communication Channels</h3>
+    <div class="three-col">
+      <div style="background:#181a24;padding:16px;border-radius:10px;">
+        <h4 style="color:#34d399;margin:0 0 8px;">Primary: WhatsApp Groups</h4>
+        <p style="margin:0;font-size:13px;">Every terminal, every crew, every local has WhatsApp groups. This is where shift info, complaints, and recommendations spread. A single screenshot of PORTPAL catching a $47 discrepancy will go viral in these groups.</p>
+      </div>
+      <div style="background:#181a24;padding:16px;border-radius:10px;">
+        <h4 style="color:#7c84fc;margin:0 0 8px;">Secondary: Facebook Groups</h4>
+        <p style="margin:0;font-size:13px;">Older workers (40+) are active on Facebook. Local 500 and 502 have private groups. Less immediate than WhatsApp but higher permanence. Good for testimonials and feature announcements.</p>
+      </div>
+      <div style="background:#181a24;padding:16px;border-radius:10px;">
+        <h4 style="color:#fbbf24;margin:0 0 8px;">Tertiary: Dispatch Hall</h4>
+        <p style="margin:0;font-size:13px;">Physical space where workers wait. Posters, TV screens (some halls have them), and in-person conversations. QR code on a poster next to the dispatch board = gold placement.</p>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h3>Canadian-Specific Considerations</h3>
+    <table>
+      <tr><th>Factor</th><th>Detail</th><th>Action</th></tr>
+      <tr><td>PIPEDA</td><td>Canadian federal privacy law. Stricter than US. Requires clear consent for data collection.</td><td>Privacy policy must be explicit about what's collected and why. Opt-in only for analytics.</td></tr>
+      <tr><td>Language</td><td>BC is English-only for practical purposes. No French needed (unlike Montreal expansion).</td><td>English-only for BC launch. Add French for ILA Montreal (Year 4).</td></tr>
+      <tr><td>Weather</td><td>Vancouver rain affects outdoor terminal work. Winter slowdowns at some terminals.</td><td>Weather-aware features (future): "Rainy day at Deltaport -- expect delays"</td></tr>
+      <tr><td>Currency</td><td>All amounts in CAD. Users think in CAD. Never show USD.</td><td>Currency hardcoded to CAD with $ symbol. USD conversion only for cross-border features.</td></tr>
+      <tr><td>Holidays</td><td>13 ILWU stat holidays, some different from standard Canadian stats.</td><td>Already built. Holiday qualifying shift tracker is a Pro feature.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 4: RETENTION EXPERIMENTS -->
+<!-- ============================================================ -->
+<div id="tab-retention" class="tab-content">
+  <div class="section-title">Retention Experiments (10 A/B Tests)</div>
+
+  <div class="callout callout-purple">
+    <strong>Current baseline:</strong> 67.9% 30-day retention, 62.5% 90-day retention, 9.0% one-and-done rate. The magic number is 10 shifts in month one (69.9% retain). Every experiment below is designed to push users past that 10-shift threshold faster.
+  </div>
+
+  <!-- EXPERIMENT 1 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 1: Onboarding Length</h4>
+      <span class="badge badge-red">HIGH PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">A/B Test</span>
+      <span class="badge badge-purple">2 weeks to run</span>
+      <span class="badge badge-amber">Easy to implement</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> Shortening onboarding from 6 steps to 3 steps (welcome, union local, first shift) will increase day-1 shift logging by 40% because current 6-step flow creates dropout before the first value moment.</p>
+    <table>
+      <tr><th>Variant</th><th>Steps</th><th>Time to First Shift</th></tr>
+      <tr><td>Control (A)</td><td>6 steps: welcome, union, board/seniority, terminals, job ratings, complete</td><td>~4 minutes</td></tr>
+      <tr><td>Test (B)</td><td>3 steps: welcome, union local, log your first shift (defer rest)</td><td>~90 seconds</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> % of users who log first shift within 24 hours of signup. <strong>Secondary:</strong> 7-day retention, data completeness at day 30.</p>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Risk:</strong> Deferred profile completion may reduce data quality. Mitigate with progressive profiling prompts over first week.</p>
+  </div>
+
+  <!-- EXPERIMENT 2 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 2: Push Notification Timing</h4>
+      <span class="badge badge-red">HIGH PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">A/B Test</span>
+      <span class="badge badge-purple">3 weeks to run</span>
+      <span class="badge badge-amber">Easy to implement</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> A 5:30 AM pre-dispatch push ("Your weekly total: $X. Have a good shift!") will drive 25% more daily opens than a 9 PM evening push ("Don't forget to log today's shift"), because the morning window aligns with the natural pre-hall routine.</p>
+    <table>
+      <tr><th>Variant</th><th>Time</th><th>Message</th></tr>
+      <tr><td>A (Morning)</td><td>5:30 AM</td><td>"Good morning. Week so far: $2,140 across 3 shifts. Have a good one."</td></tr>
+      <tr><td>B (Evening)</td><td>9:00 PM</td><td>"How was the shift? Log it now -- your streak is at 12 days."</td></tr>
+      <tr><td>C (Both)</td><td>5:30 AM + 9 PM</td><td>Morning: earnings summary. Evening: logging reminder.</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Daily active rate. <strong>Secondary:</strong> Push open rate, shift logging completion rate, opt-out rate.</p>
+  </div>
+
+  <!-- EXPERIMENT 3 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 3: Streak Recovery ("Heal")</h4>
+      <span class="badge badge-amber">MEDIUM PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">A/B Test</span>
+      <span class="badge badge-purple">4 weeks to run</span>
+      <span class="badge badge-purple">Medium effort</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> Offering a streak "heal" (spend 50 points to restore a broken streak within 24 hours) will reduce churn-after-streak-break by 50%. Duolingo data shows 73% of users who break a streak never return; recovery mechanics cut this dramatically.</p>
+    <table>
+      <tr><th>Variant</th><th>Recovery</th><th>Cost</th></tr>
+      <tr><td>Control (A)</td><td>No recovery. Streak resets to 0.</td><td>N/A</td></tr>
+      <tr><td>Test (B)</td><td>24-hour window to heal. Push notification: "Your 15-day streak broke! Heal it for 50 points?"</td><td>50 points</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> 7-day return rate after streak break. <strong>Secondary:</strong> Points economy balance, streak length distribution.</p>
+  </div>
+
+  <!-- EXPERIMENT 4 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 4: First-Week Challenge</h4>
+      <span class="badge badge-red">HIGH PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">Cohort Analysis</span>
+      <span class="badge badge-purple">2 weeks to run</span>
+      <span class="badge badge-amber">Easy to implement</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> A visible "New Docker Challenge: Log 3 shifts in your first 7 days" with a badge reward will push 30% more users past the critical 3-shifts-in-week-1 threshold that statistically predicts retention (p < 0.0001).</p>
+    <table>
+      <tr><th>Variant</th><th>Challenge</th><th>Reward</th></tr>
+      <tr><td>Control (A)</td><td>No challenge. Standard onboarding.</td><td>N/A</td></tr>
+      <tr><td>Test (B)</td><td>Progress bar: "Log 3 shifts this week to earn your Dockhand badge!" visible on home screen.</td><td>Badge + 50 points + confetti animation</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> % of new users logging 3+ shifts in week 1. <strong>Secondary:</strong> 30-day retention, engagement depth.</p>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Implementation:</strong> Endowed progress effect -- show "1/3 shifts logged" immediately after first shift. The progress bar being partially filled creates urgency to complete.</p>
+  </div>
+
+  <!-- EXPERIMENT 5 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 5: Social Proof Counter</h4>
+      <span class="badge badge-amber">MEDIUM PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">A/B Test</span>
+      <span class="badge badge-purple">3 weeks to run</span>
+      <span class="badge badge-green">Very Easy</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> Showing "247 workers logged shifts today" on the home screen will increase daily logging by 15% through social proof. Workers who see peers are active feel FOMO about not tracking their own shifts.</p>
+    <table>
+      <tr><th>Variant</th><th>Display</th></tr>
+      <tr><td>Control (A)</td><td>No counter. Standard home screen.</td></tr>
+      <tr><td>Test (B)</td><td>Live counter: "247 workers logged shifts today" with subtle animation on number change.</td></tr>
+      <tr><td>Test (C)</td><td>Terminal-specific: "34 workers at Centennial logged today" based on user's last terminal.</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Daily shift logging rate. <strong>Secondary:</strong> Home screen engagement time.</p>
+  </div>
+
+  <!-- EXPERIMENT 6 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 6: Pay Rate Change Alerts</h4>
+      <span class="badge badge-amber">MEDIUM PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">Feature Test</span>
+      <span class="badge badge-purple">Seasonal (April)</span>
+      <span class="badge badge-purple">Medium effort</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> Sending a push notification when new contract rates take effect (April 1 each year) with a personalized impact ("Your day shift rate just went up $2.13/hr. That's $4,420 more per year.") will re-engage 20% of dormant users and drive 10% conversion among free users.</p>
+    <table>
+      <tr><th>Trigger</th><th>Message</th><th>CTA</th></tr>
+      <tr><td>Contract year change (April 1)</td><td>"New rates are live! Your TT day rate: $53.82 -> $55.97. That's an extra $4,420/year."</td><td>"See All New Rates" -> rate lookup (free) or full impact analysis (Pro)</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Dormant user reactivation rate. <strong>Secondary:</strong> Pro conversion from alert interaction.</p>
+  </div>
+
+  <!-- EXPERIMENT 7 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 7: Weekly Earnings Summary Push</h4>
+      <span class="badge badge-red">HIGH PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">A/B Test</span>
+      <span class="badge badge-purple">3 weeks to run</span>
+      <span class="badge badge-amber">Easy to implement</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> A Saturday morning push with personalized weekly summary ("This week: 4 shifts, $2,340, 32 OT hours. You're 12% ahead of last week.") will increase weekend app opens by 35% and drive Sunday "review my week" behavior.</p>
+    <table>
+      <tr><th>Variant</th><th>Content</th></tr>
+      <tr><td>Control (A)</td><td>No weekly summary</td></tr>
+      <tr><td>Test (B)</td><td>Saturday 8 AM: plain text summary with key numbers</td></tr>
+      <tr><td>Test (C)</td><td>Saturday 8 AM: summary + comparison to previous week + "See full breakdown" link</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Weekend DAU. <strong>Secondary:</strong> Analytics page views, Pro conversion (full breakdown is Pro).</p>
+  </div>
+
+  <!-- EXPERIMENT 8 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 8: Buddy System</h4>
+      <span class="badge badge-amber">MEDIUM PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">Cohort Analysis</span>
+      <span class="badge badge-purple">6 weeks to run</span>
+      <span class="badge badge-purple">Medium effort</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> A "Bring Your Buddy" invite where both referrer and invitee get 7 days of Pro will increase viral coefficient by 0.3 and improve invitee retention by 20% (vs. organic signups) because the referrer becomes an accountability partner.</p>
+    <table>
+      <tr><th>Mechanic</th><th>Referrer Gets</th><th>Invitee Gets</th></tr>
+      <tr><td>Share invite link via WhatsApp/text</td><td>7 days Pro + 100 points</td><td>7 days Pro + buddy name in app</td></tr>
+      <tr><td>Both log shift same day (bonus)</td><td>+25 bonus points</td><td>+25 bonus points</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Invitee 30-day retention vs. organic. <strong>Secondary:</strong> Invites sent per user, viral coefficient.</p>
+  </div>
+
+  <!-- EXPERIMENT 9 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 9: Terminal-Specific Challenges</h4>
+      <span class="badge badge-purple">LOW PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">Feature Test</span>
+      <span class="badge badge-purple">4 weeks to run</span>
+      <span class="badge badge-purple">Medium effort</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> Monthly terminal challenges ("Centennial Challenge: 15 workers need to collectively log 200 shifts this month for everyone to get 100 bonus points") will increase logging by 20% at that terminal through communal goal psychology and peer pressure.</p>
+    <table>
+      <tr><th>Element</th><th>Design</th></tr>
+      <tr><td>Goal</td><td>Collective shift count at terminal (e.g., 200 shifts at Centennial)</td></tr>
+      <tr><td>Progress</td><td>Public progress bar visible to all users at that terminal</td></tr>
+      <tr><td>Reward</td><td>All participants get 100 bonus points + terminal-specific badge frame</td></tr>
+      <tr><td>Social</td><td>"You contributed 8 of 200 shifts. 12 workers participating."</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Shifts logged at target terminal. <strong>Secondary:</strong> User participation rate, cross-terminal spillover.</p>
+  </div>
+
+  <!-- EXPERIMENT 10 -->
+  <div class="experiment">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h4>Experiment 10: Pension Milestone Celebrations</h4>
+      <span class="badge badge-amber">MEDIUM PRIORITY</span>
+    </div>
+    <div class="experiment-meta">
+      <span class="badge badge-blue">Feature Test</span>
+      <span class="badge badge-purple">Ongoing measurement</span>
+      <span class="badge badge-amber">Easy to implement</span>
+    </div>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Hypothesis:</strong> Celebrating pension milestones with animations and push notifications ("You just crossed 500 WIPP hours! You're 38% to your annual target.") will increase pension feature engagement by 40% and drive Pro conversion by 8% among users who hit milestones.</p>
+    <table>
+      <tr><th>Milestone</th><th>Celebration</th><th>Pro Upsell</th></tr>
+      <tr><td>250 hours</td><td>Confetti + badge progress</td><td>"See your full retirement projection" (Pro)</td></tr>
+      <tr><td>500 hours</td><td>Animation + push + points</td><td>"At this pace, you'll retire at 58. See planner" (Pro)</td></tr>
+      <tr><td>1,000 hours</td><td>Special badge unlock</td><td>"You're on track. Export your pension report" (Pro)</td></tr>
+      <tr><td>WIPP target hit</td><td>Major celebration + Pension Pro badge</td><td>"Download your annual pension certificate" (Pro)</td></tr>
+    </table>
+    <p style="color:#a0a4be;font-size:13px;"><strong>Primary metric:</strong> Pension feature DAU. <strong>Secondary:</strong> Pro conversion from milestone screen, pension page time spent.</p>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <div class="card-header">
+      <div class="card-icon green">&#9745;</div>
+      <h2>Experiment Priority Matrix</h2>
+    </div>
+    <table>
+      <tr><th>#</th><th>Experiment</th><th>Effort</th><th>Expected Impact</th><th>Priority</th><th>Run Order</th></tr>
+      <tr><td>4</td><td>First-Week Challenge</td><td style="color:#34d399;">Easy</td><td style="color:#34d399;">+30% week-1 activation</td><td><span class="badge badge-red">P0</span></td><td>1st</td></tr>
+      <tr><td>1</td><td>Onboarding Length</td><td style="color:#34d399;">Easy</td><td style="color:#34d399;">+40% day-1 logging</td><td><span class="badge badge-red">P0</span></td><td>2nd</td></tr>
+      <tr><td>7</td><td>Weekly Summary Push</td><td style="color:#34d399;">Easy</td><td style="color:#fbbf24;">+35% weekend DAU</td><td><span class="badge badge-red">P0</span></td><td>3rd</td></tr>
+      <tr><td>2</td><td>Push Notification Timing</td><td style="color:#34d399;">Easy</td><td style="color:#fbbf24;">+25% daily opens</td><td><span class="badge badge-red">P0</span></td><td>4th</td></tr>
+      <tr><td>5</td><td>Social Proof Counter</td><td style="color:#34d399;">Very Easy</td><td style="color:#fbbf24;">+15% daily logging</td><td><span class="badge badge-amber">P1</span></td><td>5th</td></tr>
+      <tr><td>3</td><td>Streak Recovery</td><td style="color:#fbbf24;">Medium</td><td style="color:#fbbf24;">-50% post-break churn</td><td><span class="badge badge-amber">P1</span></td><td>6th</td></tr>
+      <tr><td>10</td><td>Pension Milestones</td><td style="color:#34d399;">Easy</td><td style="color:#fbbf24;">+8% Pro conversion</td><td><span class="badge badge-amber">P1</span></td><td>7th</td></tr>
+      <tr><td>8</td><td>Buddy System</td><td style="color:#fbbf24;">Medium</td><td style="color:#fbbf24;">+0.3 viral coefficient</td><td><span class="badge badge-amber">P1</span></td><td>8th</td></tr>
+      <tr><td>6</td><td>Rate Change Alerts</td><td style="color:#fbbf24;">Medium</td><td style="color:#7c84fc;">Seasonal spike</td><td><span class="badge badge-purple">P2</span></td><td>9th (April)</td></tr>
+      <tr><td>9</td><td>Terminal Challenges</td><td style="color:#fbbf24;">Medium</td><td style="color:#7c84fc;">+20% at target terminal</td><td><span class="badge badge-purple">P2</span></td><td>10th</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 5: COMPETITIVE LANDSCAPE -->
+<!-- ============================================================ -->
+<div id="tab-competitive" class="tab-content">
+  <div class="section-title">Competitive Landscape Analysis</div>
+
+  <div class="callout callout-green">
+    <strong>Bottom line:</strong> There is no direct competitor in the longshoremen shift tracking space. Zero. PORTPAL owns an uncontested niche. The closest threats are general workforce apps that lack contract data, pay verification, and union-specific features. The moat is deepening with every shift logged.
+  </div>
+
+  <!-- NO DIRECT COMPETITOR -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#9878;</div>
+      <h2>Direct Competitors: None</h2>
+    </div>
+    <p>Extensive search of App Store, Google Play, and web confirms: no app specifically targets longshoremen shift tracking, pay verification, or ILWU/ILA contract rate calculations. The reasons:</p>
+    <ul class="feature-list">
+      <li><span class="dot">&#9679;</span> <strong>Niche too small for VC.</strong> 127,000 workers in North America doesn't excite typical tech investors (until you show the data moat).</li>
+      <li><span class="dot">&#9679;</span> <strong>Domain expertise barrier.</strong> Understanding BCMEA contracts, differential classes, shift types, pension structures, and dispatch mechanics requires deep industry knowledge.</li>
+      <li><span class="dot">&#9679;</span> <strong>Union trust barrier.</strong> Building trust with organized labor requires careful positioning. Big tech companies can't just enter this space.</li>
+      <li><span class="dot">&#9679;</span> <strong>Data cold start problem.</strong> PORTPAL has 73,683 shifts across 990+ rate combinations. A new entrant starts from zero.</li>
+    </ul>
+  </div>
+
+  <!-- GENERAL WORKFORCE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#9888;</div>
+      <h2>General Workforce Apps (Indirect)</h2>
+    </div>
+    <p>These apps serve hourly/shift workers broadly but lack every longshoreman-specific feature that makes PORTPAL valuable.</p>
+
+    <div class="competitor">
+      <h4>Deputy</h4>
+      <div class="category">Shift Scheduling & Time Tracking</div>
+      <div class="two-col">
+        <div>
+          <ul class="feature-list">
+            <li><span class="check">&#10003;</span> Shift scheduling and swapping</li>
+            <li><span class="check">&#10003;</span> GPS time clock</li>
+            <li><span class="check">&#10003;</span> Team communication</li>
+            <li><span class="check">&#10003;</span> Payroll integration</li>
+          </ul>
+        </div>
+        <div>
+          <ul class="feature-list">
+            <li><span class="cross">&#10007;</span> No union contract rates</li>
+            <li><span class="cross">&#10007;</span> No pay stub verification</li>
+            <li><span class="cross">&#10007;</span> No differential calculations</li>
+            <li><span class="cross">&#10007;</span> Employer-side tool (workers don't choose it)</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:13px;"><strong>Threat level:</strong> <span class="badge badge-green">Low</span> -- Employer-managed. Workers can't use it independently. No maritime features.</p>
+    </div>
+
+    <div class="competitor">
+      <h4>When I Work</h4>
+      <div class="category">Employee Scheduling</div>
+      <div class="two-col">
+        <div>
+          <ul class="feature-list">
+            <li><span class="check">&#10003;</span> Schedule management</li>
+            <li><span class="check">&#10003;</span> Shift trading</li>
+            <li><span class="check">&#10003;</span> Availability tracking</li>
+          </ul>
+        </div>
+        <div>
+          <ul class="feature-list">
+            <li><span class="cross">&#10007;</span> No pay calculation</li>
+            <li><span class="cross">&#10007;</span> No pension tracking</li>
+            <li><span class="cross">&#10007;</span> No seniority tracking</li>
+            <li><span class="cross">&#10007;</span> Designed for retail/hospitality</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:13px;"><strong>Threat level:</strong> <span class="badge badge-green">Low</span> -- Wrong industry entirely. No dispatch hall model support.</p>
+    </div>
+
+    <div class="competitor">
+      <h4>ShiftNote</h4>
+      <div class="category">Shift Communication</div>
+      <div class="two-col">
+        <div>
+          <ul class="feature-list">
+            <li><span class="check">&#10003;</span> Shift-to-shift communication logs</li>
+            <li><span class="check">&#10003;</span> Manager dashboards</li>
+          </ul>
+        </div>
+        <div>
+          <ul class="feature-list">
+            <li><span class="cross">&#10007;</span> No pay tracking at all</li>
+            <li><span class="cross">&#10007;</span> No worker-facing mobile app</li>
+            <li><span class="cross">&#10007;</span> Management tool, not worker tool</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:13px;"><strong>Threat level:</strong> <span class="badge badge-green">None</span> -- Completely different product category.</p>
+    </div>
+  </div>
+
+  <!-- ADJACENT INDUSTRIES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">&#128666;</div>
+      <h2>Adjacent Industry Apps (Lessons to Learn)</h2>
+    </div>
+
+    <div class="competitor">
+      <h4>Motive (formerly KeepTruckin)</h4>
+      <div class="category">Trucking -- ELD & Fleet Management</div>
+      <p style="color:#a0a4be;font-size:13px;">Grew from electronic logging device (ELD) mandate compliance tool to $2.85B valuation. Started with a single pain point (Hours of Service compliance), then expanded to fleet management, fuel, safety.</p>
+      <div class="callout callout-purple">
+        <strong>Lesson for PORTPAL:</strong> Start with the compliance/accuracy pain point (pay verification), become indispensable, then expand to career management (seniority, pension, dispatch prediction). Motive's playbook: solve the legal requirement first, upsell the nice-to-haves.
+      </div>
+    </div>
+
+    <div class="competitor">
+      <h4>Procore</h4>
+      <div class="category">Construction -- Project Management</div>
+      <p style="color:#a0a4be;font-size:13px;">$10B+ market cap. Serves construction with project management, financial tracking, quality/safety. Built industry-specific features that generic tools (Asana, Monday) can't replicate.</p>
+      <div class="callout callout-purple">
+        <strong>Lesson for PORTPAL:</strong> Industry-specific always beats generic. Procore won because they understood construction workflows. PORTPAL wins because we understand dispatch, differentials, WIPP, and the difference between a DAY shift at Centennial (9 hrs) and Vanterm (8 hrs). No generic app can replicate this.
+      </div>
+    </div>
+
+    <div class="competitor">
+      <h4>Stride</h4>
+      <div class="category">Gig Economy -- Tax & Expense Tracking</div>
+      <p style="color:#a0a4be;font-size:13px;">Free tax tracking for gig workers (Uber, DoorDash). Revenue from health insurance referrals. 2M+ users.</p>
+      <div class="callout callout-purple">
+        <strong>Lesson for PORTPAL:</strong> Free core + monetize through adjacent services. Stride gives away tax tracking to sell insurance. PORTPAL could give away shift tracking and monetize through financial services (tax prep referrals, union-specific insurance partnerships). Future revenue channel.
+      </div>
+    </div>
+  </div>
+
+  <!-- MOAT ANALYSIS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon purple">&#9878;</div>
+      <h2>PORTPAL's Competitive Moat</h2>
+    </div>
+
+    <table>
+      <tr><th>Moat Layer</th><th>What It Is</th><th>How Deep</th><th>Time to Replicate</th></tr>
+      <tr>
+        <td><strong>Contract Data Engine</strong></td>
+        <td>990+ rate combinations from BCMEA contracts. Every job, shift, day-of-week, differential class, location hour variation.</td>
+        <td><div class="progress-bar"><div class="progress-fill fill-green" style="width:90%"></div></div></td>
+        <td>6-12 months (requires contract access + domain expert)</td>
+      </tr>
+      <tr>
+        <td><strong>Shift Dataset</strong></td>
+        <td>73,683 real shifts logged by 957 workers. Validated patterns for hours, rates, terminals. Training data for ML.</td>
+        <td><div class="progress-bar"><div class="progress-fill fill-green" style="width:85%"></div></div></td>
+        <td>2-3 years to accumulate organically</td>
+      </tr>
+      <tr>
+        <td><strong>User Trust & Network</strong></td>
+        <td>34.9% penetration of Local 500. Word-of-mouth engine active in WhatsApp groups and at dispatch hall.</td>
+        <td><div class="progress-bar"><div class="progress-fill fill-purple" style="width:70%"></div></div></td>
+        <td>1-2 years (trust is earned, not bought)</td>
+      </tr>
+      <tr>
+        <td><strong>Domain Expertise</strong></td>
+        <td>Understanding of dispatch mechanics, board positions, pension calculations, holiday qualifiers, seasonal patterns.</td>
+        <td><div class="progress-bar"><div class="progress-fill fill-purple" style="width:75%"></div></div></td>
+        <td>1-2 years of embedded research</td>
+      </tr>
+      <tr>
+        <td><strong>Switching Cost</strong></td>
+        <td>Users with 6+ months of shift history won't switch. Their data, streaks, badges, and analytics are locked in.</td>
+        <td><div class="progress-bar"><div class="progress-fill fill-amber" style="width:60%"></div></div></td>
+        <td>Grows with each month of use</td>
+      </tr>
+    </table>
+
+    <div class="callout callout-green" style="margin-top:16px;">
+      <strong>Compounding advantage:</strong> Every shift logged makes the dataset more valuable, the pay engine more accurate, the predictions more precise, and switching more costly. This is a flywheel, not a feature list. A competitor entering today faces a 73,683-shift data disadvantage that widens daily.
+    </div>
+  </div>
+
+  <!-- WHAT WORKED ELSEWHERE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#128161;</div>
+      <h2>What Worked in Similar Niche Markets</h2>
+    </div>
+    <table>
+      <tr><th>Company</th><th>Niche</th><th>Strategy That Won</th><th>PORTPAL Parallel</th></tr>
+      <tr>
+        <td><strong>Strava</strong></td>
+        <td>Athletes (running/cycling)</td>
+        <td>Free tracking + social/competitive layer. Monetized with training plans and route data. "Social proof" (segment leaderboards) drove viral growth.</td>
+        <td>Free shift tracking + leaderboards/badges. Monetize with pay verification and career tools. Terminal leaderboards = Strava segments.</td>
+      </tr>
+      <tr>
+        <td><strong>YNAB</strong></td>
+        <td>Personal budgeting</td>
+        <td>Free trial (34 days), then $99/year. Cult following through education-first approach. "YNAB method" before YNAB app.</td>
+        <td>Same price point ($99/yr). Education-first: contract knowledge, pension education, rate transparency. Build the method, then sell the tool.</td>
+      </tr>
+      <tr>
+        <td><strong>Trucker Path</strong></td>
+        <td>Long-haul truckers</td>
+        <td>Community-driven truck stop reviews and fuel prices. Free for drivers, monetized B2B through truck stop advertising.</td>
+        <td>Community-driven terminal data. Free for workers, potential B2B monetization through terminal operators wanting workforce analytics.</td>
+      </tr>
+      <tr>
+        <td><strong>Clio</strong></td>
+        <td>Law firms (Canadian!)</td>
+        <td>Niche practice management for lawyers. $39-129/user/mo. Won by being the best at one specific profession's workflow.</td>
+        <td>Same playbook: be the best at one specific profession's workflow. Clio didn't try to serve all professionals. PORTPAL shouldn't try to serve all shift workers.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB 6: GROWTH PLAYBOOK -->
+<!-- ============================================================ -->
+<div id="tab-growth" class="tab-content">
+  <div class="section-title">Growth Playbook</div>
+
+  <!-- VIRAL MECHANICS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#128640;</div>
+      <h2>Viral Mechanics</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Referral Program</h3>
+        <table>
+          <tr><th>Tier</th><th>Referrals</th><th>Referrer Reward</th><th>Invitee Reward</th></tr>
+          <tr><td><span class="badge badge-green">Bronze</span></td><td>1</td><td>7 days Pro + 100 pts</td><td>7 days Pro</td></tr>
+          <tr><td><span class="badge badge-amber">Silver</span></td><td>3</td><td>30 days Pro + 300 pts</td><td>7 days Pro each</td></tr>
+          <tr><td><span class="badge badge-purple">Gold</span></td><td>5</td><td>90 days Pro + 500 pts + Union Rep badge</td><td>14 days Pro each</td></tr>
+          <tr><td><span class="badge badge-red">Platinum</span></td><td>10</td><td>1 year Pro FREE + 1000 pts</td><td>14 days Pro each</td></tr>
+        </table>
+        <p style="font-size:13px;margin-top:8px;">At Platinum (10 referrals), the user effectively becomes a brand ambassador who never pays. The lifetime value of 10 referred users ($990/year at 100% conversion, ~$350/year at 35%) far exceeds the $99 cost of the free year.</p>
+      </div>
+      <div>
+        <h3>Shareable Content</h3>
+        <ul class="feature-list">
+          <li><span class="dot">&#9679;</span> <strong>Weekly Earnings Card.</strong> Branded shareable image: "This week: 4 shifts, $2,340. Tracked with PORTPAL." Designed for WhatsApp/Instagram stories. No specific dollar amounts shown publicly unless user chooses to.</li>
+          <li><span class="dot">&#9679;</span> <strong>Badge Unlock Card.</strong> When unlocking a badge: "Just earned Iron Worker (100 shifts) on PORTPAL." Shareable to WhatsApp group.</li>
+          <li><span class="dot">&#9679;</span> <strong>Streak Milestone Card.</strong> "30-day streak! Tracked every shift this month." Social proof + FOMO for non-users.</li>
+          <li><span class="dot">&#9679;</span> <strong>Pay Discrepancy Alert.</strong> Most viral content: "PORTPAL caught a $47 discrepancy on my pay stub. Money I would have missed." This screenshot alone will sell the app in WhatsApp groups.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISPATCH HALL STRATEGY -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#128206;</div>
+      <h2>Dispatch Hall Strategy</h2>
+    </div>
+    <p>The dispatch hall is where 100% of the target audience physically gathers. There is no more efficient marketing channel for this niche.</p>
+
+    <div class="two-col">
+      <div>
+        <h3>Physical Presence</h3>
+        <table>
+          <tr><th>Tactic</th><th>Details</th><th>Cost</th></tr>
+          <tr><td><strong>QR Code Poster</strong></td><td>Poster next to dispatch board: "Checking your rate? There's an app for that." QR code to download. Updated monthly with fresh stat ("957 workers track their pay with PORTPAL").</td><td>$50/poster, $200 total for all halls</td></tr>
+          <tr><td><strong>Hall TV Screen</strong></td><td>Some halls have TVs showing dispatch info. Negotiate a rotating PORTPAL slide: "Did you know? TT at Centennial pays $53.82/hr on day shift. Track yours."</td><td>Free (if union relationship exists) or $100/mo</td></tr>
+          <tr><td><strong>Business Cards</strong></td><td>Leave stack of business-card-sized cards with QR code + "Track your pay. Verify your stub. Know your pension." Workers take them.</td><td>$30 for 500 cards</td></tr>
+          <tr><td><strong>Demo Sessions</strong></td><td>Monthly 15-minute demo at dispatch hall during wait time. Show the app on a phone. Answer questions. Let workers try it on the spot.</td><td>Time only (founder/champion)</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Champion Strategy</h3>
+        <p>Identify 3-5 power users at each terminal who will organically promote PORTPAL to their crews.</p>
+        <ul class="feature-list">
+          <li><span class="dot">&#9679;</span> <strong>Identify:</strong> Look at top users by shifts logged, referrals, and engagement. These are already champions.</li>
+          <li><span class="dot">&#9679;</span> <strong>Equip:</strong> Give them lifetime Pro, exclusive "Founding Member" badge, and early access to new features.</li>
+          <li><span class="dot">&#9679;</span> <strong>Empower:</strong> They become the go-to "PORTPAL guy" at their terminal. Workers ask them questions instead of support.</li>
+          <li><span class="dot">&#9679;</span> <strong>Recognize:</strong> Monthly shout-out in app (anonymous or opted-in). "This month's top ambassador at Centennial."</li>
+        </ul>
+        <div class="callout callout-amber" style="margin-top:12px;">
+          <strong>Key insight:</strong> In union culture, peer endorsement is everything. One respected A-Board worker saying "I use this and it caught a $40 error on my stub" is worth more than $50,000 in digital ads.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT STRATEGY -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon purple">&#127909;</div>
+      <h2>Content Strategy</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>TikTok / Instagram Reels</h3>
+        <table>
+          <tr><th>Content Type</th><th>Example</th><th>Hook</th></tr>
+          <tr><td><strong>Rate Calculator</strong></td><td>Screen recording: "What does a night shift at Centennial actually pay?" Tap through the app showing $66.98 base + $0.65 TT differential x 9 hours.</td><td>Curiosity + utility. Workers share in groups.</td></tr>
+          <tr><td><strong>Did You Know?</strong></td><td>"Did you know graveyard shift pays 56% more than day shift? That's $29.56 EXTRA per hour." Contract fact with app screenshot.</td><td>Education + surprise factor.</td></tr>
+          <tr><td><strong>Pay Stub Check</strong></td><td>Blurred stub comparison: "PORTPAL found a $47 discrepancy. Here's how." Walk through the comparison screen.</td><td>Fear of loss + value proof.</td></tr>
+          <tr><td><strong>Pension Tracker</strong></td><td>"Are you on track for full pension? Here's how to check in 10 seconds." Show pension screen.</td><td>Anxiety reduction. Long-term concern.</td></tr>
+          <tr><td><strong>OT Math</strong></td><td>"OT isn't just 1.5x your rate. The differential is flat, not multiplied. Here's what you're actually owed." Correct a common misconception.</td><td>Myth-busting. Authority building.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Posting Schedule</h3>
+        <table>
+          <tr><th>Day</th><th>Time</th><th>Content</th></tr>
+          <tr><td>Monday</td><td>6:00 AM</td><td>"Week ahead" -- rate reminder or contract tip</td></tr>
+          <tr><td>Wednesday</td><td>6:00 PM</td><td>"Mid-week check" -- app feature showcase</td></tr>
+          <tr><td>Friday</td><td>6:30 AM</td><td>"Weekend premium" -- Saturday/Sunday rate highlight</td></tr>
+        </table>
+
+        <h3>Content Principles</h3>
+        <ul class="feature-list">
+          <li><span class="check">&#10003;</span> Always show the app screen, not stock footage</li>
+          <li><span class="check">&#10003;</span> Use real numbers from real rates (BCMEA public data)</li>
+          <li><span class="check">&#10003;</span> Practical tone: "Here's what you're owed" not "Optimize your financial journey"</li>
+          <li><span class="cross">&#10007;</span> Never show specific users' earnings</li>
+          <li><span class="cross">&#10007;</span> Never position as management tool</li>
+          <li><span class="cross">&#10007;</span> Never use generic port stock footage</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNION ENDORSEMENT -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon blue">&#9878;</div>
+      <h2>Union Endorsement Strategy</h2>
+    </div>
+    <p>A formal union endorsement is the single highest-leverage growth event. It transforms PORTPAL from "some app" to "the app the union recommends."</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>Phase 1: Demonstrate Value (Current)</h4>
+        <p>957 users at Local 500 already proving value organically. Collect testimonials. Document pay discrepancies caught. Build the case with real data: "$41M tracked, X discrepancies found totaling $Y."</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Phase 2: Approach Union Leadership</h4>
+        <p>Request meeting with Local 500 executive. Present: "957 of your members already use this. Here's what it does for them." Offer union-endorsed pricing ($69/year). Emphasize: worker empowerment tool, not management tool.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Phase 3: Pilot Partnership</h4>
+        <p>If receptive, propose pilot: union mentions PORTPAL in monthly newsletter or at next general meeting. PORTPAL provides free Pro to all Local 500 members for 90 days. Measure signup and retention.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Phase 4: Formal Endorsement</h4>
+        <p>After successful pilot, negotiate formal endorsement. Union gets: free Pro for all members (subsidized by PORTPAL), anonymized workforce insights (aggregate only), input on feature roadmap. PORTPAL gets: official endorsement, dispatch hall placement, newsletter inclusion, introduction to other locals.</p>
+      </div>
+      <div class="timeline-item">
+        <h4>Phase 5: Cascade to Other Locals</h4>
+        <p>Local 500 endorsement creates credibility for approaching Local 502 (New Westminster, 3,000+ workers), then 505, 508, 514, 517. Each endorsement is easier than the last. ILWU regional endorsement becomes possible.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMINAL-BY-TERMINAL -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon amber">&#9873;</div>
+      <h2>Terminal-by-Terminal Launch Plan</h2>
+    </div>
+    <p>Within each local, launch terminal by terminal to create concentrated social proof rather than thin coverage everywhere.</p>
+
+    <table>
+      <tr><th>Phase</th><th>Terminal</th><th>Workers</th><th>Strategy</th><th>Target</th></tr>
+      <tr>
+        <td><span class="badge badge-green">LIVE</span></td>
+        <td>Centennial</td>
+        <td>~800</td>
+        <td>Already highest penetration. 9-hour shifts = more complex pay = higher PORTPAL value.</td>
+        <td>60% penetration</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">LIVE</span></td>
+        <td>Vanterm</td>
+        <td>~600</td>
+        <td>Second most popular in shift data. Standard 8-hour shifts.</td>
+        <td>50% penetration</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-amber">NEXT</span></td>
+        <td>Deltaport</td>
+        <td>~700</td>
+        <td>Third terminal. Push campaign targeting Deltaport workers specifically.</td>
+        <td>30% penetration</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">Q2 2026</span></td>
+        <td>Fraser Surrey</td>
+        <td>~400</td>
+        <td>Different hour patterns (FIRST AID 9 hrs). Validate data engine accuracy.</td>
+        <td>25% penetration</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">Q3 2026</span></td>
+        <td>Wheat Terminals</td>
+        <td>~200</td>
+        <td>Grain season activation. Wheat jobs have unique 7.5+0.5 OT pattern.</td>
+        <td>40% penetration</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">Q4 2026</span></td>
+        <td>Local 502 Terminals</td>
+        <td>3,000+</td>
+        <td>Biggest expansion. Same metro area. Leverage Local 500 success stories.</td>
+        <td>15% penetration Y1</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- GROWTH METRICS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon green">&#128200;</div>
+      <h2>Growth Targets & Milestones</h2>
+    </div>
+    <table>
+      <tr><th>Milestone</th><th>Users</th><th>Timeline</th><th>Key Unlock</th></tr>
+      <tr><td><strong>1,000 users</strong></td><td>1,000</td><td>April 2026</td><td>Psychological milestone. Marketing asset: "1,000 longshoremen trust PORTPAL."</td></tr>
+      <tr><td><strong>Local 500 majority</strong></td><td>1,500</td><td>July 2026</td><td>>50% of Local 500. Network effects become self-sustaining. Non-users feel left out.</td></tr>
+      <tr><td><strong>Local 502 launch</strong></td><td>2,000</td><td>Oct 2026</td><td>First expansion beyond home local. Validates expansion playbook.</td></tr>
+      <tr><td><strong>All BC locals</strong></td><td>3,000</td><td>Mar 2027</td><td>Full BC coverage. Foundation for ILWU regional expansion.</td></tr>
+      <tr><td><strong>First US local</strong></td><td>4,000</td><td>Jul 2027</td><td>Cross-border validation. Likely Seattle (Local 19/52). Tests US contract data engine.</td></tr>
+      <tr><td><strong>10,000 users</strong></td><td>10,000</td><td>Dec 2027</td><td>Scale milestone. Multiple locals, solid revenue, investor-ready metrics.</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- end .content -->
+
+<script>
+function switchTab(tabId) {
+  // Hide all tab contents
+  var contents = document.querySelectorAll('.tab-content');
+  for (var i = 0; i < contents.length; i++) {
+    contents[i].classList.remove('active');
+  }
+  // Deactivate all tab buttons
+  var buttons = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove('active');
+  }
+  // Show selected tab content
+  var target = document.getElementById('tab-' + tabId);
+  if (target) {
+    target.classList.add('active');
+  }
+  // Activate clicked button
+  var clickedBtn = event.currentTarget || event.target;
+  clickedBtn.classList.add('active');
+}
+</script>
+
+</body>
+</html>

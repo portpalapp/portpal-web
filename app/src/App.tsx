@@ -6,6 +6,7 @@ import { Shifts } from './pages/Shifts'
 import { Calendar } from './pages/Calendar'
 import { Analytics } from './pages/Analytics'
 import { Chat } from './pages/Chat'
+import { Contract } from './pages/Contract'
 import { Subscribe } from './pages/Subscribe'
 import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
@@ -13,6 +14,12 @@ import { Migrate } from './pages/Migrate'
 import { Onboarding } from './pages/Onboarding'
 import { Dashboard } from './pages/Dashboard'
 import { CommandCenter } from './pages/CommandCenter'
+import { Holidays } from './pages/Holidays'
+import { Pension } from './pages/Pension'
+import { Profile } from './pages/Profile'
+import { TemplateBuilder } from './pages/TemplateBuilder'
+import { Vessels } from './pages/Vessels'
+import { PayStubs } from './pages/PayStubs'
 import { SocialPreview } from './social/SocialPreview'
 import { InstagramMockup } from './social/InstagramMockup'
 
@@ -46,7 +53,14 @@ function MobileApp() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/holidays" element={<Holidays />} />
+          <Route path="/pension" element={<Pension />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/subscribe" element={<Subscribe />} />
+          <Route path="/template-builder" element={<TemplateBuilder />} />
+          <Route path="/vessels" element={<Vessels />} />
+          <Route path="/pay-stubs" element={<PayStubs />} />
+          <Route path="/contract" element={<Contract />} />
         </Routes>
       </div>
 
