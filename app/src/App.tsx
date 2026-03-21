@@ -21,6 +21,7 @@ import { Profile } from './pages/Profile'
 import { TemplateBuilder } from './pages/TemplateBuilder'
 import { Vessels } from './pages/Vessels'
 import { PayStubs } from './pages/PayStubs'
+import { News } from './pages/News'
 import { SocialPreview } from './social/SocialPreview'
 import { InstagramMockup } from './social/InstagramMockup'
 
@@ -70,6 +71,7 @@ function MobileApp() {
             <Route path="/vessels" element={<Vessels />} />
             <Route path="/pay-stubs" element={<PayStubs />} />
             <Route path="/contract" element={<Contract />} />
+            <Route path="/news" element={<News />} />
           </Routes>
         </div>
 

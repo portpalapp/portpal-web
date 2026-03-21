@@ -1,0 +1,28 @@
+{
+  "name": "portpal-news-agent",
+  "version": "1.0.0",
+  "description": "24/7 news fetching and AI enrichment agent for PORTPAL maritime/port/union news",
+  "main": "dist/fetcher/index.js",
+  "scripts": {
+    "start:fetch": "ts-node src/fetcher/index.ts",
+    "start:enrich": "ts-node src/enricher/index.ts",
+    "build": "tsc",
+    "start:fetch:prod": "node dist/fetcher/index.js",
+    "start:enrich:prod": "node dist/enricher/index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "dotenv": "^16.4.7",
+    "node-html-parser": "^7.0.1",
+    "rss-parser": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

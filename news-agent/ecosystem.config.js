@@ -1,0 +1,42 @@
+module.exports = {
+  apps: [
+    {
+      name: 'portpal-news-fetcher',
+      script: 'dist/fetcher/index.js',
+      cwd: __dirname,
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '256M',
+      restart_delay: 60000,
+      env: {
+        NODE_ENV: 'production',
+      },
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      error_file: 'logs/fetcher-error.log',
+      out_file: 'logs/fetcher-out.log',
+      merge_logs: true,
+      max_size: '10M',
+      retain: 5,
+    },
+    {
+      name: 'portpal-news-enricher',
+      script: 'dist/enricher/index.js',
+      cwd: __dirname,
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '256M',
+      restart_delay: 60000,
+      env: {
+        NODE_ENV: 'production',
+      },
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      error_file: 'logs/enricher-error.log',
+      out_file: 'logs/enricher-out.log',
+      merge_logs: true,
+      max_size: '10M',
+      retain: 5,
+    },
+  ],
+};

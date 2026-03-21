@@ -14,6 +14,7 @@ import {
   User,
   Gift,
   ClipboardList,
+  Newspaper,
   Menu,
   X,
 } from 'lucide-react'
@@ -61,6 +62,12 @@ const navGroups: NavGroup[] = [
     title: 'AI',
     items: [
       { to: '/chat', icon: Sparkles, label: 'Ask PORTPAL' },
+    ],
+  },
+  {
+    title: 'Community',
+    items: [
+      { to: '/news', icon: Newspaper, label: 'Port News' },
     ],
   },
 ]
