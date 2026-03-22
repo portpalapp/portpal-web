@@ -72,7 +72,7 @@ export function DispatchSignal() {
   let keyStat = ''
   if (data.latestDayShift) {
     const { pre, at } = data.latestDayShift
-    keyStat = `${at} of ${pre} jobs filled`
+    keyStat = `${at} of ${pre} jobs available`
   }
 
   // Day-of-week context for casuals

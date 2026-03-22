@@ -1047,7 +1047,7 @@ Hired a social media content creator (based in Mexico, WhatsApp: +52 1 56 1433 3
 - After changes: run the appropriate Build & Validate checklist (web or mobile)
 - Create feature branches: `feat/description` or `fix/description`
 - **DEPLOYMENT:** Push branch → get Vercel preview URL → send link immediately
-- PR command: `gh pr create --base main --repo portpalapp/portpal-web`
+- PR command: `gh pr create --base master --repo portpalapp/portpal-web`
 - CRITICAL: OT formula is `(Base × 1.5) + Differential` — never `(Base + Diff) × 1.5`
 - CRITICAL: Always use `s.date.slice(0,10)` for dates, never `new Date(dateStr)`
 - If modifying pay calculation logic: use `/careful` mode, run `pay-engine.test.ts`

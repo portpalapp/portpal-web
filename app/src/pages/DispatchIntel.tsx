@@ -117,10 +117,10 @@ function CurrentWindowCard({ windows, nextWindow }: { windows: WindowSummary[]; 
                     />
                   </div>
                   <div className="flex items-center justify-between text-xs text-slate-400">
-                    <span>{Math.round(dayShift.fillRate * 100)}% filled</span>
+                    <span>{Math.round(dayShift.fillRate * 100)}% available</span>
                     {w.totalAtDelta > 0 && (
                       <span className="text-green-600 font-medium">
-                        +{w.totalAtDelta} dispatched this window
+                        +{w.totalAtDelta} available this window
                       </span>
                     )}
                   </div>
@@ -268,7 +268,7 @@ function RecentWindowsCard({ recentWindows }: { recentWindows: WindowSummary[] }
                       {dayShift.at} / {dayShift.pre} jobs
                     </span>
                     <span className="text-xs text-slate-500">
-                      {Math.round(dayShift.fillRate * 100)}% filled
+                      {Math.round(dayShift.fillRate * 100)}% available
                     </span>
                   </div>
                   <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
