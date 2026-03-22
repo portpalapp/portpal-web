@@ -1,0 +1,36 @@
+{
+  "name": "portpal-scrapers",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PORTPAL dispatch data scrapers — BCMEA, ILWU 502, weather, port authority",
+  "scripts": {
+    "build": "tsc",
+    "install-browsers": "npx playwright install chromium",
+    "workinfo": "tsx src/work-info/workinfo-snapshot.ts",
+    "boards": "tsx src/board-rosters/board-scraper.ts",
+    "vessel": "tsx src/vessel-forecast/vessel-forecast-monitor.ts",
+    "doa": "tsx src/doa-forecast/doa-scraper.ts",
+    "external": "tsx src/external/external-data-monitor.ts",
+    "ilwu502": "tsx src/greaseboard/ilwu502-monitor.ts",
+    "health": "tsx src/health-check/health-check.ts",
+    "dashboard": "tsx src/dashboards/generate-dashboard.ts",
+    "analysis": "tsx src/dashboards/generate-analysis-dashboard.ts",
+    "ops": "tsx src/dashboards/generate-ops-dashboard.ts",
+    "worker-details": "tsx src/worker-ratings/scrape-worker-details.ts",
+    "dispatch-monitor": "tsx src/dispatch-monitor/dispatch-monitor.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.99.3",
+    "dotenv": "^16.4.7",
+    "playwright": "^1.41.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

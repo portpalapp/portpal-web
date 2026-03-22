@@ -22,17 +22,15 @@ export const NEWS_SOURCES: NewsSourceConfig[] = [
   // --- Union sources ---
   {
     name: 'ILWU International',
-    url: 'https://www.ilwu.org/news/',
-    feedType: 'html_scrape',
+    url: 'https://www.ilwu.org/feed/',
+    feedType: 'rss',
     category: 'union',
-    scrapeSelector: 'article a, .entry-title a, .post-title a, .news-item a',
   },
   {
     name: 'ILWU Local 500',
-    url: 'https://ilwu500.org/',
-    feedType: 'html_scrape',
+    url: 'https://ilwu500.org/feed/',
+    feedType: 'rss',
     category: 'union',
-    scrapeSelector: 'article a, .entry-title a, .post-title a, .news-item a',
   },
   {
     name: 'ILWU Local 502',
@@ -45,28 +43,29 @@ export const NEWS_SOURCES: NewsSourceConfig[] = [
   // --- Employer ---
   {
     name: 'BCMEA',
-    url: 'https://www.bcmea.com/news/',
-    feedType: 'html_scrape',
+    url: 'https://www.bcmaritime.com/feed/',
+    feedType: 'rss',
     category: 'employer',
-    scrapeSelector: '.news-item a, article a, .post-title a, .entry-title a',
   },
 
   // --- Port authority ---
+  // Port of Vancouver direct site is behind Cloudflare (403 challenge).
+  // Using Google News RSS to aggregate coverage from CBC, Globe and Mail, Vancouver Sun, etc.
   {
     name: 'Port of Vancouver',
-    url: 'https://www.portvancouver.com/news-and-media/news-releases/',
-    feedType: 'html_scrape',
+    url: 'https://news.google.com/rss/search?q=%22port+of+vancouver%22+when:7d&hl=en-CA&gl=CA&ceid=CA:en',
+    feedType: 'rss',
     category: 'port',
-    scrapeSelector: '.news-release a, article a, .media-item a, .post-title a',
   },
 
   // --- Terminal operators ---
+  // DP World site is a Next.js SPA — content is client-side rendered, so HTML scraping
+  // returns 0 articles. Using Google News RSS to aggregate DP World coverage instead.
   {
     name: 'DP World',
-    url: 'https://www.dpworld.com/en/news',
-    feedType: 'html_scrape',
+    url: 'https://news.google.com/rss/search?q=%22DP+World%22+port+OR+terminal+OR+container+when:7d&hl=en-CA&gl=CA&ceid=CA:en',
+    feedType: 'rss',
     category: 'terminal',
-    scrapeSelector: '.news-card a, article a, .media-card a, .card a',
   },
   {
     name: 'GCT Global',
@@ -77,12 +76,13 @@ export const NEWS_SOURCES: NewsSourceConfig[] = [
   },
 
   // --- Government ---
+  // Transport Canada marine page is a static topic hub with no news items.
+  // No RSS feed available on tc.canada.ca. Using Google News RSS for TC marine coverage.
   {
     name: 'Transport Canada',
-    url: 'https://tc.canada.ca/en/marine-transportation',
-    feedType: 'html_scrape',
+    url: 'https://news.google.com/rss/search?q=%22Transport+Canada%22+marine+OR+shipping+OR+port+when:14d&hl=en-CA&gl=CA&ceid=CA:en',
+    feedType: 'rss',
     category: 'government',
-    scrapeSelector: 'article a, .views-row a, .field-content a, .news-item a',
   },
 
   // --- Industry RSS feeds ---
@@ -104,9 +104,10 @@ export const NEWS_SOURCES: NewsSourceConfig[] = [
     feedType: 'rss',
     category: 'industry',
   },
+  // JOC RSS is dead (returns HTML, site paywalled). Replaced with Hellenic Shipping News.
   {
-    name: 'JOC',
-    url: 'https://www.joc.com/rss',
+    name: 'Hellenic Shipping News',
+    url: 'https://www.hellenicshippingnews.com/feed/',
     feedType: 'rss',
     category: 'industry',
   },
