@@ -21,6 +21,7 @@ function calculateStreak(shifts: Shift[]): number {
 
   const sorted = [...shifts]
     .map((s) => s.date)
+    .filter((d): d is string => d != null)
     .sort((a, b) => b.localeCompare(a))
 
   // Deduplicate dates
@@ -89,7 +90,7 @@ export function Home() {
   const weekStartStr = getLocalDateStr(startOfWeek)
 
   const thisWeekShifts = shifts.filter(s => {
-    return s.date.slice(0, 10) >= weekStartStr
+    return s.date && s.date.slice(0, 10) >= weekStartStr
   })
 
   // Calculate streaks and total shifts from real data
@@ -102,10 +103,11 @@ export function Home() {
 
   // Check if today is a stat holiday and user hasn't logged a shift
   const todayHoliday = getHolidayOnDate(todayStr)
-  const hasLoggedTodayShift = shifts.some(s => s.date.slice(0, 10) === todayStr)
+  const hasLoggedTodayShift = shifts.some(s => s.date && s.date.slice(0, 10) === todayStr)
 
   function getShiftsInPeriod(h: StatHoliday): number {
     return shifts.filter(s => {
+      if (!s.date) return false
       const d = s.date.slice(0, 10)
       return d >= h.countingPeriodStart && d <= h.countingPeriodEnd
     }).length
@@ -120,7 +122,7 @@ export function Home() {
 
   // Monthly earnings
   const monthStart = todayStr.slice(0, 7) + '-01'
-  const thisMonthShifts = shifts.filter(s => s.date.slice(0, 10) >= monthStart)
+  const thisMonthShifts = shifts.filter(s => s.date && s.date.slice(0, 10) >= monthStart)
   const thisMonthEarnings = thisMonthShifts.reduce((sum, s) => sum + s.totalPay, 0)
   const avgPerShift = thisMonthShifts.length > 0 ? thisMonthEarnings / thisMonthShifts.length : 0
 
