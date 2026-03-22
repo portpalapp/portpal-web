@@ -204,7 +204,7 @@ async function enrichArticle(
       relevance_score: enrichment.relevanceScore,
       tags: enrichment.tags,
       status,
-      enriched_at: new Date().toISOString(),
+      processed_at: new Date().toISOString(),
     });
 
     logger.info(`Enriched article: ${enrichment.title}`, {
