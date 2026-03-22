@@ -73,10 +73,19 @@ export default function ShiftsScreen() {
     };
   }, [allShifts]);
 
-  // ─── Route params for callback from home screen ───
-  const params = useLocalSearchParams<{ callback?: string }>();
+  // ─── Route params for callback from home screen and prefill ───
+  const params = useLocalSearchParams<{ 
+    callback?: string;
+    prefillJob?: string;
+    prefillLocation?: string;
+    prefillShift?: string;
+    prefillSubjob?: string;
+    editShiftId?: string;
+  }>();
   const callbackHandled = useRef(false);
+  const prefillHandled = useRef(false);
 
+  // Handle callback params (existing functionality)
   useEffect(() => {
     if (callbackHandled.current) return;
     if (!params.callback || !lastShift) return;
@@ -97,11 +106,44 @@ export default function ShiftsScreen() {
     }
   }, [params.callback, lastShift]);
 
+  // Handle prefill params (new functionality)
+  useEffect(() => {
+    if (prefillHandled.current) return;
+    if (!params.prefillJob) return;
+    prefillHandled.current = true;
+
+    // Apply prefill data
+    dispatch({ type: 'SET_JOB', job: params.prefillJob });
+    
+    if (params.prefillLocation) {
+      dispatch({ type: 'SET_LOCATION', location: params.prefillLocation });
+    }
+    
+    if (params.prefillShift && ['DAY', 'NIGHT', 'GRAVEYARD'].includes(params.prefillShift)) {
+      dispatch({ type: 'SET_SHIFT', shift: params.prefillShift as ShiftType });
+    }
+    
+    if (params.prefillSubjob) {
+      dispatch({ type: 'SET_SUBJOB', subjob: params.prefillSubjob });
+    }
+    
+    dispatch({ type: 'SET_DATE', date: getTodayStr() });
+    dispatch({ type: 'SET_STEP1_MODE', mode: 'choose' });
+    
+    // If we have enough prefilled data, jump to step 2 or 3
+    if (params.prefillLocation && params.prefillShift) {
+      dispatch({ type: 'SET_STEP', step: 2 }); // Go to hours/pay step
+    }
+  }, [params.prefillJob, params.prefillLocation, params.prefillShift, params.prefillSubjob]);
+
   // ─── Reset when leaving this tab ───
   useFocusEffect(
     useCallback(() => {
       return () => {
         dispatch({ type: 'RESET_ON_BLUR' });
+        // Reset handlers so they can run again if user navigates back with different params
+        callbackHandled.current = false;
+        prefillHandled.current = false;
       };
     }, [])
   );

@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable, ActivityIndicator, TextInput } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import {
   startOfWeek,
@@ -59,6 +60,7 @@ type TimeRange = 'week' | 'month' | 'year' | 'custom';
 export default function AnalyticsScreen() {
   const { shifts, loading } = useShifts();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   // Only refetch if data is stale (older than staleTime), not on every focus
   useFocusEffect(
@@ -441,10 +443,17 @@ export default function AnalyticsScreen() {
 
         {/* Top Jobs */}
         <View className="bg-white rounded-xl p-4 border border-slate-200 mb-4">
-          <Text className="font-semibold text-slate-800 mb-3">Top Jobs</Text>
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="font-semibold text-slate-800">Top Jobs</Text>
+            <Text className="text-xs text-slate-500">Tap to view details</Text>
+          </View>
           <View className="gap-3">
             {jobData.map((job, i) => (
-              <View key={job.name} className="flex-row items-center gap-3">
+              <Pressable 
+                key={job.name} 
+                onPress={() => router.push({ pathname: '/job-detail', params: { jobName: job.name } })}
+                className="flex-row items-center gap-3 active:bg-slate-50 rounded-lg p-1 -m-1"
+              >
                 <View className="w-6 h-6 rounded-full bg-blue-100 items-center justify-center">
                   <Text className="text-xs font-bold text-blue-600">
                     {i + 1}
@@ -458,9 +467,12 @@ export default function AnalyticsScreen() {
                     >
                       {job.name}
                     </Text>
-                    <Text className="font-semibold text-slate-800">
-                      ${job.earnings.toFixed(0)}
-                    </Text>
+                    <View className="flex-row items-center gap-1">
+                      <Text className="font-semibold text-slate-800">
+                        ${job.earnings.toFixed(0)}
+                      </Text>
+                      <Ionicons name="chevron-forward" size={14} color="#94a3b8" />
+                    </View>
                   </View>
                   <View className="h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden">
                     <View
@@ -471,7 +483,7 @@ export default function AnalyticsScreen() {
                     />
                   </View>
                 </View>
-              </View>
+              </Pressable>
             ))}
             {jobData.length === 0 && (
               <Text className="text-slate-500 text-sm text-center py-4">
