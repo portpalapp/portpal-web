@@ -11,8 +11,8 @@ import { useProfile } from '../hooks/useProfile'
 import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr } from '../lib/formatters'
 import { getUpcomingHolidays, getHolidayOnDate, daysUntil, type StatHoliday } from '../data/holidayData'
 import { useNews } from '../hooks/useNews'
-import { useWorkInfo, getLocationsForLocal } from '../hooks/useWorkInfo'
-import type { ShiftTotal, JobSection } from '../hooks/useWorkInfo'
+// import { useWorkInfo, getLocationsForLocal } from '../hooks/useWorkInfo'
+// import type { ShiftTotal, JobSection } from '../hooks/useWorkInfo'
 
 // Streak: counts consecutive shifts where each gap is <= 48 hours.
 // Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
@@ -57,8 +57,9 @@ export function Home() {
   const { profile, loading: profileLoading } = useProfile()
   const [showHolidayInfo, setShowHolidayInfo] = useState(false)
   const { articles: newsArticles } = useNews()
-  const workInfoLocations = getLocationsForLocal(profile.union_local ?? '500')
-  const { snapshots: workInfoSnapshots } = useWorkInfo(workInfoLocations)
+  // const workInfoLocations = getLocationsForLocal(profile.union_local ?? '500')
+  // const { snapshots: workInfoSnapshots } = useWorkInfo(workInfoLocations)
+  const workInfoSnapshots: any[] = []
 
   const loading = shiftsLoading || profileLoading
 
