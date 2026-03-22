@@ -14,3 +14,4 @@ Thumbs.db
 /prediction/model.json
 /prediction/model-v2.json
 .gstack/
+.vercel

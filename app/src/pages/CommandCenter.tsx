@@ -600,7 +600,7 @@ export function CommandCenter() {
 
             {/* Job Detail Cards */}
             <div className="grid gap-6">
-              {mockJobs.map((job, index) => (
+              {mockJobs.map((job) => (
                 <div key={job.name} className="bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden">
                   {/* Job Header */}
                   <div className="p-4 border-b border-slate-700/50">
@@ -653,7 +653,7 @@ export function CommandCenter() {
                     <div className="mb-4">
                       <div className="text-sm font-medium text-slate-300 mb-2">Terminal Distribution</div>
                       <div className="flex gap-2">
-                        {job.topTerminals.map((terminal, i) => (
+                        {job.topTerminals.map((terminal) => (
                           <div key={terminal} className="flex-1">
                             <div className="flex justify-between text-xs text-slate-400 mb-1">
                               <span>{terminal}</span>
