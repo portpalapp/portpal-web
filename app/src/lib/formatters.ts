@@ -33,6 +33,7 @@ function parseDateParts(dateStr: string): { year: number; month: number; day: nu
  * Uses string comparison for timezone safety.
  */
 export function formatDateRelative(dateStr: string): string {
+  if (!dateStr) return '';
   const todayStr = getTodayStr();
 
   if (dateStr.slice(0, 10) === todayStr) {
@@ -55,6 +56,7 @@ export function formatDateRelative(dateStr: string): string {
  * No relative labelling.
  */
 export function formatDateShort(dateStr: string): string {
+  if (!dateStr) return '';
   const { date } = parseDateParts(dateStr);
   const wd = WEEKDAYS_SHORT[date.getDay()];
   const mo = MONTHS_SHORT[date.getMonth()];
@@ -78,6 +80,7 @@ export function formatDateLong(dateStr: string): string {
  * Returns "Jan 5" format (month short, day).
  */
 export function formatDateCompact(dateStr: string): string {
+  if (!dateStr) return '';
   const { date } = parseDateParts(dateStr);
   const mo = MONTHS_SHORT[date.getMonth()];
   return `${mo} ${date.getDate()}`;
