@@ -89,7 +89,7 @@ function LatestNewsCard({ onNavigate }: { onNavigate?: () => void }) {
 
   if (!latest) return null
 
-  const ago = getTimeAgo(latest.published_at)
+  const ago = latest.published_at ? getTimeAgo(latest.published_at) : ''
   const colors = CATEGORY_COLORS[latest.category] ?? 'bg-slate-100 text-slate-600'
 
   return (
@@ -121,8 +121,10 @@ function LatestNewsCard({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function getTimeAgo(dateStr: string): string {
+  if (!dateStr) return ''
   const now = Date.now()
   const then = new Date(dateStr).getTime()
+  if (isNaN(then)) return ''
   const mins = Math.floor((now - then) / 60000)
   if (mins < 60) return `${mins}m ago`
   const hrs = Math.floor(mins / 60)

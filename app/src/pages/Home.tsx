@@ -211,10 +211,10 @@ export function Home() {
         if (!van) return null
         const shiftLabels: Record<string, string> = { '08:00': 'Day', '16:30': 'Night', '01:00': 'Graveyard' }
         const shiftOrder = ['08:00', '16:30', '01:00']
-        const totals = van.totals.filter((t: ShiftTotal) => shiftOrder.includes(t.shift))
+        const totals = (van.totals || []).filter((t: ShiftTotal) => shiftOrder.includes(t.shift))
           .sort((a: ShiftTotal, b: ShiftTotal) => shiftOrder.indexOf(a.shift) - shiftOrder.indexOf(b.shift))
         const totalJobs = totals.reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
-        const topSections = (van.sections as JobSection[])
+        const topSections = ((van.sections || []) as JobSection[])
           .filter((sec: JobSection) => {
             const secTotal = (sec.totals || []).reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
             return secTotal > 0
