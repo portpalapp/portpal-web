@@ -15,6 +15,7 @@ import {
   Gift,
   ClipboardList,
   Newspaper,
+  Radio,
   Menu,
   X,
 } from 'lucide-react'
@@ -53,6 +54,7 @@ const navGroups: NavGroup[] = [
   {
     title: 'Planning',
     items: [
+      { to: '/dispatch', icon: Radio, label: 'Dispatch Intel' },
       { to: '/pension', icon: Heart, label: 'Pension' },
       { to: '/holidays', icon: Gift, label: 'Holidays' },
       { to: '/vessels', icon: Ship, label: 'Vessels' },

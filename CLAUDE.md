@@ -992,6 +992,63 @@ Hired a social media content creator (based in Mexico, WhatsApp: +52 1 56 1433 3
 
 ---
 
+## Common Failure Modes
+
+| Failure | Root Cause | Fix |
+|---------|------------|-----|
+| OT formula wrong | `(Base + Diff) × 1.5` instead of `(Base × 1.5) + Diff` | Verify with `pay-engine.test.ts` |
+| Timezone date mismatch | `new Date(dateStr)` creates local time | Always use `s.date.slice(0,10)` |
+| CENTENNIAL hours wrong | Missing hour override lookup | Check `HOURS_BY_LOCATION['CENTENNIAL']` returns 9/9/7.5 |
+| Pay stub OCR fails | Google Cloud Vision API key missing | Verify `GOOGLE_CLOUD_VISION_KEY` env var |
+| Mobile build fails (Gradle) | Node version mismatch | `fnm use 22`, `npm install --legacy-peer-deps` |
+| Differential rate not applying | Job name case mismatch | Match canonical names exactly |
+| Pension year calc wrong | Boundary is Jan 4 → Jan 3 (WIPP Sunday-Saturday) | Check boundary logic |
+
+## Do Not Touch
+
+- `mobile/supabase/schema.sql` — modify only via migrations
+- `mobile/supabase/migrations/*` — never edit past migrations
+- RLS policies — always show changes before applying
+- OT formula logic — tested heavily, change only if BCMEA contract changes
+- `mobile/eas.json` — only Vee modifies EAS build settings
+- `app/vercel.json` — confirm deployment implications before changing
+- `pay data/reference_calculation_files/` — reference only, don't modify
+- `.env` files — never commit
+
+---
+
+## Build & Validate
+**Web dashboard (app/):**
+1. `cd app && npx tsc --noEmit`
+2. `cd app && npm run lint`
+3. `cd app && npx vitest run`
+4. `cd app && npm run build`
+
+**Mobile app (mobile/):**
+1. `cd mobile && npx tsc --noEmit`
+2. `cd mobile && npm run prebuild:check`
+
+## Deployment
+- **Web dashboard:** Vercel — push branch for preview, merge to main for prod
+- **Mobile app:** EAS Build — `cd mobile && npm run build:apk` for APK
+- **GitHub repo:** `portpalapp/portpal-web`
+- **Vercel project:** `portpal-web`
+- **EAS account:** `veetesh` (Expo)
+
+## Agent Instructions
+- Read this CLAUDE.md before starting any task
+- Check the "Do Not Touch" section before modifying any file
+- After changes: run the appropriate Build & Validate checklist (web or mobile)
+- Create feature branches: `feat/description` or `fix/description`
+- PR command: `gh pr create --base main --repo portpalapp/portpal-web`
+- CRITICAL: OT formula is `(Base × 1.5) + Differential` — never `(Base + Diff) × 1.5`
+- CRITICAL: Always use `s.date.slice(0,10)` for dates, never `new Date(dateStr)`
+- If modifying pay calculation logic: use `/careful` mode, run `pay-engine.test.ts`
+- If modifying Supabase schema: create migration, never edit `schema.sql` directly
+- After PR creation, report: PR link, what changed, preview URL
+
+---
+
 ## Quick Reference
 
 **Run mobile app:**
