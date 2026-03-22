@@ -1,5 +1,64 @@
 import { useState } from 'react'
 
+// Mock job data for demonstration
+const mockJobs = [
+  { 
+    name: 'LABOUR',
+    totalShifts: 156,
+    totalEarnings: 69480,
+    avgPay: 445,
+    recentShifts: 23,
+    dispatchProbability: 65,
+    topTerminals: ['VANTERM', 'CENTENNIAL', 'DELTAPORT'],
+    preferredShift: 'DAY',
+    insights: ['General work - high demand', 'Dispatches last but highest volume', 'Board position affects probability']
+  },
+  { 
+    name: 'TRACTOR TRAILER',
+    totalShifts: 89,
+    totalEarnings: 45390,
+    avgPay: 510,
+    recentShifts: 12,
+    dispatchProbability: 45,
+    topTerminals: ['CENTENNIAL', 'DELTAPORT', 'VANTERM'],
+    preferredShift: 'DAY',
+    insights: ['TT work often has built-in overtime', 'Centennial offers 9-hour shifts', 'Moderate demand position']
+  },
+  { 
+    name: 'LIFT TRUCK',
+    totalShifts: 67,
+    totalEarnings: 32830,
+    avgPay: 490,
+    recentShifts: 8,
+    dispatchProbability: 55,
+    topTerminals: ['VANTERM', 'CENTENNIAL', 'FRASER SURREY'],
+    preferredShift: 'DAY',
+    insights: ['Common machine operator role', 'Steady demand across terminals', 'Class 4 differential applies']
+  },
+  { 
+    name: 'DOCK GANTRY',
+    totalShifts: 34,
+    totalEarnings: 18020,
+    avgPay: 530,
+    recentShifts: 3,
+    dispatchProbability: 25,
+    topTerminals: ['DELTAPORT', 'VANTERM'],
+    preferredShift: 'DAY',
+    insights: ['Specialized crane operations', 'Requires certification', 'Low demand but high pay']
+  },
+  { 
+    name: 'HEAD CHECKER',
+    totalShifts: 45,
+    totalEarnings: 20925,
+    avgPay: 465,
+    recentShifts: 6,
+    dispatchProbability: 40,
+    topTerminals: ['CENTENNIAL', 'VANTERM', 'DELTAPORT'],
+    preferredShift: 'NIGHT',
+    insights: ['Supervision role', 'Centennial offers 9-hour shifts', 'Class 3 differential']
+  }
+]
+
 // Types
 interface MetricCardProps {
   label: string
@@ -268,7 +327,7 @@ function Slider({
 
 // Main Command Center Component
 export function CommandCenter() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'retention' | 'marketing' | 'financial' | 'statistical' | 'calculator'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'retention' | 'marketing' | 'financial' | 'statistical' | 'calculator' | 'jobs'>('overview')
   // Revenue Calculator State
   const [pricePerYear, setPricePerYear] = useState(99)
   const [conversionRate, setConversionRate] = useState(35)
@@ -343,6 +402,7 @@ export function CommandCenter() {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'calculator', label: 'Revenue Calculator', icon: '🧮' },
+    { id: 'jobs', label: 'Job Intelligence', icon: '🏗️' },
     { id: 'growth', label: 'Growth Engine', icon: '📈' },
     { id: 'retention', label: 'Retention', icon: '🔄' },
     { id: 'marketing', label: 'Marketing', icon: '📣' },
@@ -522,6 +582,170 @@ export function CommandCenter() {
               <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
                 <strong className="text-orange-400">Critical Insight:</strong>
                 <span className="text-slate-300 ml-2">9% of users (68 people) log only 1 shift and never return. This is our biggest onboarding leak to fix.</span>
+              </div>
+            </ExpandablePanel>
+          </div>
+        )}
+
+        {/* JOB INTELLIGENCE TAB */}
+        {activeTab === 'jobs' && (
+          <div className="space-y-6">
+            {/* Job Analytics Header */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <MetricCard label="Total Jobs Tracked" value="5" subtext="Unique classifications" highlight />
+              <MetricCard label="Total Shifts" value="391" subtext="All jobs combined" />
+              <MetricCard label="Avg Dispatch Rate" value="45%" subtext="Weighted by volume" />
+              <MetricCard label="Most Active Job" value="LABOUR" subtext="156 shifts logged" />
+            </div>
+
+            {/* Job Detail Cards */}
+            <div className="grid gap-6">
+              {mockJobs.map((job, index) => (
+                <div key={job.name} className="bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden">
+                  {/* Job Header */}
+                  <div className="p-4 border-b border-slate-700/50">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">{job.name}</h3>
+                        <p className="text-sm text-slate-400">
+                          {job.totalShifts} shifts • ${job.totalEarnings.toLocaleString()} total earnings
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                          job.dispatchProbability >= 60 ? 'bg-emerald-500/20 text-emerald-400' :
+                          job.dispatchProbability >= 40 ? 'bg-blue-500/20 text-blue-400' :
+                          job.dispatchProbability >= 25 ? 'bg-orange-500/20 text-orange-400' :
+                          'bg-red-500/20 text-red-400'
+                        }`}>
+                          {job.dispatchProbability}% dispatch probability
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Job Stats Grid */}
+                  <div className="p-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                      <div className="bg-slate-700/30 rounded-lg p-3">
+                        <div className="text-xs text-slate-400 mb-1">Average Pay</div>
+                        <div className="text-xl font-bold text-white">${job.avgPay}</div>
+                        <div className="text-xs text-slate-400">per shift</div>
+                      </div>
+                      <div className="bg-slate-700/30 rounded-lg p-3">
+                        <div className="text-xs text-slate-400 mb-1">Recent Activity</div>
+                        <div className="text-xl font-bold text-white">{job.recentShifts}</div>
+                        <div className="text-xs text-slate-400">last 30 days</div>
+                      </div>
+                      <div className="bg-slate-700/30 rounded-lg p-3">
+                        <div className="text-xs text-slate-400 mb-1">Top Terminal</div>
+                        <div className="text-sm font-bold text-white">{job.topTerminals[0]}</div>
+                        <div className="text-xs text-slate-400">most worked</div>
+                      </div>
+                      <div className="bg-slate-700/30 rounded-lg p-3">
+                        <div className="text-xs text-slate-400 mb-1">Preferred Shift</div>
+                        <div className="text-sm font-bold text-white">{job.preferredShift}</div>
+                        <div className="text-xs text-slate-400">most common</div>
+                      </div>
+                    </div>
+
+                    {/* Terminal Breakdown */}
+                    <div className="mb-4">
+                      <div className="text-sm font-medium text-slate-300 mb-2">Terminal Distribution</div>
+                      <div className="flex gap-2">
+                        {job.topTerminals.map((terminal, i) => (
+                          <div key={terminal} className="flex-1">
+                            <div className="flex justify-between text-xs text-slate-400 mb-1">
+                              <span>{terminal}</span>
+                              <span>{Math.round(Math.random() * 30 + 10)}%</span>
+                            </div>
+                            <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-blue-500 rounded-full transition-all" 
+                                style={{ width: `${Math.round(Math.random() * 70 + 30)}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Market Intelligence */}
+                    <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-600/30">
+                      <div className="text-sm font-medium text-slate-300 mb-2">Dispatch Intelligence</div>
+                      <div className="space-y-1">
+                        {job.insights.map((insight, i) => (
+                          <div key={i} className="text-xs text-slate-400 flex items-start gap-2">
+                            <span className="text-blue-400 mt-0.5">•</span>
+                            <span>{insight}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Dispatch Oracle Summary */}
+            <ExpandablePanel title="Dispatch Oracle Algorithm" subtitle="How predictions are calculated">
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-slate-700/30 rounded-lg p-4">
+                    <h4 className="font-semibold text-white mb-2">Prediction Factors</h4>
+                    <div className="space-y-2 text-sm text-slate-300">
+                      <div className="flex justify-between">
+                        <span>Board Position (A-R)</span>
+                        <span className="text-blue-400">40% weight</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Historical Frequency</span>
+                        <span className="text-blue-400">30% weight</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Market Demand</span>
+                        <span className="text-blue-400">20% weight</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Recent Activity</span>
+                        <span className="text-blue-400">10% weight</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-slate-700/30 rounded-lg p-4">
+                    <h4 className="font-semibold text-white mb-2">Dispatch Order</h4>
+                    <div className="space-y-1 text-sm text-slate-300">
+                      <div className="text-emerald-400">1. Trades (HD Mechanic, Electrician)</div>
+                      <div className="text-blue-400">2. Crane Ops (Dock Gantry, Ship Gantry)</div>
+                      <div className="text-yellow-400">3. Machine Ops (Lift Truck, TT, RTG)</div>
+                      <div className="text-orange-400">4. Specialized (Head Checker, Wheat)</div>
+                      <div className="text-red-400">5. General Labour</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                  <p className="text-sm text-slate-300">
+                    <strong className="text-blue-400">How it works:</strong> The algorithm simulates the actual dispatch process, 
+                    starting from button positions and walking through worker boards in seniority order. 
+                    Workers are claimed by the first button that reaches their position for a job they're rated for.
+                  </p>
+                </div>
+              </div>
+            </ExpandablePanel>
+
+            {/* Job Performance Metrics */}
+            <ExpandablePanel title="Performance Analytics" subtitle="Job-level insights and patterns">
+              <div className="grid gap-6">
+                <DataTable
+                  headers={['Job Classification', 'Avg Pay/Shift', 'Dispatch Rate', 'Top Terminal', 'Overtime %']}
+                  rows={[
+                    ['LABOUR', '$445', '65%', 'VANTERM', '15%'],
+                    ['TRACTOR TRAILER', '$510', '45%', 'CENTENNIAL', '45%'],
+                    ['LIFT TRUCK', '$490', '55%', 'VANTERM', '20%'],
+                    ['DOCK GANTRY', '$530', '25%', 'DELTAPORT', '30%'],
+                    ['HEAD CHECKER', '$465', '40%', 'CENTENNIAL', '35%'],
+                  ]}
+                />
               </div>
             </ExpandablePanel>
           </div>
