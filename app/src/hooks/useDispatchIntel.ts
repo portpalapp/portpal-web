@@ -250,6 +250,73 @@ function getActiveWindowLabel(windows: WindowSummary[]): string | null {
 }
 
 // ---------------------------------------------------------------------------
+// Fallback: build signal from work_info_snapshots when no tick data exists
+// ---------------------------------------------------------------------------
+
+async function buildFromWorkInfoFallback(todayStr: string): Promise<DispatchIntelData> {
+  const dayOfWeek = new Date().getDay()
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
+
+  const { data: snapshot } = await supabase
+    .from('work_info_snapshots')
+    .select('*')
+    .eq('location', 'vancouver')
+    .limit(1)
+    .single()
+
+  if (!snapshot) {
+    return {
+      signal: 'Moderate',
+      signalReason: 'No dispatch data available yet',
+      dayOfWeek,
+      dayName: DAY_NAMES[dayOfWeek] ?? 'Unknown',
+      dateStr: todayStr,
+      isWeekend,
+      activeWindow: null,
+      windows: [],
+      latestDayShift: null,
+      sectionBreakdowns: [],
+      hasData: false,
+      recentWindows: [],
+    }
+  }
+
+  // Parse day shift from work_info_snapshots totals
+  const totals = (snapshot.totals ?? []) as TickTotal[]
+  const dayShift = parseDayShift(totals)
+
+  // Build section breakdowns from work_info_snapshots sections
+  const sections = (snapshot.sections ?? []) as TickSection[]
+  const sectionBreakdowns: SectionBreakdown[] = sections
+    .map(section => {
+      const dayTotal = section.totals?.find((t: TickTotal) => t.shift === '08:00')
+      const pre = dayTotal ? parseInt(dayTotal.pre, 10) || 0 : 0
+      const at = dayTotal ? parseInt(dayTotal.at, 10) || 0 : 0
+      return { section: section.section, pre, at, delta: 0 }
+    })
+    .filter(s => s.pre > 0 || s.at > 0)
+
+  // Compute signal from the snapshot data
+  const { signal, reason } = computeSignal(dayOfWeek, dayShift, [])
+  const signalReason = reason + ' (from latest snapshot)'
+
+  return {
+    signal,
+    signalReason,
+    dayOfWeek,
+    dayName: DAY_NAMES[dayOfWeek] ?? 'Unknown',
+    dateStr: todayStr,
+    isWeekend,
+    activeWindow: null,
+    windows: [],
+    latestDayShift: dayShift,
+    sectionBreakdowns,
+    hasData: true,
+    recentWindows: [],
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
 
@@ -290,22 +357,9 @@ export function useDispatchIntel() {
         ticks = (recentTicks ?? []) as DispatchMonitorTick[]
       }
 
+      // No tick data — fall back to work_info_snapshots for a basic signal
       if (ticks.length === 0) {
-        const dayOfWeek = new Date().getDay()
-        return {
-          signal: 'Moderate',
-          signalReason: 'No dispatch data available yet',
-          dayOfWeek,
-          dayName: DAY_NAMES[dayOfWeek],
-          dateStr: todayStr,
-          isWeekend: dayOfWeek === 0 || dayOfWeek === 6,
-          activeWindow: null,
-          windows: [],
-          latestDayShift: null,
-          sectionBreakdowns: [],
-          hasData: false,
-          recentWindows: [],
-        }
+        return buildFromWorkInfoFallback(todayStr)
       }
 
       // Group ticks by date for the current/latest date
