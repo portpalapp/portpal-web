@@ -20,6 +20,8 @@
 
 ### How Dispatch Actually Works — The Button System
 
+**CRITICAL:** Our scraped data shows **JOBS AVAILABLE** for dispatch, NOT jobs filled or workers dispatched.
+
 Dispatch uses a **rotating button (circular token)** per job category per shift. The button is the plate number of the last worker dispatched for that category.
 
 **Core mechanics:**
@@ -39,10 +41,13 @@ Dispatch uses a **rotating button (circular token)** per job category per shift.
    - **Labour / HOLD last** (catch-all general work)
 8. Once a worker is grabbed by an earlier button, they're unavailable for later buttons
 
-**Dispatch windows (buttons move in shift-specific waves):**
-- **Day buttons** move between 6:30-9:00 AM (day dispatch at ~6:45 AM)
-- **Night + 1AM buttons** move between 3:00-6:00 PM (afternoon/graveyard dispatch)
-- Day buttons do NOT move in the afternoon; Night/1AM buttons do NOT move in the morning
+**Dispatch timing (CORRECTED UNDERSTANDING):**
+- **Day Before**: FIRST AID and HEAD CHECKERS often dispatched previous day
+- **Day Of - Morning**: Regular dispatch windows 6:30-9:00 AM (day dispatch at ~6:45 AM)  
+- **Day Of - Afternoon**: Night + 1AM dispatch between 3:00-6:00 PM
+- **Throughout Day**: Callbacks posted as additional work appears
+
+**IMPORTANT:** Work-info shows jobs AVAILABLE for dispatch, not jobs already filled.
 
 **Button categories (3 types, captured hourly):**
 - **Union buttons** — TOPSIDE, GANG, HOLD, WHEAT SPECIALTY, WHEAT MACHINE, COASTWISE, WAREHOUSE, DOCK, RAILROAD, MACHINE, TRADES. These are the job category buttons that walk through the union boards.
@@ -122,7 +127,7 @@ All scraper code and data at: `C:\Users\veete\OneDrive\Desktop\claude_local\port
 | Button positions | hourly-monitor (union/casual/telephone) | Hourly | Current dispatch state |
 | Board rosters | boards/ (pre/post dispatch) | 6x daily | Worker positions + who got called |
 | Worker ratings | worker-details/all-worker-ratings.json | One-time (1,708 workers) | Rating match for simulation |
-| Job demand | work-info/ + work-info-snapshots/ | 6x daily | How many jobs per category |
+| Job demand | work-info/ + work-info-snapshots/ | 6x daily | How many jobs AVAILABLE per category |
 | Vessel forecast | vessel-forecast/ | Hourly | 3-shift-ahead gang predictions |
 | External (weather, port, DP World) | external/ | Every 2h | Context signals |
 | ILWU 502 greaseboard | ilwu502/ | Hourly | Delta/FSD exact job counts |

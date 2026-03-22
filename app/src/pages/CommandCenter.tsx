@@ -543,7 +543,7 @@ export function CommandCenter() {
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="bg-white/10 rounded-lg p-3">
-                  <div className="text-sm text-indigo-200">Posted Jobs</div>
+                  <div className="text-sm text-indigo-200">Jobs Available</div>
                   <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.totalJobs}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
@@ -551,7 +551,7 @@ export function CommandCenter() {
                   <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.callbacks}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
-                  <div className="text-sm text-indigo-200">Total Work</div>
+                  <div className="text-sm text-indigo-200">Total Available</div>
                   <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.totalWithCallbacks}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
@@ -688,8 +688,8 @@ export function CommandCenter() {
             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-6 text-white">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.dayOfWeek} Work Forecast</h2>
-                  <p className="text-blue-200">{mockWorkIntelligence.tomorrow.date}</p>
+                  <h2 className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.dayOfWeek} Work Available</h2>
+                  <p className="text-blue-200">{mockWorkIntelligence.tomorrow.date} - Jobs Posted for Dispatch</p>
                 </div>
                 <div className="text-right">
                   <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
@@ -704,7 +704,7 @@ export function CommandCenter() {
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="bg-white/10 rounded-lg p-3">
-                  <div className="text-sm text-blue-200">Posted Jobs</div>
+                  <div className="text-sm text-blue-200">Jobs Available</div>
                   <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.totalJobs}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
@@ -712,11 +712,11 @@ export function CommandCenter() {
                   <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.callbacks}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
-                  <div className="text-sm text-blue-200">Total Work</div>
+                  <div className="text-sm text-blue-200">Total Available</div>
                   <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.totalWithCallbacks}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
-                  <div className="text-sm text-blue-200">Busyness Score</div>
+                  <div className="text-sm text-blue-200">Volume Index</div>
                   <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.busynessScore}%</div>
                 </div>
               </div>
