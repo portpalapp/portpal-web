@@ -1,0 +1,177 @@
+{
+  "tasks": [
+    {
+      "id": "job-intelligence-system",
+      "title": "Job Intelligence & Work Forecasting System",
+      "description": "Comprehensive job detail screens, dispatch predictions, work intelligence dashboard",
+      "status": "deployed",
+      "priority": "high",
+      "branch": "feature/job-detail-system", 
+      "vercelUrl": "https://portpal-hdwtsmazu-veeteshs-projects.vercel.app/command-center",
+      "components": [
+        "Job detail screen (mobile)",
+        "Work Intelligence tab",
+        "Job Intelligence tab", 
+        "Clickable job entries",
+        "Dispatch prediction algorithm"
+      ],
+      "progress": {
+        "idea": true,
+        "inProgress": true,
+        "testing": true,
+        "deployed": true,
+        "production": false,
+        "done": false
+      },
+      "blockers": [
+        "Need BCMEA_PASSWORD for live scraping",
+        "First Aid dispatch board not scraped yet",
+        "Vision-enhanced scraper needs production testing"
+      ],
+      "nextSteps": [
+        "Set BCMEA_PASSWORD environment variable",
+        "Test live scraping with credentials", 
+        "Add First Aid dispatch board scraping",
+        "Deploy to production"
+      ],
+      "createdAt": "2026-03-21T20:00:00Z",
+      "updatedAt": "2026-03-22T04:56:00Z"
+    },
+    {
+      "id": "dispatch-understanding-correction",
+      "title": "Dispatch Process Understanding Correction",
+      "description": "Fixed critical misunderstanding: jobs available vs jobs filled",
+      "status": "done",
+      "priority": "critical",
+      "branch": "feature/job-detail-system",
+      "vercelUrl": "https://portpal-hdwtsmazu-veeteshs-projects.vercel.app/command-center",
+      "components": [
+        "Dashboard language corrections",
+        "DISPATCH_CORRECTION.md documentation",
+        "CLAUDE.md updates",
+        "Data interpretation fixes"
+      ],
+      "progress": {
+        "idea": true,
+        "inProgress": true,
+        "testing": true,
+        "deployed": true,
+        "production": false,
+        "done": true
+      },
+      "blockers": [],
+      "nextSteps": [],
+      "createdAt": "2026-03-21T21:44:00Z",
+      "updatedAt": "2026-03-22T04:56:00Z"
+    },
+    {
+      "id": "vision-enhanced-scraper",
+      "title": "Vision-Enhanced BCMEA Scraper System",
+      "description": "AI-powered scraper with screenshot analysis, multi-modal data extraction",
+      "status": "testing",
+      "priority": "high",
+      "branch": "feature/job-detail-system",
+      "components": [
+        "Vision-enhanced scraper",
+        "BCMEA skill creation", 
+        "Screenshot capture system",
+        "Cross-validation framework",
+        "Authentication flow mapping"
+      ],
+      "progress": {
+        "idea": true,
+        "inProgress": true,
+        "testing": true,
+        "deployed": false,
+        "production": false,
+        "done": false
+      },
+      "blockers": [
+        "Need BCMEA_PASSWORD for authentication",
+        "High-frequency monitoring not tested yet"
+      ],
+      "nextSteps": [
+        "Get BCMEA_PASSWORD from user",
+        "Test full authentication flow",
+        "Run high-frequency monitoring experiment (10-15 sec intervals)",
+        "Validate data accuracy vs manual checking"
+      ],
+      "createdAt": "2026-03-21T20:55:00Z",
+      "updatedAt": "2026-03-22T04:56:00Z"
+    },
+    {
+      "id": "dev-task-tracker",
+      "title": "Development Task Tracker",
+      "description": "Internal task management system for tracking features, ideas, progress",
+      "status": "idea",
+      "priority": "medium",
+      "branch": null,
+      "components": [
+        "Task status tracking (idea → done)",
+        "Branch and deployment integration", 
+        "Backlog prioritization",
+        "Progress visualization",
+        "Command Center integration"
+      ],
+      "progress": {
+        "idea": true,
+        "inProgress": false,
+        "testing": false,
+        "deployed": false,
+        "production": false,
+        "done": false
+      },
+      "blockers": [],
+      "nextSteps": [
+        "Design task tracker UI/UX",
+        "Build into Command Center",
+        "Integrate with Git workflow", 
+        "Add task creation/editing"
+      ],
+      "createdAt": "2026-03-22T04:56:00Z",
+      "updatedAt": "2026-03-22T04:56:00Z"
+    }
+  ],
+  "backlogIdeas": [
+    {
+      "id": "first-aid-board-scraper",
+      "title": "First Aid Dispatch Board Scraper",
+      "description": "Separate scraper for First Aid dispatch board - critical missing data",
+      "priority": "high",
+      "effort": "medium",
+      "impact": "high"
+    },
+    {
+      "id": "callback-separation-tracking",
+      "title": "Callback vs Original Job Separation",
+      "description": "Track callbacks separately from original job postings",
+      "priority": "medium",
+      "effort": "low", 
+      "impact": "medium"
+    },
+    {
+      "id": "granular-sub-job-breakdown",
+      "title": "Granular Sub-Job Category Breakdown",
+      "description": "MACHINE → LIFT TRUCK, RTG, REACHSTACKER detailed breakdown",
+      "priority": "medium",
+      "effort": "medium",
+      "impact": "medium"
+    },
+    {
+      "id": "real-time-dispatch-monitoring",
+      "title": "Real-Time Dispatch Result Tracking",
+      "description": "Track actual dispatch results, not just job postings",
+      "priority": "high",
+      "effort": "high",
+      "impact": "high"
+    },
+    {
+      "id": "mobile-app-sync",
+      "title": "Mobile App Job Detail Integration",
+      "description": "Sync new job intelligence features to mobile app",
+      "priority": "low",
+      "effort": "high",
+      "impact": "medium"
+    }
+  ]
+}

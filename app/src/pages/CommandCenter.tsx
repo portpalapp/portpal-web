@@ -369,7 +369,7 @@ function Slider({
 
 // Main Command Center Component
 export function CommandCenter() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'retention' | 'marketing' | 'financial' | 'statistical' | 'calculator' | 'jobs' | 'work'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'dev' | 'growth' | 'retention' | 'marketing' | 'financial' | 'statistical' | 'calculator' | 'jobs' | 'work'>('overview')
   // Revenue Calculator State
   const [pricePerYear, setPricePerYear] = useState(99)
   const [conversionRate, setConversionRate] = useState(35)
@@ -443,6 +443,7 @@ export function CommandCenter() {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'dev', label: 'Dev Tracker', icon: '⚙️' },
     { id: 'calculator', label: 'Revenue Calculator', icon: '🧮' },
     { id: 'work', label: 'Work Intelligence', icon: '⚡' },
     { id: 'jobs', label: 'Job Intelligence', icon: '🏗️' },
@@ -1849,6 +1850,214 @@ export function CommandCenter() {
                 </div>
               </div>
             </ExpandablePanel>
+          </div>
+        )}
+
+        {/* DEV TRACKER TAB */}
+        {activeTab === 'dev' && (
+          <div className="space-y-6">
+            {/* Active Tasks Header */}
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl p-6 text-white">
+              <h1 className="text-3xl font-bold mb-2">Development Task Tracker</h1>
+              <p className="text-purple-200">Track features from idea to production</p>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <MetricCard label="💡 Ideas" value="5" subtext="Backlog items" />
+              <MetricCard label="🚧 In Progress" value="1" subtext="Active development" highlight />
+              <MetricCard label="🧪 Testing" value="1" subtext="QA & validation" />
+              <MetricCard label="🚀 Deployed" value="1" subtext="On Vercel preview" />
+              <MetricCard label="✅ Done" value="1" subtext="Complete & working" />
+            </div>
+
+            {/* Current Sprint/Active Tasks */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                🎯 Current Sprint
+                <span className="text-sm font-normal text-gray-500">Priority Tasks</span>
+              </h2>
+              <div className="space-y-4">
+                {/* Job Intelligence System */}
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-semibold text-lg">Job Intelligence & Work Forecasting System</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Comprehensive job detail screens, dispatch predictions, work intelligence dashboard</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">DEPLOYED</span>
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">HIGH</span>
+                    </div>
+                  </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Progress</span>
+                      <span>80%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '80%' }}></div>
+                    </div>
+                  </div>
+
+                  {/* Components */}
+                  <div className="mb-3">
+                    <h4 className="font-medium text-sm mb-2">Components:</h4>
+                    <div className="flex flex-wrap gap-1">
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">✅ Job detail screen</span>
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">✅ Work Intelligence</span>
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">✅ Job Intelligence</span>
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">✅ Dispatch predictions</span>
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">🔄 Live scraping</span>
+                    </div>
+                  </div>
+
+                  {/* Blockers & Next Steps */}
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <h4 className="font-medium text-red-600 mb-1">🚫 Blockers:</h4>
+                      <ul className="text-gray-600 dark:text-gray-400 text-xs space-y-1">
+                        <li>• Need BCMEA_PASSWORD for live scraping</li>
+                        <li>• First Aid dispatch board not scraped yet</li>
+                        <li>• Vision-enhanced scraper needs testing</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-blue-600 mb-1">➡️ Next Steps:</h4>
+                      <ul className="text-gray-600 dark:text-gray-400 text-xs space-y-1">
+                        <li>• Set BCMEA_PASSWORD environment variable</li>
+                        <li>• Test live scraping with credentials</li>
+                        <li>• Add First Aid dispatch board scraping</li>
+                        <li>• Deploy to production</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Links */}
+                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex gap-2 text-sm">
+                      <a href="#" className="text-blue-600 hover:underline">📱 Vercel Preview</a>
+                      <span className="text-gray-400">•</span>
+                      <a href="#" className="text-blue-600 hover:underline">🌿 Branch: feature/job-detail-system</a>
+                      <span className="text-gray-400">•</span>
+                      <span className="text-gray-500">Updated: 2 min ago</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Vision-Enhanced Scraper */}
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-semibold text-lg">Vision-Enhanced BCMEA Scraper System</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">AI-powered scraper with screenshot analysis, multi-modal data extraction</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">TESTING</span>
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">HIGH</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Progress</span>
+                      <span>65%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div className="bg-yellow-600 h-2 rounded-full" style={{ width: '65%' }}></div>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <h4 className="font-medium text-red-600 mb-1">🚫 Blockers:</h4>
+                      <ul className="text-gray-600 dark:text-gray-400 text-xs space-y-1">
+                        <li>• Need BCMEA_PASSWORD for authentication</li>
+                        <li>• High-frequency monitoring not tested yet</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-blue-600 mb-1">➡️ Next Steps:</h4>
+                      <ul className="text-gray-600 dark:text-gray-400 text-xs space-y-1">
+                        <li>• Get BCMEA_PASSWORD from user</li>
+                        <li>• Test full authentication flow</li>
+                        <li>• Run high-frequency monitoring (10-15 sec)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Backlog Ideas */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                💡 Backlog Ideas
+                <span className="text-sm font-normal text-gray-500">Future Enhancements</span>
+              </h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <h3 className="font-medium mb-2">First Aid Dispatch Board Scraper</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Separate scraper for First Aid dispatch board - critical missing data</p>
+                  <div className="flex justify-between items-center text-xs">
+                    <div className="flex gap-2">
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded">HIGH</span>
+                      <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded">MED EFFORT</span>
+                    </div>
+                    <span className="text-gray-500">High Impact</span>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <h3 className="font-medium mb-2">Real-Time Dispatch Result Tracking</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Track actual dispatch results, not just job postings</p>
+                  <div className="flex justify-between items-center text-xs">
+                    <div className="flex gap-2">
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded">HIGH</span>
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded">HIGH EFFORT</span>
+                    </div>
+                    <span className="text-gray-500">High Impact</span>
+                  </div>
+                </div>
+
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <h3 className="font-medium mb-2">Granular Sub-Job Breakdown</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">MACHINE → LIFT TRUCK, RTG, REACHSTACKER detailed breakdown</p>
+                  <div className="flex justify-between items-center text-xs">
+                    <div className="flex gap-2">
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">MED</span>
+                      <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded">MED EFFORT</span>
+                    </div>
+                    <span className="text-gray-500">Med Impact</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Completed Tasks */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                ✅ Recently Completed
+                <span className="text-sm font-normal text-gray-500">Last 7 Days</span>
+              </h2>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm">✓</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium">Dispatch Process Understanding Correction</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Fixed critical misunderstanding: jobs available vs jobs filled</p>
+                  </div>
+                  <div className="text-right text-xs text-gray-500">
+                    <div>Completed 2h ago</div>
+                    <div>✅ Deployed & Working</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
