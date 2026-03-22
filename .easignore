@@ -4,18 +4,20 @@
 # Exclude everything at root level except mobile
 app/
 archive/
+data/
 DIFFERENTIALS/
-DATA/
 ILWU DOCS/
 ILWU Documents/
 logos/
 marketing/
+news-agent/
 pay data/
 pay stubs/
 Pics/
 POSTS/
 prediction/
 presentations/
+screenshots/
 
 # Root files
 *.xlsx

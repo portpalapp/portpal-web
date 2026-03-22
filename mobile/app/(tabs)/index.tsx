@@ -15,6 +15,8 @@ import { useShifts } from '../../hooks/useShifts';
 import { useProfile } from '../../hooks/useProfile';
 import { formatDateRelative } from '../../lib/formatters';
 import { getShiftBarColor } from '../../lib/shiftColors';
+import { DispatchSignal } from '../../components/DispatchSignal';
+import { WorkAvailable } from '../../components/WorkAvailable';
 
 // Streak: counts consecutive shifts where each gap is ≤ 48 hours.
 // A worker has 48 hours from the end of a shift to log the next one.
@@ -354,6 +356,16 @@ export default function HomeScreen() {
             </View>
           </View>
         </TouchableOpacity>
+
+        {/* Dispatch Signal */}
+        <View className="mb-4">
+          <DispatchSignal />
+        </View>
+
+        {/* Work Available */}
+        <View className="mb-4">
+          <WorkAvailable />
+        </View>
 
         {/* Upcoming Stat Holidays */}
         {(() => {

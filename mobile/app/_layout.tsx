@@ -296,6 +296,10 @@ function RootLayoutNav() {
           name="vessels"
           options={{ presentation: "modal" }}
         />
+        <Stack.Screen
+          name="dispatch"
+          options={{ presentation: "modal" }}
+        />
       </Stack>
     </>
   );
