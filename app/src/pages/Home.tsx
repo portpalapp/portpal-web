@@ -11,8 +11,8 @@ import { useProfile } from '../hooks/useProfile'
 import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr } from '../lib/formatters'
 import { getUpcomingHolidays, getHolidayOnDate, daysUntil, type StatHoliday } from '../data/holidayData'
 import { useNews } from '../hooks/useNews'
-// import { useWorkInfo, getLocationsForLocal } from '../hooks/useWorkInfo'
-// import type { ShiftTotal, JobSection } from '../hooks/useWorkInfo'
+import { useWorkInfo, getLocationsForLocal } from '../hooks/useWorkInfo'
+import type { ShiftTotal, JobSection } from '../hooks/useWorkInfo'
 
 // Streak: counts consecutive shifts where each gap is <= 48 hours.
 // Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
@@ -57,9 +57,8 @@ export function Home() {
   const { profile, loading: profileLoading } = useProfile()
   const [showHolidayInfo, setShowHolidayInfo] = useState(false)
   const { articles: newsArticles } = useNews()
-  // const workInfoLocations = getLocationsForLocal(profile.union_local ?? '500')
-  // const { snapshots: workInfoSnapshots } = useWorkInfo(workInfoLocations)
-  const workInfoSnapshots: any[] = []
+  const workInfoLocations = getLocationsForLocal(profile.union_local ?? '500')
+  const { snapshots: workInfoSnapshots } = useWorkInfo(workInfoLocations)
 
   const loading = shiftsLoading || profileLoading
 
@@ -208,8 +207,9 @@ export function Home() {
 
       {/* Work Available — shift totals from BCMEA */}
       {workInfoSnapshots.length > 0 && (() => {
+        try {
         const van = workInfoSnapshots.find(s => s.location === 'vancouver')
-        if (!van) return null
+        if (!van || !van.totals || !van.sections) return null
         const shiftLabels: Record<string, string> = { '08:00': 'Day', '16:30': 'Night', '01:00': 'Graveyard' }
         const shiftOrder = ['08:00', '16:30', '01:00']
         const totals = (van.totals || []).filter((t: ShiftTotal) => shiftOrder.includes(t.shift))
@@ -268,6 +268,7 @@ export function Home() {
             )}
           </div>
         )
+        } catch (e) { console.warn('[WorkInfo] render error:', e); return null; }
       })()}
 
       {/* Pension Progress - Clickable for AI insights */}
