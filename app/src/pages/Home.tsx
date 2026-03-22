@@ -11,6 +11,7 @@ import { useProfile } from '../hooks/useProfile'
 import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr } from '../lib/formatters'
 import { getUpcomingHolidays, getHolidayOnDate, daysUntil, type StatHoliday } from '../data/holidayData'
 import { useNews } from '../hooks/useNews'
+import { DispatchSignal } from '../components/DispatchSignal'
 import { useWorkInfo, getLocationsForLocal } from '../hooks/useWorkInfo'
 import type { ShiftTotal, JobSection } from '../hooks/useWorkInfo'
 
@@ -178,6 +179,9 @@ export function Home() {
           </div>
         </div>
       )}
+
+      {/* Dispatch Signal */}
+      <DispatchSignal />
 
       {/* Earnings Cards */}
       <div className="grid grid-cols-2 gap-3">
