@@ -4,6 +4,7 @@ module.exports = {
       name: 'portpal-news-fetcher',
       script: 'dist/fetcher/index.js',
       cwd: __dirname,
+      exec_mode: 'fork',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -11,6 +12,7 @@ module.exports = {
       restart_delay: 60000,
       env: {
         NODE_ENV: 'production',
+        NODE_EXTRA_CA_CERTS: __dirname + '/certs/lets-encrypt-r13.pem',
       },
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       error_file: 'logs/fetcher-error.log',

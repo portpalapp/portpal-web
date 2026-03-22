@@ -1,3 +1,4 @@
+import https from 'node:https';
 import Parser from 'rss-parser';
 import { NewsSourceConfig, USER_AGENT } from '../config.js';
 import { logger } from '../logger.js';
@@ -15,6 +16,27 @@ const parser = new Parser({
   maxRedirects: 5,
 });
 
+/** Hosts with broken TLS chains (missing intermediate cert) */
+const BROKEN_CHAIN_HOSTS = new Set(['www.bcmaritime.com']);
+
+/** Fetch XML from a host with an incomplete TLS cert chain */
+function fetchWithRelaxedTLS(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const req = https.get(
+      url,
+      { rejectUnauthorized: false, headers: { 'User-Agent': USER_AGENT }, timeout: 30_000 },
+      (res) => {
+        let data = '';
+        res.on('data', (chunk: string) => (data += chunk));
+        res.on('end', () => resolve(data));
+        res.on('error', reject);
+      },
+    );
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('Request timed out')); });
+  });
+}
+
 /**
  * Fetch articles from an RSS feed source.
  * Returns an array of raw articles (title, summary, url, publishedAt).
@@ -26,7 +48,14 @@ export async function fetchRss(
   try {
     logger.info(`Fetching RSS: ${source.name}`, { url: source.url });
 
-    const feed = await parser.parseURL(source.url);
+    const hostname = new URL(source.url).hostname;
+    let feed;
+    if (BROKEN_CHAIN_HOSTS.has(hostname)) {
+      const xml = await fetchWithRelaxedTLS(source.url);
+      feed = await parser.parseString(xml);
+    } else {
+      feed = await parser.parseURL(source.url);
+    }
     const articles: FetchedArticle[] = [];
 
     for (const item of feed.items) {
