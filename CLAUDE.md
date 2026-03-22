@@ -1038,8 +1038,10 @@ Hired a social media content creator (based in Mexico, WhatsApp: +52 1 56 1433 3
 ## Agent Instructions
 - Read this CLAUDE.md before starting any task
 - Check the "Do Not Touch" section before modifying any file
+- **WORKFLOW:** Always push to Vercel branch first, work on it, then decide on merge
 - After changes: run the appropriate Build & Validate checklist (web or mobile)
 - Create feature branches: `feat/description` or `fix/description`
+- **DEPLOYMENT:** Push branch → get Vercel preview URL → send link immediately
 - PR command: `gh pr create --base main --repo portpalapp/portpal-web`
 - CRITICAL: OT formula is `(Base × 1.5) + Differential` — never `(Base + Diff) × 1.5`
 - CRITICAL: Always use `s.date.slice(0,10)` for dates, never `new Date(dateStr)`
@@ -1125,6 +1127,7 @@ If gstack skills aren't working, run `cd ~/.claude/skills/gstack && ./setup` to 
 - **Supabase schema changes:** Use `/freeze mobile/supabase/` to scope edits, and `/careful` for any migration that touches production
 - **Before shipping APK builds:** Run `/review` to catch issues, especially timezone bugs (always `s.date.slice(0,10)`, never `new Date(dateStr)`)
 - **After feature work:** Run `/document-release` to keep CLAUDE.md and TECHNICAL_SPEC.md in sync with code changes
+- **VERCEL WORKFLOW:** Always branch → push → send preview link → decide on merge later
 
 ### Test & Build Commands (for gstack skills)
 

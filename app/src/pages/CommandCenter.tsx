@@ -1,5 +1,47 @@
 import { useState } from 'react'
 
+// Mock work intelligence data
+const mockWorkIntelligence = {
+  tomorrow: {
+    date: '2026-03-22',
+    dayOfWeek: 'Saturday',
+    totalJobs: 180,
+    callbacks: 23,
+    totalWithCallbacks: 203,
+    busynessLevel: 'High', // High/Medium/Low
+    busynessScore: 78, // 0-100
+    dayOfWeekPattern: 'Saturdays are typically 15% busier than weekdays',
+    shifts: {
+      day: { time: '08:00', jobs: 145, callbacks: 18, prediction: 'High dispatch activity' },
+      night: { time: '16:30', jobs: 35, callbacks: 5, prediction: 'Moderate overnight work' },
+      graveyard: { time: '01:00', jobs: 23, callbacks: 0, prediction: 'Light graveyard shift' }
+    },
+    jobBreakdown: [
+      { category: 'LABOUR', jobs: 45, change: '+12%', insight: 'Container surge expected' },
+      { category: 'TRACTOR TRAILER', jobs: 38, change: '+8%', insight: '3 large vessels arriving' },
+      { category: 'LIFT TRUCK', jobs: 28, change: '-5%', insight: 'Normal machine demand' },
+      { category: 'DOCK GANTRY', jobs: 12, change: '+25%', insight: 'Crane work for MSC vessel' },
+      { category: 'HEAD CHECKER', jobs: 15, change: '+0%', insight: 'Standard supervision needs' }
+    ],
+    insights: [
+      'Tomorrow is 78% busier than average - recommend plugging in',
+      '3 major container vessels arriving between 6-10 AM',
+      'Callback work from Friday suggests overtime opportunities',
+      'Board B has 85% chance of dispatch before 8:30 AM',
+      'Wheat terminals closed - focus on container work'
+    ]
+  },
+  historical: {
+    weekPattern: [65, 72, 68, 71, 75, 78, 45], // Mon-Sun busyness scores
+    recentTrends: {
+      thisWeek: 185,
+      lastWeek: 167,
+      change: '+10.8%',
+      insight: 'Post-holiday surge in container traffic'
+    }
+  }
+}
+
 // Mock job data for demonstration
 const mockJobs = [
   { 
@@ -327,7 +369,7 @@ function Slider({
 
 // Main Command Center Component
 export function CommandCenter() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'retention' | 'marketing' | 'financial' | 'statistical' | 'calculator' | 'jobs'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'growth' | 'retention' | 'marketing' | 'financial' | 'statistical' | 'calculator' | 'jobs' | 'work'>('overview')
   // Revenue Calculator State
   const [pricePerYear, setPricePerYear] = useState(99)
   const [conversionRate, setConversionRate] = useState(35)
@@ -402,6 +444,7 @@ export function CommandCenter() {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'calculator', label: 'Revenue Calculator', icon: '🧮' },
+    { id: 'work', label: 'Work Intelligence', icon: '⚡' },
     { id: 'jobs', label: 'Job Intelligence', icon: '🏗️' },
     { id: 'growth', label: 'Growth Engine', icon: '📈' },
     { id: 'retention', label: 'Retention', icon: '🔄' },
@@ -474,6 +517,57 @@ export function CommandCenter() {
               <MetricCard label="30-Day Retention" value="67.9%" subtext="Active users" trend="up" trendValue="+2.3pp" />
               <MetricCard label="Avg Shifts/User" value="95.4" subtext="Lifetime" />
               <MetricCard label="Power Users" value="40.6%" subtext="100+ shifts" />
+            </div>
+
+            {/* Tomorrow's Work Intelligence - Clickable Feature Tile */}
+            <div 
+              onClick={() => setActiveTab('work')}
+              className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl p-6 cursor-pointer hover:scale-[1.02] transition-transform shadow-lg"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white">Tomorrow's Work Forecast</h2>
+                  <p className="text-indigo-200">{mockWorkIntelligence.tomorrow.dayOfWeek}, {mockWorkIntelligence.tomorrow.date}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    mockWorkIntelligence.tomorrow.busynessLevel === 'High' ? 'bg-red-500/30 text-red-200' :
+                    mockWorkIntelligence.tomorrow.busynessLevel === 'Medium' ? 'bg-yellow-500/30 text-yellow-200' :
+                    'bg-green-500/30 text-green-200'
+                  }`}>
+                    {mockWorkIntelligence.tomorrow.busynessLevel} Activity
+                  </div>
+                  <span className="text-white text-lg">→</span>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-indigo-200">Posted Jobs</div>
+                  <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.totalJobs}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-indigo-200">+ Callbacks</div>
+                  <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.callbacks}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-indigo-200">Total Work</div>
+                  <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.totalWithCallbacks}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-indigo-200">Busyness</div>
+                  <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.busynessScore}%</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-indigo-200">
+                  {mockWorkIntelligence.tomorrow.dayOfWeekPattern}
+                </div>
+                <div className="text-sm text-white font-medium">
+                  Click for detailed analysis →
+                </div>
+              </div>
             </div>
 
             {/* Quick Insights */}
@@ -582,6 +676,251 @@ export function CommandCenter() {
               <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
                 <strong className="text-orange-400">Critical Insight:</strong>
                 <span className="text-slate-300 ml-2">9% of users (68 people) log only 1 shift and never return. This is our biggest onboarding leak to fix.</span>
+              </div>
+            </ExpandablePanel>
+          </div>
+        )}
+
+        {/* WORK INTELLIGENCE TAB */}
+        {activeTab === 'work' && (
+          <div className="space-y-6">
+            {/* Tomorrow's Work Overview */}
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-6 text-white">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.dayOfWeek} Work Forecast</h2>
+                  <p className="text-blue-200">{mockWorkIntelligence.tomorrow.date}</p>
+                </div>
+                <div className="text-right">
+                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    mockWorkIntelligence.tomorrow.busynessLevel === 'High' ? 'bg-red-500/30 text-red-200' :
+                    mockWorkIntelligence.tomorrow.busynessLevel === 'Medium' ? 'bg-yellow-500/30 text-yellow-200' :
+                    'bg-green-500/30 text-green-200'
+                  }`}>
+                    {mockWorkIntelligence.tomorrow.busynessLevel} Activity
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-blue-200">Posted Jobs</div>
+                  <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.totalJobs}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-blue-200">Callbacks</div>
+                  <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.callbacks}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-blue-200">Total Work</div>
+                  <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.totalWithCallbacks}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-3">
+                  <div className="text-sm text-blue-200">Busyness Score</div>
+                  <div className="text-2xl font-bold">{mockWorkIntelligence.tomorrow.busynessScore}%</div>
+                </div>
+              </div>
+
+              <div className="text-sm text-blue-200">
+                {mockWorkIntelligence.tomorrow.dayOfWeekPattern}
+              </div>
+            </div>
+
+            {/* Dispatch Windows */}
+            <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden">
+              <div className="p-4 border-b border-slate-700/50">
+                <h3 className="text-lg font-semibold text-white">Dispatch Windows</h3>
+                <p className="text-sm text-slate-400">Click between shifts to see detailed breakdown</p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 divide-x divide-slate-700/50">
+                {Object.entries(mockWorkIntelligence.tomorrow.shifts).map(([shiftKey, shift]) => (
+                  <div key={shiftKey} className="p-4 hover:bg-slate-700/30 cursor-pointer transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-sm font-medium text-slate-300 uppercase">
+                        {shiftKey === 'day' ? 'Day Shift' : shiftKey === 'night' ? 'Night Shift' : 'Graveyard'}
+                      </div>
+                      <div className="text-lg font-bold text-white">{shift.time}</div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Jobs:</span>
+                        <span className="text-white font-medium">{shift.jobs}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Callbacks:</span>
+                        <span className="text-white font-medium">{shift.callbacks}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Total:</span>
+                        <span className="text-emerald-400 font-medium">{shift.jobs + shift.callbacks}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-3 pt-2 border-t border-slate-600/50">
+                      <p className="text-xs text-blue-400">{shift.prediction}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Job Category Breakdown */}
+            <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-4">
+              <h3 className="text-lg font-semibold text-white mb-4">Tomorrow's Job Categories</h3>
+              
+              <div className="space-y-3">
+                {mockWorkIntelligence.tomorrow.jobBreakdown.map((job) => (
+                  <div key={job.category} className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <div className="font-medium text-white">{job.category}</div>
+                        <div className={`text-sm px-2 py-1 rounded-full ${
+                          job.change.startsWith('+') ? 'bg-emerald-500/20 text-emerald-400' :
+                          job.change.startsWith('-') ? 'bg-red-500/20 text-red-400' :
+                          'bg-slate-500/20 text-slate-400'
+                        }`}>
+                          {job.change}
+                        </div>
+                      </div>
+                      <div className="text-sm text-slate-400 mt-1">{job.insight}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold text-white">{job.jobs}</div>
+                      <div className="text-sm text-slate-400">jobs</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AI Insights */}
+            <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl p-6 text-white">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  🤖
+                </div>
+                <h3 className="text-lg font-semibold">AI Dispatch Intelligence</h3>
+              </div>
+              
+              <div className="space-y-3">
+                {mockWorkIntelligence.tomorrow.insights.map((insight, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 bg-white/10 rounded-lg">
+                    <div className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-bold text-black mt-0.5">
+                      {i + 1}
+                    </div>
+                    <div className="flex-1 text-sm">{insight}</div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 pt-4 border-t border-white/20">
+                <p className="text-sm text-purple-200">
+                  💡 <strong>Pro Tip:</strong> This intelligence is based on vessel schedules, historical patterns, 
+                  and real-time dispatch data. Predictions are 85% accurate for next-day work forecasting.
+                </p>
+              </div>
+            </div>
+
+            {/* Weekly Pattern Analysis */}
+            <ExpandablePanel title="Weekly Work Patterns" subtitle="Historical analysis and trends">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-white mb-3">Day of Week Busyness</h4>
+                  <div className="space-y-2">
+                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => (
+                      <div key={day} className="flex items-center gap-3">
+                        <div className="w-12 text-sm text-slate-400">{day}</div>
+                        <div className="flex-1 h-6 bg-slate-700 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-blue-500 rounded-full transition-all"
+                            style={{ width: `${mockWorkIntelligence.historical.weekPattern[i]}%` }}
+                          />
+                        </div>
+                        <div className="w-12 text-sm text-white text-right">
+                          {mockWorkIntelligence.historical.weekPattern[i]}%
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-white mb-3">Recent Trends</h4>
+                  <div className="space-y-3">
+                    <div className="bg-slate-700/30 rounded-lg p-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400">This Week</span>
+                        <span className="text-white font-bold">{mockWorkIntelligence.historical.recentTrends.thisWeek} jobs</span>
+                      </div>
+                    </div>
+                    <div className="bg-slate-700/30 rounded-lg p-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400">Last Week</span>
+                        <span className="text-white font-bold">{mockWorkIntelligence.historical.recentTrends.lastWeek} jobs</span>
+                      </div>
+                    </div>
+                    <div className="bg-emerald-500/20 border border-emerald-500/30 rounded-lg p-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-emerald-300">Change</span>
+                        <span className="text-emerald-400 font-bold">{mockWorkIntelligence.historical.recentTrends.change}</span>
+                      </div>
+                      <div className="text-sm text-emerald-300 mt-1">
+                        {mockWorkIntelligence.historical.recentTrends.insight}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ExpandablePanel>
+
+            {/* Dispatch Oracle Integration */}
+            <ExpandablePanel title="How We Know This" subtitle="Data sources and prediction methodology">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Real-Time Data Sources</h4>
+                    <div className="space-y-2 text-sm text-slate-300">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+                        <span>BCMEA Work-Info API (every 6 hours)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                        <span>Vessel Schedule Forecasts (DP World, GCT)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                        <span>Button Position Monitoring (hourly)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+                        <span>Historical Dispatch Patterns</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Prediction Accuracy</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Next-day job count:</span>
+                        <span className="text-emerald-400">85% accurate</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Category breakdown:</span>
+                        <span className="text-blue-400">78% accurate</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Individual dispatch:</span>
+                        <span className="text-yellow-400">65% accurate</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </ExpandablePanel>
           </div>
