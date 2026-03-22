@@ -526,8 +526,8 @@ export function CommandCenter() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">Tomorrow's Work Forecast</h2>
-                  <p className="text-indigo-200">{mockWorkIntelligence.tomorrow.dayOfWeek}, {mockWorkIntelligence.tomorrow.date}</p>
+                  <h2 className="text-xl font-bold text-white">Tomorrow's Work Available</h2>
+                  <p className="text-indigo-200">{mockWorkIntelligence.tomorrow.dayOfWeek}, {mockWorkIntelligence.tomorrow.date} - Jobs Posted</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -535,7 +535,7 @@ export function CommandCenter() {
                     mockWorkIntelligence.tomorrow.busynessLevel === 'Medium' ? 'bg-yellow-500/30 text-yellow-200' :
                     'bg-green-500/30 text-green-200'
                   }`}>
-                    {mockWorkIntelligence.tomorrow.busynessLevel} Activity
+                    {mockWorkIntelligence.tomorrow.busynessLevel} Volume
                   </div>
                   <span className="text-white text-lg">→</span>
                 </div>
@@ -555,7 +555,7 @@ export function CommandCenter() {
                   <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.totalWithCallbacks}</div>
                 </div>
                 <div className="bg-white/10 rounded-lg p-3">
-                  <div className="text-sm text-indigo-200">Busyness</div>
+                  <div className="text-sm text-indigo-200">Volume Index</div>
                   <div className="text-2xl font-bold text-white">{mockWorkIntelligence.tomorrow.busynessScore}%</div>
                 </div>
               </div>
