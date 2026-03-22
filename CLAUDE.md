@@ -189,13 +189,30 @@ Scrapers at `~/portpal/scrapers/`, news agent at `~/portpal/news-agent/`
 
 ## Project Overview
 
-PORTPAL is a shift-tracking and pay verification app for BC port workers (longshoremen). The app helps workers:
+PORTPAL is a shift-tracking, pay verification, and dispatch intelligence app for BC port workers (longshoremen). The app helps workers:
 - Log shifts with correct hours and pay rates
 - Verify pay stubs against logged shifts
 - Track earnings across complex union pay structures
+- Get real-time dispatch intelligence (signal, category breakdowns, predictions)
 - Identify pay discrepancies
 
-**Current Status:** Live app with 957 users, 73,683 shifts tracked, $41M in pay tracked. Mobile app v1.2.0 (Expo/React Native).
+**Current Status:** 957 users, 73,683 shifts tracked, $41M in pay tracked.
+
+### Development Strategy: Web-First, Mobile-Ready
+
+**Build for web first (`app/`), deploy to Vercel.** The web app is the primary development target — all new features land here first. Design every component mobile-responsive from day one so it works on phones via browser. The native mobile app (`mobile/`, Expo/React Native) is secondary and will be updated later to match.
+
+**Why web-first:**
+- Instant deployment via Vercel (no app store review, no EAS build queue)
+- Users can access immediately via URL — no install friction
+- Faster iteration cycle for dispatch intelligence features
+- Same codebase ports to mobile when ready (shared Supabase backend, same data hooks)
+
+**What this means for development:**
+- New features go in `app/` first, not `mobile/`
+- Use responsive design (mobile breakpoints) for all UI
+- Keep the Supabase query patterns portable (hooks should be easy to lift to React Native)
+- The `mobile/` app gets synced periodically, not on every feature
 
 See [BUSINESS.md](BUSINESS.md) for market data, pricing, and expansion strategy.
 See [PAY_ENGINE.md](PAY_ENGINE.md) for pay rates, differentials, and PAYDIFFS format.
@@ -206,28 +223,27 @@ See [PAY_ENGINE.md](PAY_ENGINE.md) for pay rates, differentials, and PAYDIFFS fo
 
 ```
 project/
-├── mobile/                   # React Native (Expo) mobile app — ACTIVE DEVELOPMENT
-│   ├── app/                       # Expo Router screens (file-based routing)
-│   │   ├── _layout.tsx            # Root: ThemeProvider > SafeAreaProvider > AuthProvider
-│   │   ├── login.tsx              # Auth (login/signup + demo mode)
-│   │   ├── onboarding.tsx         # 6-step new user setup
-│   │   ├── profile.tsx            # Settings, favorite terminals, dark mode
-│   │   ├── holidays.tsx           # Stat holidays (upcoming + rules)
-│   │   ├── pension.tsx            # WIPP pension (4 tabs)
-│   │   ├── pay-stubs.tsx          # Pay stub comparison (demo only)
-│   │   ├── template-builder.tsx   # Shift template builder
-│   │   └── (tabs)/               # 5 main tabs + FAB
-│   ├── lib/                       # Supabase client, auth, formatters, colors
-│   ├── hooks/                     # useShifts, useProfile, useTemplates, etc.
-│   ├── data/                      # Pay rates, contract, pension, holidays
-│   ├── supabase/                  # Schema, migrations, sync scripts
-│   └── package.json
-├── app/                      # React + Vite web app (Command Center dashboard)
+├── app/                      # PRIMARY — React + Vite web app (deployed to Vercel)
 │   ├── src/
-│   │   ├── pages/
-│   │   │   └── CommandCenter.tsx  # Data engine command center dashboard
+│   │   ├── pages/                 # All user-facing screens + Command Center
+│   │   │   ├── Home.tsx           # Dashboard with dispatch signal, work available, shifts
+│   │   │   ├── DispatchIntel.tsx  # Full dispatch intelligence detail page
+│   │   │   ├── CommandCenter.tsx  # Investor/ops dashboard (7 tabs)
+│   │   │   ├── Shifts.tsx         # Shift logger
+│   │   │   ├── Calendar.tsx       # Calendar views
+│   │   │   ├── Analytics.tsx      # Earnings charts
+│   │   │   └── [14 more pages]
+│   │   ├── hooks/                 # useDispatchIntel, useWorkInfo, useShifts, etc.
+│   │   ├── components/            # DispatchSignal, Sidebar, shared UI
 │   │   ├── App.tsx
 │   │   └── index.css
+│   └── package.json
+├── mobile/                   # SECONDARY — React Native (Expo) mobile app (synced later)
+│   ├── app/                       # Expo Router screens (mirrors web app pages)
+│   ├── lib/                       # Supabase client, auth, formatters, colors
+│   ├── hooks/                     # useShifts, useProfile, useDispatchIntel, etc.
+│   ├── data/                      # Pay rates, contract, pension, holidays
+│   ├── supabase/                  # Schema, migrations, sync scripts
 │   └── package.json
 ├── marketing/                # Marketing strategy & research (35+ docs)
 │   ├── EXPANSION_STRATEGY.md      # Geographic expansion roadmap
@@ -250,50 +266,55 @@ project/
 
 ---
 
-## Mobile App (Expo / React Native)
+## Web App — Primary (Vite + React, Vercel)
 
-**Stack:** Expo SDK 54, React Native 0.81.5, Expo Router, NativeWind v4, TypeScript, Supabase
+**Stack:** Vite, React 19, TypeScript, Tailwind CSS, Supabase, Recharts
 
 **To run:**
 ```bash
-cd mobile
-fnm use 22                    # Node >= 20.19.4 required
-npm install --legacy-peer-deps
-npm start
+cd app && npm run dev
+```
+URL: http://localhost:5173
+
+### Screens & Features
+| Screen | Route | Description |
+|--------|-------|-------------|
+| **Home** | `/` | Dispatch signal, work available, today's shift, streak, earnings, holidays |
+| **Dispatch Intel** | `/dispatch` | Full dispatch intelligence: signal, category breakdowns, weekly pattern, history |
+| **Shifts** | `/shifts` | Shift logger with location picker, templates |
+| **Calendar** | `/calendar` | Week/month/year views, job-colored days |
+| **Analytics** | `/analytics` | Earnings charts, top jobs/locations, tax estimation |
+| **Command Center** | `/command-center` | Investor/ops dashboard (7 tabs: overview, calculator, growth, retention, marketing, financial, statistical) |
+| **News** | `/news` | Port industry news from 13 sources |
+| **Vessels** | `/vessels` | Vessel forecast and ETA tracking |
+| And 10+ more | | Login, onboarding, profile, pension, holidays, pay stubs, chat, contract, templates, subscribe |
+
+### Key Technical Patterns
+- **Timezone-safe dates:** Always `s.date.slice(0,10)` string comparison, never `new Date(dateStr)` for filtering
+- **Smart location picker:** 3 tiers — favorite terminals > recent > all terminals
+- **OT formula:** (Base x 1.5) + Differential (flat), NOT (Base + Diff) x 1.5 — see [PAY_ENGINE.md](PAY_ENGINE.md)
+- **Dispatch hooks:** `useDispatchIntel` (tick data + signal), `useWorkInfo` (snapshots)
+- **All UI must be mobile-responsive** — users access via phone browser
+
+---
+
+## Mobile App — Secondary (Expo / React Native)
+
+**Stack:** Expo SDK 54, React Native 0.81.5, Expo Router, NativeWind v4, TypeScript, Supabase
+
+**Status:** v1.2.0 shipped (APK). v1.3.3 in codebase with dispatch intelligence, build pending.
+
+**To run:**
+```bash
+cd mobile && fnm use 22 && npm install --legacy-peer-deps && npm start
 ```
 
 **To build APK:**
 ```bash
-cd mobile
-npm run prebuild:check        # Verify Metro bundling works
-npm run build:apk             # Submit to EAS Build (free tier, 5-30 min queue)
-npm run build:status          # Check build progress
+cd mobile && npm run prebuild:check && npm run build:apk
 ```
 
-### Screens & Features
-| Screen | Description |
-|--------|-------------|
-| **Login** | Email/password auth, demo mode, Bubble migration link |
-| **Onboarding** | 6-step: welcome, union local, board/seniority, favorite terminals, job ratings, complete |
-| **Home** | Today's shift, streak + points, earnings (this/last week), upcoming holidays, pension progress |
-| **Shift Logger** | Smart location picker (favorites > recent > all), templates, work slip upload, editable rates |
-| **Calendar** | Week/month/year views, job-colored days, shift type badges, weekly tax estimates |
-| **Analytics** | Earnings charts, top jobs/locations, tax estimation with time range filtering |
-| **Chat** | Contract-aware assistant (hardcoded responses, needs real AI) |
-| **Pension** | Overview, calculator, planner (goal tracking, projections), WIPP rules reference |
-| **Holidays** | 13 ILWU stat holidays, counting periods, qualifying shifts, pay rules |
-| **Profile** | Name, union local, favorite terminals, dark mode toggle |
-| **Pay Stubs** | Comparison UI (demo only — needs server-side OCR) |
-| **Templates** | 5-step shift template builder |
-| **Contract** | ILWU contract reference (wages, OT, differentials) |
-
-### Key Technical Patterns
-- **Timezone-safe dates:** Always `s.date.slice(0,10)` string comparison, never `new Date(dateStr)` for filtering
-- **Smart location picker:** 3 tiers — favorite terminals (from onboarding/profile) > recent (from shift history) > all terminals (collapsible)
-- **Points system:** Derived real-time from shifts (10pts/shift, 5pts/streak, 50pts/stub upload, streak multipliers)
-- **Pension year:** Jan 4, 2026 → Jan 3, 2027 (WIPP Sunday-Saturday boundary)
-- **OT formula:** (Base x 1.5) + Differential (flat), NOT (Base + Diff) x 1.5 — see [PAY_ENGINE.md](PAY_ENGINE.md) for full details
-- **Shared utilities:** `lib/formatters.ts` (dates/currency), `lib/shiftColors.ts` (colors/icons) — no inline duplicates
+**Note:** The mobile app mirrors the web app's features but lags behind. New features land in `app/` first, then get ported to `mobile/` periodically. Shared Supabase backend means both apps use the same data.
 
 ---
 
@@ -369,18 +390,24 @@ See `TECHNICAL_SPEC.md` for the developer handoff document. Key points:
 2. `cd mobile && npm run prebuild:check`
 
 ## Deployment
-- **Web dashboard:** Vercel — push branch for preview, merge to main for prod
-- **Mobile app:** EAS Build — `cd mobile && npm run build:apk` for APK
+
+| App | Platform | Deploy | URL |
+|-----|----------|--------|-----|
+| **Web app (PRIMARY)** | Vercel | Push branch → preview, merge to master → prod | portpal-web.vercel.app |
+| **Mobile app** | EAS Build | `cd mobile && npm run build:apk` → APK download | Expo (veetesh) |
+
 - **GitHub repo:** `portpalapp/portpal-web`
-- **Vercel project:** `portpal-web`
-- **EAS account:** `veetesh` (Expo)
+- **Vercel project:** `portpal-web` (root: `app/`)
+- **EAS account:** `veetesh` (Expo), EXPO_TOKEN in ~/.zshrc
+- **Supabase:** `qcnozghkxbnlofahaqig` (us-west-2) — shared by web + mobile + scrapers
 
 ## Agent Instructions
 - Read this CLAUDE.md before starting any task
 - Check the "Do Not Touch" section before modifying any file
+- **New features go in `app/` (web) first, not `mobile/`** — web-first strategy
 - After changes: run the appropriate Build & Validate checklist (web or mobile)
 - Create feature branches: `feat/description` or `fix/description`
-- PR command: `gh pr create --base main --repo portpalapp/portpal-web`
+- PR command: `gh pr create --base master --repo portpalapp/portpal-web`
 - CRITICAL: OT formula is `(Base × 1.5) + Differential` — never `(Base + Diff) × 1.5`
 - CRITICAL: Always use `s.date.slice(0,10)` for dates, never `new Date(dateStr)`
 - If modifying pay calculation logic: use `/careful` mode, run `pay-engine.test.ts`
@@ -391,6 +418,12 @@ See `TECHNICAL_SPEC.md` for the developer handoff document. Key points:
 
 ## Quick Reference
 
+**Run web app (PRIMARY):**
+```bash
+cd app && npm run dev
+```
+URL: http://localhost:5173
+
 **Run mobile app:**
 ```bash
 cd mobile && fnm use 22 && npm start
@@ -400,12 +433,6 @@ cd mobile && fnm use 22 && npm start
 ```bash
 cd mobile && npm run prebuild:check && npm run build:apk
 ```
-
-**Run Command Center (web):**
-```bash
-cd app && npm run dev
-```
-URL: http://localhost:5173/command-center
 
 **Key Numbers:**
 - Users: 957 (Bubble) | Shifts: 73,683 | Pay tracked: $41M
