@@ -91,12 +91,11 @@ async function processSources(): Promise<void> {
 
       const result = await insertArticle({
         source_name: source.name,
-        source_category: source.category,
-        url: article.url,
+        category: source.category,
+        external_url: article.url,
         title: article.title,
         raw_title: article.title,
         raw_summary: article.summary,
-        body_text: article.summary,
         published_at: article.publishedAt ?? undefined,
         status: 'fetched',
       });
@@ -108,11 +107,7 @@ async function processSources(): Promise<void> {
     }
 
     // Track source metadata
-    await updateSourceLastChecked(
-      source.name,
-      sourceArticles.length,
-      sourceError
-    );
+    await updateSourceLastChecked(source.name);
 
     logger.info(`Source complete: ${source.name}`, {
       found: sourceArticles.length,

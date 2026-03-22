@@ -24,8 +24,8 @@ Respond with ONLY the JSON object. No markdown fencing, no explanation, no pream
 export function buildArticlePrompt(article: NewsArticle): string {
   const parts: string[] = [];
 
-  parts.push(`Source: ${article.source_name} (${article.source_category})`);
-  parts.push(`URL: ${article.url}`);
+  parts.push(`Source: ${article.source_name} (${article.category})`);
+  parts.push(`URL: ${article.external_url}`);
 
   if (article.published_at) {
     parts.push(`Published: ${article.published_at}`);
@@ -33,7 +33,7 @@ export function buildArticlePrompt(article: NewsArticle): string {
 
   parts.push(`Title: ${article.raw_title ?? article.title}`);
 
-  const body = article.raw_summary ?? article.body_text ?? '';
+  const body = article.raw_summary ?? '';
   if (body) {
     parts.push(`Content:\n${body}`);
   }
