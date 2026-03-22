@@ -20,8 +20,8 @@ const { Client } = require('pg');
 
 // ── Configuration ────────────────────────────────────────────────────────────
 
-const BUBBLE_API = 'https://portpal.app/version-test/api/1.1/obj';
-const BUBBLE_KEY = '6c87dd86e8db22ad01cc5c05300a4aad';
+const BUBBLE_API = process.env.BUBBLE_API_URL || 'https://portpal.app/api/1.1/obj';
+const BUBBLE_KEY = process.env.BUBBLE_API_KEY || 'f5a34eaa19896b29d0635d9dbe4f0630';
 const DB_URL = 'postgresql://postgres.qcnozghkxbnlofahaqig:Vdsrjspq92$123@aws-0-us-west-2.pooler.supabase.com:5432/postgres';
 
 const BATCH_SIZE = 100; // Bubble API max per request
@@ -49,12 +49,15 @@ async function fetchBubble(type, cursor = 0, limit = BATCH_SIZE, constraints = [
 /**
  * Fetch all records for a type. For large datasets (>9900), uses date-range
  * windowing to work around Bubble's cursor limit.
+ * @param {string} type - Bubble data type
+ * @param {number} maxRecords - Max records to fetch
+ * @param {Array} baseConstraints - Additional constraints (e.g. Modified Date filter)
  */
-async function fetchAll(type, maxRecords = Infinity) {
+async function fetchAll(type, maxRecords = Infinity, baseConstraints = []) {
   const all = [];
   let cursor = 0;
   let remaining = 1;
-  let constraints = [];
+  let constraints = [...baseConstraints];
   let lastDate = null;
 
   while (remaining > 0 && all.length < maxRecords) {
@@ -78,6 +81,7 @@ async function fetchAll(type, maxRecords = Infinity) {
     if (cursor >= CURSOR_LIMIT && remaining > 0) {
       console.log(`\n  ↳ Cursor limit reached at ${cursor}, windowing from ${lastDate}...`);
       constraints = [
+        ...baseConstraints,
         { key: 'Created Date', constraint_type: 'greater than', value: lastDate }
       ];
       cursor = 0;
@@ -165,9 +169,12 @@ function transformPayDiff(bubblePayDiff) {
 
 // ── Sync Functions ───────────────────────────────────────────────────────────
 
-async function syncUsers(client, maxRecords) {
+async function syncUsers(client, maxRecords, since = null) {
   console.log('\n📥 Syncing users...');
-  const bubbleUsers = await fetchAll('user', maxRecords);
+  const constraints = since
+    ? [{ key: 'Modified Date', constraint_type: 'greater than', value: since }]
+    : [];
+  const bubbleUsers = await fetchAll('user', maxRecords, constraints);
 
   // Create staging table for bubble users
   await client.query(`
@@ -255,9 +262,12 @@ async function syncUsers(client, maxRecords) {
   return synced;
 }
 
-async function syncShifts(client, maxRecords) {
+async function syncShifts(client, maxRecords, since = null) {
   console.log('\n📥 Syncing shifts...');
-  const bubbleShifts = await fetchAll('shifts', maxRecords);
+  const constraints = since
+    ? [{ key: 'Modified Date', constraint_type: 'greater than', value: since }]
+    : [];
+  const bubbleShifts = await fetchAll('shifts', maxRecords, constraints);
 
   // Create staging table for bubble shifts (all fields)
   await client.query(`
@@ -383,9 +393,12 @@ async function syncShifts(client, maxRecords) {
   return synced;
 }
 
-async function syncPayDiffs(client, maxRecords) {
+async function syncPayDiffs(client, maxRecords, since = null) {
   console.log('\n📥 Syncing PayDiffs...');
-  const bubblePayDiffs = await fetchAll('PayDiff', maxRecords);
+  const constraints = since
+    ? [{ key: 'Modified Date', constraint_type: 'greater than', value: since }]
+    : [];
+  const bubblePayDiffs = await fetchAll('PayDiff', maxRecords, constraints);
 
   // Create staging table
   await client.query(`
@@ -438,8 +451,27 @@ async function run() {
   const mode = process.argv[2] || 'all';
   const maxRecords = process.argv[3] ? parseInt(process.argv[3]) : Infinity;
 
+  // Parse --since=DATE or --incremental (reads last sync time from state file)
+  const sinceArg = process.argv.find(a => a.startsWith('--since='));
+  const isIncremental = process.argv.includes('--incremental');
+  const stateFile = `${process.env.HOME}/.portpal-sync/last-sync.txt`;
+  let since = null;
+
+  if (sinceArg) {
+    since = sinceArg.split('=')[1];
+  } else if (isIncremental) {
+    const fs = require('fs');
+    const path = require('path');
+    try {
+      since = fs.readFileSync(stateFile, 'utf8').trim();
+    } catch {
+      // First incremental run — sync last 6 hours
+      since = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    }
+  }
+
   console.log('🔄 PORTPAL Bubble → Supabase Sync');
-  console.log(`   Mode: ${mode}${maxRecords < Infinity ? ` (limit: ${maxRecords})` : ''}`);
+  console.log(`   Mode: ${mode}${maxRecords < Infinity ? ` (limit: ${maxRecords})` : ''}${since ? ` (since: ${since})` : ''}`);
 
   const client = new Client({ connectionString: DB_URL, ssl: { rejectUnauthorized: false } });
   await client.connect();
@@ -449,13 +481,13 @@ async function run() {
 
   try {
     if (mode === 'all' || mode === 'users') {
-      results.users = await syncUsers(client, maxRecords);
+      results.users = await syncUsers(client, maxRecords, since);
     }
     if (mode === 'all' || mode === 'shifts') {
-      results.shifts = await syncShifts(client, maxRecords);
+      results.shifts = await syncShifts(client, maxRecords, since);
     }
     if (mode === 'all' || mode === 'paydiffs') {
-      results.paydiffs = await syncPayDiffs(client, maxRecords);
+      results.paydiffs = await syncPayDiffs(client, maxRecords, since);
     }
 
     // Print summary
@@ -476,6 +508,15 @@ async function run() {
     }
   } catch (e) {
     console.error('\n❌ Fatal error:', e.message);
+  }
+
+  // Save sync timestamp for incremental mode
+  if (isIncremental || sinceArg) {
+    const fs = require('fs');
+    const dir = require('path').dirname(stateFile);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(stateFile, new Date().toISOString());
+    console.log(`   Saved sync timestamp to ${stateFile}`);
   }
 
   await client.end();
