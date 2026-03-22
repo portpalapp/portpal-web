@@ -2,38 +2,42 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { logger } from './logger.js';
 
 // ---------------------------------------------------------------------------
-// Types
+// Types — matched to actual Supabase schema
 // ---------------------------------------------------------------------------
 
 export type ArticleStatus = 'fetched' | 'enriched' | 'published' | 'rejected' | 'error';
 
 export interface NewsArticle {
   id?: string;
+  source_id?: number;
   source_name: string;
-  source_category: string;
-  url: string;
+  category: string;
+  external_url: string;
+  external_id?: string;
   title: string;
   raw_title?: string;
   summary?: string;
   raw_summary?: string;
-  body_text?: string;
   worker_impact?: string;
   relevance_score?: number;
   tags?: string[];
   published_at?: string;
   fetched_at?: string;
-  enriched_at?: string;
+  processed_at?: string;
+  url_hash?: string;
   status: ArticleStatus;
+  processing_error?: string;
 }
 
 export interface NewsSource {
   id?: string;
   name: string;
   url: string;
+  feed_type?: string;
   category: string;
   last_checked_at?: string;
-  last_error?: string;
-  articles_found?: number;
+  last_article_at?: string;
+  is_active?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -73,7 +77,14 @@ export async function insertArticle(
   const { data, error } = await client
     .from('news_articles')
     .insert({
-      ...article,
+      source_name: article.source_name,
+      category: article.category,
+      external_url: article.external_url,
+      title: article.title,
+      raw_title: article.raw_title,
+      raw_summary: article.raw_summary,
+      published_at: article.published_at,
+      status: article.status,
       fetched_at: article.fetched_at ?? new Date().toISOString(),
     })
     .select('id')
@@ -81,7 +92,7 @@ export async function insertArticle(
 
   if (error) {
     logger.error('Failed to insert article', {
-      url: article.url,
+      url: article.external_url,
       error: error.message,
     });
     return null;
@@ -137,7 +148,7 @@ export async function articleExistsByUrl(url: string): Promise<boolean> {
   const { count, error } = await client
     .from('news_articles')
     .select('id', { count: 'exact', head: true })
-    .eq('url', url);
+    .eq('external_url', url);
 
   if (error) {
     logger.error('Failed to check article existence', {
@@ -152,23 +163,16 @@ export async function articleExistsByUrl(url: string): Promise<boolean> {
 }
 
 export async function updateSourceLastChecked(
-  sourceName: string,
-  articlesFound: number,
-  lastError?: string
+  sourceName: string
 ): Promise<void> {
   const client = getSupabaseClient();
 
   const { error } = await client
     .from('news_sources')
-    .upsert(
-      {
-        name: sourceName,
-        last_checked_at: new Date().toISOString(),
-        articles_found: articlesFound,
-        last_error: lastError ?? null,
-      },
-      { onConflict: 'name' }
-    );
+    .update({
+      last_checked_at: new Date().toISOString(),
+    })
+    .eq('name', sourceName);
 
   if (error) {
     logger.warn('Failed to update source last_checked', {

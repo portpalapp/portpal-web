@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import { useProfile } from '../hooks/useProfile'
+import { useNews } from '../hooks/useNews'
 
 interface NavItem {
   to: string
@@ -74,6 +75,66 @@ const navGroups: NavGroup[] = [
   },
 ]
 
+const CATEGORY_COLORS: Record<string, string> = {
+  union: 'bg-blue-100 text-blue-700',
+  employer: 'bg-orange-100 text-orange-700',
+  port: 'bg-green-100 text-green-700',
+  terminal: 'bg-purple-100 text-purple-700',
+  government: 'bg-red-100 text-red-700',
+  industry: 'bg-slate-100 text-slate-700',
+  labour: 'bg-amber-100 text-amber-700',
+}
+
+function LatestNewsCard({ onNavigate }: { onNavigate?: () => void }) {
+  const { articles } = useNews()
+  const latest = articles[0]
+
+  if (!latest) return null
+
+  const ago = latest.published_at ? getTimeAgo(latest.published_at) : ''
+  const colors = CATEGORY_COLORS[latest.category] ?? 'bg-slate-100 text-slate-600'
+
+  return (
+    <div className="px-3 pb-3">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2">
+        <div className="flex items-center gap-1.5">
+          <span className={`text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded-full ${colors}`}>
+            {latest.source_name}
+          </span>
+          <span className="text-[10px] text-slate-400">{ago}</span>
+        </div>
+        <NavLink
+          to="/news"
+          onClick={onNavigate}
+          className="block text-xs font-medium text-slate-700 leading-snug hover:text-blue-600 transition-colors line-clamp-2"
+        >
+          {latest.title}
+        </NavLink>
+        <NavLink
+          to="/news"
+          onClick={onNavigate}
+          className="text-[10px] font-medium text-blue-600 hover:text-blue-700"
+        >
+          View all news →
+        </NavLink>
+      </div>
+    </div>
+  )
+}
+
+function getTimeAgo(dateStr: string): string {
+  if (!dateStr) return ''
+  const now = Date.now()
+  const then = new Date(dateStr).getTime()
+  if (isNaN(then)) return ''
+  const mins = Math.floor((now - then) / 60000)
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h ago`
+  const days = Math.floor(hrs / 24)
+  return `${days}d ago`
+}
+
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const { profile } = useProfile()
 
@@ -126,6 +187,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           </div>
         ))}
       </div>
+
+      {/* Latest News */}
+      <LatestNewsCard onNavigate={onNavigate} />
 
       {/* Profile / Subscribe */}
       <div className="border-t border-slate-200 p-3 space-y-0.5">

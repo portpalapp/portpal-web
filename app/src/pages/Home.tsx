@@ -12,6 +12,8 @@ import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr 
 import { getUpcomingHolidays, getHolidayOnDate, daysUntil, type StatHoliday } from '../data/holidayData'
 import { useNews } from '../hooks/useNews'
 import { DispatchSignal } from '../components/DispatchSignal'
+import { useWorkInfo, getLocationsForLocal } from '../hooks/useWorkInfo'
+import type { ShiftTotal, JobSection } from '../hooks/useWorkInfo'
 
 // Streak: counts consecutive shifts where each gap is <= 48 hours.
 // Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
@@ -20,6 +22,7 @@ function calculateStreak(shifts: Shift[]): number {
 
   const sorted = [...shifts]
     .map((s) => s.date)
+    .filter((d): d is string => d != null)
     .sort((a, b) => b.localeCompare(a))
 
   // Deduplicate dates
@@ -56,6 +59,8 @@ export function Home() {
   const { profile, loading: profileLoading } = useProfile()
   const [showHolidayInfo, setShowHolidayInfo] = useState(false)
   const { articles: newsArticles } = useNews()
+  const workInfoLocations = getLocationsForLocal(profile.union_local ?? '500')
+  const { snapshots: workInfoSnapshots } = useWorkInfo(workInfoLocations)
 
   const loading = shiftsLoading || profileLoading
 
@@ -86,7 +91,7 @@ export function Home() {
   const weekStartStr = getLocalDateStr(startOfWeek)
 
   const thisWeekShifts = shifts.filter(s => {
-    return s.date.slice(0, 10) >= weekStartStr
+    return s.date && s.date.slice(0, 10) >= weekStartStr
   })
 
   // Calculate streaks and total shifts from real data
@@ -99,10 +104,11 @@ export function Home() {
 
   // Check if today is a stat holiday and user hasn't logged a shift
   const todayHoliday = getHolidayOnDate(todayStr)
-  const hasLoggedTodayShift = shifts.some(s => s.date.slice(0, 10) === todayStr)
+  const hasLoggedTodayShift = shifts.some(s => s.date && s.date.slice(0, 10) === todayStr)
 
   function getShiftsInPeriod(h: StatHoliday): number {
     return shifts.filter(s => {
+      if (!s.date) return false
       const d = s.date.slice(0, 10)
       return d >= h.countingPeriodStart && d <= h.countingPeriodEnd
     }).length
@@ -117,7 +123,7 @@ export function Home() {
 
   // Monthly earnings
   const monthStart = todayStr.slice(0, 7) + '-01'
-  const thisMonthShifts = shifts.filter(s => s.date.slice(0, 10) >= monthStart)
+  const thisMonthShifts = shifts.filter(s => s.date && s.date.slice(0, 10) >= monthStart)
   const thisMonthEarnings = thisMonthShifts.reduce((sum, s) => sum + s.totalPay, 0)
   const avgPerShift = thisMonthShifts.length > 0 ? thisMonthEarnings / thisMonthShifts.length : 0
 
@@ -204,6 +210,72 @@ export function Home() {
           </div>
         </div>
       </div>
+
+      {/* Work Available — shift totals from BCMEA */}
+      {workInfoSnapshots.length > 0 && (() => {
+        try {
+        const van = workInfoSnapshots.find(s => s.location === 'vancouver')
+        if (!van || !van.totals || !van.sections) return null
+        const shiftLabels: Record<string, string> = { '08:00': 'Day', '16:30': 'Night', '01:00': 'Graveyard' }
+        const shiftOrder = ['08:00', '16:30', '01:00']
+        const totals = (van.totals || []).filter((t: ShiftTotal) => shiftOrder.includes(t.shift))
+          .sort((a: ShiftTotal, b: ShiftTotal) => shiftOrder.indexOf(a.shift) - shiftOrder.indexOf(b.shift))
+        const totalJobs = totals.reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
+        const topSections = ((van.sections || []) as JobSection[])
+          .filter((sec: JobSection) => {
+            const secTotal = (sec.totals || []).reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
+            return secTotal > 0
+          })
+          .sort((a: JobSection, b: JobSection) => {
+            const aTotal = (a.totals || []).reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
+            const bTotal = (b.totals || []).reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
+            return bTotal - aTotal
+          })
+          .slice(0, 4)
+
+        return (
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-green-100 rounded-lg">
+                  <BarChart3 size={16} className="text-green-600" />
+                </div>
+                <h3 className="font-semibold text-slate-800">Work Available</h3>
+                <span className="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">
+                  {totalJobs} jobs
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-400">{van.stamp.split('_')[1]?.replace(/(\d{2})(\d{2})/, '$1:$2')}</span>
+            </div>
+
+            {/* Shift totals */}
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              {totals.map((t: ShiftTotal) => (
+                <div key={t.shift} className="bg-slate-50 rounded-xl p-2.5 text-center">
+                  <p className="text-[10px] font-medium text-slate-400 uppercase">{shiftLabels[t.shift] ?? t.shift}</p>
+                  <p className="text-lg font-bold text-slate-800">{Number(t.pre || 0)}</p>
+                  <p className="text-[10px] text-slate-400">{t.date}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Top sections */}
+            {topSections.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {topSections.map((sec: JobSection) => {
+                  const secTotal = (sec.totals || []).reduce((s: number, t: ShiftTotal) => s + Number(t.pre || 0), 0)
+                  return (
+                    <span key={sec.section} className="text-[10px] font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-700">
+                      {sec.section} ({secTotal})
+                    </span>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        )
+        } catch (e) { console.warn('[WorkInfo] render error:', e); return null; }
+      })()}
 
       {/* Pension Progress - Clickable for AI insights */}
       <button
