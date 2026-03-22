@@ -22,6 +22,7 @@ import { TemplateBuilder } from './pages/TemplateBuilder'
 import { Vessels } from './pages/Vessels'
 import { PayStubs } from './pages/PayStubs'
 import { News } from './pages/News'
+import { DispatchIntel } from './pages/DispatchIntel'
 import { SocialPreview } from './social/SocialPreview'
 import { InstagramMockup } from './social/InstagramMockup'
 
@@ -72,6 +73,7 @@ function MobileApp() {
             <Route path="/pay-stubs" element={<PayStubs />} />
             <Route path="/contract" element={<Contract />} />
             <Route path="/news" element={<News />} />
+            <Route path="/dispatch" element={<DispatchIntel />} />
           </Routes>
         </div>
 

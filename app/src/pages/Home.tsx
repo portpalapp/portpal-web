@@ -11,6 +11,7 @@ import { useProfile } from '../hooks/useProfile'
 import { formatDateRelative, formatDateCompact, formatCurrency, getLocalDateStr } from '../lib/formatters'
 import { getUpcomingHolidays, getHolidayOnDate, daysUntil, type StatHoliday } from '../data/holidayData'
 import { useNews } from '../hooks/useNews'
+import { DispatchSignal } from '../components/DispatchSignal'
 
 // Streak: counts consecutive shifts where each gap is <= 48 hours.
 // Matches the mobile app logic from mobile/app/(tabs)/index.tsx.
@@ -172,6 +173,9 @@ export function Home() {
           </div>
         </div>
       )}
+
+      {/* Dispatch Signal */}
+      <DispatchSignal />
 
       {/* Earnings Cards */}
       <div className="grid grid-cols-2 gap-3">
