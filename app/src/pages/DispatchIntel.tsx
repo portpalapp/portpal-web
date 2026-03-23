@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Radio, Clock, TrendingUp, BarChart3, Calendar, Loader2, Info } from 'lucide-react'
 import { useDispatchIntel } from '../hooks/useDispatchIntel'
 import type { SignalLevel, SectionBreakdown, WindowSummary } from '../hooks/useDispatchIntel'
+import { DispatchPredictor } from '../components/DispatchPredictor'
 
 // ---------------------------------------------------------------------------
 // Signal config
@@ -307,7 +308,7 @@ export function DispatchIntel() {
     )
   }
 
-  // No data state
+  // No data state — still show predictor (it fetches independently)
   if (!data || !data.hasData) {
     return (
       <div className="p-4 space-y-4">
@@ -318,6 +319,9 @@ export function DispatchIntel() {
           </button>
           <h1 className="text-xl font-bold text-slate-800">Dispatch Intelligence</h1>
         </div>
+
+        {/* Personal Dispatch Prediction — available even before tick data */}
+        <DispatchPredictor />
 
         <div className="bg-white rounded-2xl p-6 shadow-sm text-center">
           <div className="p-4 bg-blue-50 rounded-2xl w-16 h-16 mx-auto mb-4 flex items-center justify-center">
@@ -347,6 +351,9 @@ export function DispatchIntel() {
         </button>
         <h1 className="text-xl font-bold text-slate-800">Dispatch Intelligence</h1>
       </div>
+
+      {/* Personal Dispatch Prediction */}
+      <DispatchPredictor />
 
       {/* Signal Header */}
       <SignalHeader signal={data.signal} reason={data.signalReason} dayName={data.dayName} />

@@ -23,6 +23,7 @@ import { Vessels } from './pages/Vessels'
 import { PayStubs } from './pages/PayStubs'
 import { News } from './pages/News'
 import { DispatchIntel } from './pages/DispatchIntel'
+import { Metrics } from './pages/Metrics'
 import { SocialPreview } from './social/SocialPreview'
 import { InstagramMockup } from './social/InstagramMockup'
 
@@ -98,6 +99,7 @@ function App() {
         <Route path="/social" element={<SocialPreview />} />
         <Route path="/instagram" element={<InstagramMockup />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/metrics" element={<Metrics />} />
         <Route path="/command-center" element={<CommandCenter />} />
         <Route path="/*" element={<MobileApp />} />
       </Routes>
