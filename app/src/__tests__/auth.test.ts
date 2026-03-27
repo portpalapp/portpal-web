@@ -11,7 +11,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act, waitFor } from '@testing-library/react';
 import { createElement } from 'react';
-import { AuthProvider, useAuth } from '../lib/auth';
+import { AuthProvider } from '../lib/auth';
+import { useAuth } from '../lib/useAuth';
 import { mockSupabaseAuth } from '../test/setup';
 
 // A simple component that displays auth state for testing
@@ -257,19 +258,24 @@ describe('demoMode', () => {
 describe('useAuth default context', () => {
   it('returns default values when used outside AuthProvider', () => {
     // useAuth outside provider returns the default context values
-    let authState: ReturnType<typeof useAuth> | null = null;
-
-    function Capture() {
-      authState = useAuth();
-      return null;
+    // Render auth state into DOM data attributes so we can assert via screen queries
+    function CaptureDefaults() {
+      const auth = useAuth();
+      return createElement('div', {
+        'data-testid': 'auth-defaults',
+        'data-session': String(auth.session),
+        'data-user': String(auth.user),
+        'data-loading': String(auth.loading),
+        'data-demo': String(auth.demoMode),
+      });
     }
 
-    render(createElement(Capture));
+    render(createElement(CaptureDefaults));
 
-    expect(authState).not.toBeNull();
-    expect(authState!.session).toBeNull();
-    expect(authState!.user).toBeNull();
-    expect(authState!.loading).toBe(true);
-    expect(authState!.demoMode).toBe(false);
+    const el = screen.getByTestId('auth-defaults');
+    expect(el.getAttribute('data-session')).toBe('null');
+    expect(el.getAttribute('data-user')).toBe('null');
+    expect(el.getAttribute('data-loading')).toBe('true');
+    expect(el.getAttribute('data-demo')).toBe('false');
   });
 });

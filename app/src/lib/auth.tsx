@@ -1,30 +1,7 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { supabase } from './supabase';
-import type { Session, User } from '@supabase/supabase-js';
-
-interface AuthContext {
-  session: Session | null;
-  user: User | null;
-  loading: boolean;
-  authError: string | null;
-  demoMode: boolean;
-  enterDemoMode: () => void;
-  signUp: (email: string, password: string, name: string) => Promise<{ error: Error | null }>;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signOut: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContext>({
-  session: null,
-  user: null,
-  loading: true,
-  authError: null,
-  demoMode: false,
-  enterDemoMode: () => {},
-  signUp: async () => ({ error: null }),
-  signIn: async () => ({ error: null }),
-  signOut: async () => {},
-});
+import { AuthContext } from './AuthContext';
+import type { Session } from '@supabase/supabase-js';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -48,13 +25,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setAuthError(error.message);
         }
         setSession(session);
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (attempts < 2) {
           await new Promise(r => setTimeout(r, 1000 * (attempts + 1)));
           return getSessionWithRetry(attempts + 1);
         }
         console.warn('[Auth] getSession failed:', err);
-        setAuthError(err?.message || 'Failed to connect to auth service');
+        setAuthError(err instanceof Error ? err.message : 'Failed to connect to auth service');
         setSession(null);
       }
       setLoading(false);
@@ -126,4 +103,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+// useAuth hook is in ./useAuth.ts to satisfy react-refresh/only-export-components

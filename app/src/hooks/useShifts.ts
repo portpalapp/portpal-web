@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/useAuth';
 
 /** App-level Shift type (camelCase) */
 export interface Shift {
@@ -111,7 +111,7 @@ export function useShifts() {
   const addShiftMutation = useMutation({
     mutationFn: async (input: AddShiftInput) => {
       if (!user) throw new Error('Not authenticated');
-      const row: Record<string, any> = {
+      const row: Record<string, string | number | boolean | null | ShiftAttachment[]> = {
         user_id: user.id,
         date: input.date,
         job: input.job,
@@ -128,7 +128,7 @@ export function useShifts() {
       };
       const { data, error } = await supabase
         .from('shifts')
-        .insert(row as any)
+        .insert(row)
         .select()
         .single();
 
@@ -160,7 +160,7 @@ export function useShifts() {
 
   const updateAttachmentsMutation = useMutation({
     mutationFn: async ({ shiftId, attachments }: { shiftId: string; attachments: ShiftAttachment[] }) => {
-      const { error } = await (supabase.from('shifts') as any)
+      const { error } = await supabase.from('shifts')
         .update({ attachments })
         .eq('id', shiftId);
 

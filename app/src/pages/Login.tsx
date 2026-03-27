@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Anchor, Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertTriangle, Loader2 } from 'lucide-react';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/useAuth';
 import { supabase } from '../lib/supabase';
 
 export function Login() {

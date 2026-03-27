@@ -8,7 +8,7 @@
 import { Slide, TikTokSlide, Logo, ProgressBar, StatCard, DataBadge, SourceBadge } from '../components'
 import { Target, TrendingUp, TrendingDown, Calendar, Flame, AlertTriangle, CheckCircle } from 'lucide-react'
 
-interface PensionData {
+export interface PensionData {
   weekNumber: number
   currentEarnings: number
   goal: number
@@ -330,50 +330,5 @@ export function PensionCountdown_TikTok({ data }: { data: PensionData }) {
   )
 }
 
-// =============================================================================
-// EXAMPLE DATA FOR PREVIEWS
-// =============================================================================
-
-export const examplePensionData: PensionData[] = [
-  {
-    weekNumber: 4,
-    currentEarnings: 12400,
-    goal: 120000,
-    thisWeekEarnings: 2800,
-    shiftsThisWeek: 5,
-    projectedDate: 'Nov 12',
-    status: 'ahead',
-    streak: 12,
-  },
-  {
-    weekNumber: 16,
-    currentEarnings: 38500,
-    goal: 120000,
-    thisWeekEarnings: 2200,
-    shiftsThisWeek: 4,
-    projectedDate: 'Nov 28',
-    status: 'on-track',
-    streak: 8,
-  },
-  {
-    weekNumber: 32,
-    currentEarnings: 68000,
-    goal: 120000,
-    thisWeekEarnings: 1800,
-    shiftsThisWeek: 3,
-    projectedDate: 'Dec 15',
-    status: 'behind',
-    streak: 0,
-  },
-]
-
-// Export component collection
-export const PensionCountdownSlides = {
-  instagram: [
-    PensionCountdown_Slide1,
-    PensionCountdown_Slide2,
-    PensionCountdown_Slide3,
-    PensionCountdown_Slide4,
-  ],
-  tiktok: PensionCountdown_TikTok,
-}
+// Non-component exports (data + slide collections) are in PensionCountdownData.ts
+// to satisfy react-refresh/only-export-components

@@ -36,46 +36,48 @@ import {
 
 type PensionTab = 'overview' | 'calculator' | 'planner' | 'rules';
 
+// Read saved pension planner settings from localStorage (called once at init)
+function loadPensionPlan(): {
+  shiftsPerWeek: number;
+  avgPay: string;
+  workWeekends: boolean;
+  workHolidays: boolean;
+  monthOff: boolean;
+  monthsOff: number;
+  preferredShift: 'DAY' | 'NIGHT' | 'GRAVEYARD' | 'MIX';
+  goalDate: string;
+  goalAmount: string;
+  calcAge: number;
+  calcYears: number;
+} | null {
+  try {
+    const stored = localStorage.getItem('portpal_pension_plan');
+    if (stored) return JSON.parse(stored);
+  } catch { /* ignore parse errors */ }
+  return null;
+}
+
 export function Pension() {
   const navigate = useNavigate();
   const { shifts } = useShifts();
   const [tab, setTab] = useState<PensionTab>('overview');
-  const [calcAge, setCalcAge] = useState(62);
-  const [calcYears, setCalcYears] = useState(25);
+
+  // Load saved planner settings via lazy initializers (no useEffect cascade)
+  const saved = useMemo(() => loadPensionPlan(), []);
+  const [calcAge, setCalcAge] = useState(() => saved?.calcAge ?? 62);
+  const [calcYears, setCalcYears] = useState(() => saved?.calcYears ?? 25);
 
   // Planner state
-  const [planShiftsPerWeek, setPlanShiftsPerWeek] = useState(4);
-  const [planAvgPay, setPlanAvgPay] = useState('');
-  const [planWorkWeekends, setPlanWorkWeekends] = useState(false);
-  const [planWorkHolidays, setPlanWorkHolidays] = useState(false);
-  const [planMonthOff, setPlanMonthOff] = useState(true);
-  const [planMonthsOff, setPlanMonthsOff] = useState(1);
-  const [planPreferredShift, setPlanPreferredShift] = useState<'DAY' | 'NIGHT' | 'GRAVEYARD' | 'MIX'>('MIX');
-  const [planGoalDate, setPlanGoalDate] = useState('');
-  const [planGoalAmount, setPlanGoalAmount] = useState(PENSION_2026.earningsLimit.toString());
-  const [planLoaded, setPlanLoaded] = useState(false);
-
-  // Load saved planner settings from localStorage
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('portpal_pension_plan');
-      if (stored) {
-        const p = JSON.parse(stored);
-        if (p.shiftsPerWeek) setPlanShiftsPerWeek(p.shiftsPerWeek);
-        if (p.avgPay) setPlanAvgPay(p.avgPay);
-        if (p.workWeekends !== undefined) setPlanWorkWeekends(p.workWeekends);
-        if (p.workHolidays !== undefined) setPlanWorkHolidays(p.workHolidays);
-        if (p.monthOff !== undefined) setPlanMonthOff(p.monthOff);
-        if (p.monthsOff) setPlanMonthsOff(p.monthsOff);
-        if (p.preferredShift) setPlanPreferredShift(p.preferredShift);
-        if (p.goalDate) setPlanGoalDate(p.goalDate);
-        if (p.goalAmount) setPlanGoalAmount(p.goalAmount);
-        if (p.calcAge) setCalcAge(p.calcAge);
-        if (p.calcYears) setCalcYears(p.calcYears);
-      }
-    } catch { /* ignore parse errors */ }
-    setPlanLoaded(true);
-  }, []);
+  const [planShiftsPerWeek, setPlanShiftsPerWeek] = useState(() => saved?.shiftsPerWeek ?? 4);
+  const [planAvgPay, setPlanAvgPay] = useState(() => saved?.avgPay ?? '');
+  const [planWorkWeekends, setPlanWorkWeekends] = useState(() => saved?.workWeekends ?? false);
+  const [planWorkHolidays, setPlanWorkHolidays] = useState(() => saved?.workHolidays ?? false);
+  const [planMonthOff, setPlanMonthOff] = useState(() => saved?.monthOff ?? true);
+  const [planMonthsOff, setPlanMonthsOff] = useState(() => saved?.monthsOff ?? 1);
+  const [planPreferredShift, setPlanPreferredShift] = useState<'DAY' | 'NIGHT' | 'GRAVEYARD' | 'MIX'>(() => saved?.preferredShift ?? 'MIX');
+  const [planGoalDate, setPlanGoalDate] = useState(() => saved?.goalDate ?? '');
+  const [planGoalAmount, setPlanGoalAmount] = useState(() => saved?.goalAmount ?? PENSION_2026.earningsLimit.toString());
+  const [planLoaded] = useState(true);
 
   // Auto-save planner settings whenever they change
   useEffect(() => {

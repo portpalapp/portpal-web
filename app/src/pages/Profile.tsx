@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -11,7 +11,7 @@ import {
   Moon,
   LogOut,
 } from 'lucide-react';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/useAuth';
 import { useProfile } from '../hooks/useProfile';
 import { LOCATIONS } from '../data/mockData';
 
@@ -55,24 +55,29 @@ export function Profile() {
     try { localStorage.setItem('portpal_favorite_terminals', JSON.stringify(next)); } catch { /* ignore */ }
   };
 
+  // Form state — initialized and synced from profile
+  // Use "adjust state during render" pattern with state (not ref) to avoid useEffect setState
+  const [prevProfileKey, setPrevProfileKey] = useState<string | null>(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [unionLocal, setUnionLocal] = useState('500');
-  const [saving, setSaving] = useState(false);
-  const [showLocalPicker, setShowLocalPicker] = useState(false);
-  const [showTerminalPicker, setShowTerminalPicker] = useState(false);
 
-  // Populate fields from profile when loaded
-  useEffect(() => {
-    if (profile && profile.name) {
+  const profileKey = profile ? `${profile.name}|${profile.board}` : null;
+  if (profileKey !== null && profileKey !== prevProfileKey) {
+    setPrevProfileKey(profileKey);
+    if (profile.name) {
       const parts = profile.name.split(' ');
       setFirstName(parts[0] || '');
       setLastName(parts.slice(1).join(' ') || '');
     }
-    if (profile && profile.board) {
+    if (profile.board) {
       setUnionLocal(profile.board);
     }
-  }, [profile]);
+  }
+
+  const [saving, setSaving] = useState(false);
+  const [showLocalPicker, setShowLocalPicker] = useState(false);
+  const [showTerminalPicker, setShowTerminalPicker] = useState(false);
 
   const email = user?.email || (demoMode ? 'demo@portpal.app' : '');
 

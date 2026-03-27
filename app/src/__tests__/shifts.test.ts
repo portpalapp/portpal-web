@@ -273,7 +273,7 @@ describe('addShift mutation', () => {
     };
 
     const row = {
-      subjob: (input as any).subjob || null,
+      subjob: (input as unknown as { subjob?: string }).subjob || null,
     };
 
     expect(row.subjob).toBeNull();
@@ -293,7 +293,7 @@ describe('addShift mutation', () => {
     };
 
     const row = {
-      attachments: (input as any).attachments ?? [],
+      attachments: (input as unknown as { attachments?: unknown[] }).attachments ?? [],
     };
 
     expect(row.attachments).toEqual([]);

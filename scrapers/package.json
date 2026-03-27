@@ -17,7 +17,9 @@
     "analysis": "tsx src/dashboards/generate-analysis-dashboard.ts",
     "ops": "tsx src/dashboards/generate-ops-dashboard.ts",
     "worker-details": "tsx src/worker-ratings/scrape-worker-details.ts",
-    "dispatch-monitor": "tsx src/dispatch-monitor/dispatch-monitor.ts"
+    "dispatch-monitor": "tsx src/dispatch-monitor/dispatch-monitor.ts",
+    "simple-dispatch": "tsx src/dispatch-monitor/simple-dispatch-scraper.ts",
+    "public-jobs": "tsx src/public-jobs/public-job-scraper.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",

@@ -959,7 +959,27 @@ export function Chat() {
     const controller = new AbortController()
     abortRef.current = controller
 
-    const requestBody: any = {
+    interface ChatRequestBody {
+      message: string;
+      history: { role: string; content: string }[];
+      context: {
+        profile: {
+          name: string;
+          board: string;
+          seniority: number;
+          pensionGoal: number;
+          union_local: string;
+        };
+        shiftSummary: ReturnType<typeof summarizeShifts>;
+      };
+      attachment?: {
+        data: string;
+        mediaType: string;
+        fileName: string;
+      };
+    }
+
+    const requestBody: ChatRequestBody = {
       message: userInput,
       history,
       context: {
@@ -1032,8 +1052,8 @@ export function Chat() {
           prev.map(m => m.id === assistantMsg.id ? { ...m, content: fallback } : m)
         )
       }
-    } catch (err: any) {
-      if (err?.name === 'AbortError') return
+    } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === 'AbortError') return
       console.warn('[Chat] API failed, using local fallback:', err)
       const fallback = generateLocalResponse(userInput)
       setMessages(prev =>

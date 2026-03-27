@@ -98,7 +98,7 @@ export function PayStubs() {
         `File: ${file.name}\n\nPDF parsing requires server-side processing. Would you like to try the demo to see the feature in action?`
       );
       if (tryDemo) handleDemo();
-    } catch (err) {
+    } catch {
       alert('Could not upload file. Please try again.');
     } finally {
       setUploading(false);
