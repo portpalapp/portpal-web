@@ -598,32 +598,5 @@ export function ProgressCheck_TikTok() {
   )
 }
 
-// =============================================================================
-// EXPORTS
-// =============================================================================
-
-export const RevisedCarousels = {
-  payAccuracy: [
-    PayAccuracy_Slide1,
-    PayAccuracy_Slide2,
-    PayAccuracy_Slide3,
-    PayAccuracy_Slide4,
-    PayAccuracy_Slide5,
-  ],
-  peaceOfMind: [
-    PeaceOfMind_Slide1,
-    PeaceOfMind_Slide2,
-    PeaceOfMind_Slide3,
-    PeaceOfMind_Slide4,
-  ],
-  timeSavings: [
-    TimeSavings_Slide1,
-    TimeSavings_Slide2,
-    TimeSavings_Slide3,
-    TimeSavings_Slide4,
-  ],
-  tiktok: {
-    discrepancyCatch: DiscrepancyCatch_TikTok,
-    progressCheck: ProgressCheck_TikTok,
-  },
-}
+// Non-component exports (slide collections) are in RevisedCarouselsData.ts
+// to satisfy react-refresh/only-export-components

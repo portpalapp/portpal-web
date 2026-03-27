@@ -432,25 +432,5 @@ export function TTDeepDiveCarousel_Slide3() {
   )
 }
 
-// Export all for use in preview/render system
-export const SalaryCarousels = {
-  topJobs: [
-    SalaryCarousel1_Slide1,
-    SalaryCarousel1_Slide2,
-    SalaryCarousel1_Slide3,
-    SalaryCarousel1_Slide4,
-    SalaryCarousel1_Slide5,
-  ],
-  payMistakes: [
-    PayMistakesCarousel_Slide1,
-    PayMistakesCarousel_Slide2,
-    PayMistakesCarousel_Slide3,
-    // Add remaining slides
-  ],
-  ttDeepDive: [
-    TTDeepDiveCarousel_Slide1,
-    TTDeepDiveCarousel_Slide2,
-    TTDeepDiveCarousel_Slide3,
-    // Add remaining slides
-  ],
-}
+// Non-component exports (slide collections) are in SalaryCarouselData.ts
+// to satisfy react-refresh/only-export-components

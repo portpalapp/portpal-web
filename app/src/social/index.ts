@@ -3,6 +3,6 @@
 
 export { brand, realData } from './brand'
 export * from './components'
-export { SalaryCarousels } from './templates/SalaryCarousel'
-export { PensionCountdownSlides, examplePensionData } from './templates/PensionCountdown'
+export { SalaryCarousels } from './templates/SalaryCarouselData'
+export { PensionCountdownSlides, examplePensionData } from './templates/PensionCountdownData'
 export { SocialPreview } from './SocialPreview'

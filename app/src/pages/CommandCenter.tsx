@@ -1,5 +1,17 @@
 import { useState } from 'react'
 
+// Simulated DAU data computed once at module level (deterministic, no Math.random in render)
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000
+  return x - Math.floor(x)
+}
+const SIMULATED_DAU_DATA = Array.from({ length: 90 }, (_, i) => {
+  const base = 180 + i * 1.2
+  const dayOfWeek = i % 7
+  const weekendDip = dayOfWeek === 0 || dayOfWeek === 6 ? -30 : 0
+  return Math.floor(base + weekendDip + seededRandom(i + 42) * 40)
+})
+
 // Types
 interface MetricCardProps {
   label: string
@@ -318,13 +330,8 @@ export function CommandCenter() {
     ilaPR: { enabled: false, members: 1500, name: 'ILA Puerto Rico', region: 'caribbean', locals: '1575, 1740, 1855, 1903' },
   })
 
-  // Simulated DAU data (90 days)
-  const dauData = Array.from({ length: 90 }, (_, i) => {
-    const base = 180 + i * 1.2
-    const dayOfWeek = i % 7
-    const weekendDip = dayOfWeek === 0 || dayOfWeek === 6 ? -30 : 0
-    return Math.floor(base + weekendDip + Math.random() * 40)
-  })
+  // Simulated DAU data (90 days) — deterministic seed to avoid impure render
+  const dauData = SIMULATED_DAU_DATA
 
   // Cohort retention data
   const cohortData = [

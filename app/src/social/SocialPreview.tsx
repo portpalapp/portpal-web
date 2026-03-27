@@ -30,8 +30,8 @@ import {
 
 type ContentSet = {
   name: string
-  slides: React.ComponentType<any>[]
-  props?: any
+  slides: React.ComponentType<Record<string, never>>[]
+  props?: Record<string, unknown>
   format: 'instagram' | 'tiktok'
 }
 

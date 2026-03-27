@@ -102,7 +102,7 @@ export function Migrate() {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
         password: tempPassword,
-        options: { data: { name: (bubbleUser as any).email } },
+        options: { data: { name: (bubbleUser as { email: string }).email } },
       });
 
       if (signUpError) {
@@ -119,7 +119,7 @@ export function Migrate() {
 
       // Link the Bubble user to the new Supabase Auth user
       if (signUpData.user) {
-        await (supabase.rpc as any)('link_bubble_user', {
+        await supabase.rpc('link_bubble_user', {
           p_email: email.trim(),
           p_supabase_uid: signUpData.user.id,
         });
@@ -139,8 +139,8 @@ export function Migrate() {
       await supabase.auth.signOut();
 
       setEmailSuccess(true);
-    } catch (err: any) {
-      setEmailError(err.message || 'Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      setEmailError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     }
     setEmailLoading(false);
   };
@@ -159,7 +159,7 @@ export function Migrate() {
 
     setVerifyLoading(true);
     try {
-      const { data, error } = await (supabase.rpc as any)('verify_bubble_identity', {
+      const { data, error } = await supabase.rpc('verify_bubble_identity', {
         p_first_name: firstName.trim(),
         p_last_name: lastName.trim(),
         p_union_local: unionLocal,
@@ -171,7 +171,7 @@ export function Migrate() {
         return;
       }
 
-      if (!data || (data as any).length === 0) {
+      if (!data || (Array.isArray(data) && data.length === 0)) {
         setVerifyError(
           'We could not find a PORTPAL account matching that name and union local. Please double-check your information.'
         );
@@ -180,8 +180,8 @@ export function Migrate() {
       }
 
       setMatchedUser(data[0]);
-    } catch (err: any) {
-      setVerifyError(err.message || 'Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      setVerifyError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     }
     setVerifyLoading(false);
   };
@@ -227,7 +227,7 @@ export function Migrate() {
 
       // Update the bubble user's email and link to Supabase Auth
       if (signUpData.user) {
-        await (supabase.rpc as any)('update_bubble_user_email', {
+        await supabase.rpc('update_bubble_user_email', {
           p_bubble_id: matchedUser.bubble_id,
           p_new_email: newEmail.trim(),
           p_supabase_uid: signUpData.user.id,
@@ -248,8 +248,8 @@ export function Migrate() {
       await supabase.auth.signOut();
 
       setNewEmailSuccess(true);
-    } catch (err: any) {
-      setNewEmailError(err.message || 'Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      setNewEmailError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     }
     setNewEmailLoading(false);
   };
@@ -281,7 +281,7 @@ export function Migrate() {
       }
 
       // Single server-side call: creates user, claims code, transfers shifts, creates profile
-      const { data: migrateResult, error: migrateErr } = await (supabase.rpc as any)('migrate_with_code', {
+      const { data: migrateResult, error: migrateErr } = await supabase.rpc('migrate_with_code', {
         p_code: code.trim(),
         p_email: codeEmail.trim(),
         p_password: codePassword,
@@ -314,8 +314,8 @@ export function Migrate() {
       } else {
         navigate('/');
       }
-    } catch (err: any) {
-      setCodeError(err.message || 'Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      setCodeError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     }
     setCodeLoading(false);
   };

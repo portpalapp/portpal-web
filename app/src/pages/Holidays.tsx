@@ -35,13 +35,6 @@ export function Holidays() {
       tab === t ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
     }`;
 
-  // Count qualifying shifts in a counting period
-  const countQualifyingShifts = (start: string, end: string): number => {
-    return shifts.filter(
-      (s) => s.date.slice(0, 10) >= start && s.date.slice(0, 10) <= end
-    ).length;
-  };
-
   // Determine today string for comparisons
   const todayStr = getTodayStr();
 
@@ -50,10 +43,9 @@ export function Holidays() {
     return STAT_HOLIDAYS_2026.map((h) => {
       const days = daysUntil(h.date);
       const isPast = h.date < todayStr;
-      const qualifyingShifts = countQualifyingShifts(
-        h.countingPeriodStart,
-        h.countingPeriodEnd
-      );
+      const qualifyingShifts = shifts.filter(
+        (s) => s.date.slice(0, 10) >= h.countingPeriodStart && s.date.slice(0, 10) <= h.countingPeriodEnd
+      ).length;
       return { ...h, days, isPast, qualifyingShifts };
     });
   }, [shifts, todayStr]);

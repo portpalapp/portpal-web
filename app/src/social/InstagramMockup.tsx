@@ -20,7 +20,6 @@ import {
   Search,
   PlusSquare,
   Film,
-  User as _User,
   Anchor,
   Check,
   ArrowLeft,

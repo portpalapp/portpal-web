@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from './lib/auth'
+import { useAuth } from './lib/useAuth'
 import { Navigation } from './components/Navigation'
 import { Sidebar, MobileDrawer } from './components/Sidebar'
 import { Home } from './pages/Home'
@@ -33,7 +33,7 @@ function MobileApp() {
   // Show loading spinner while checking auth
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center bg-slate-50">
+      <div className="h-full flex items-center justify-center bg-pink-50">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
       </div>
     );
@@ -45,7 +45,7 @@ function MobileApp() {
   }
 
   return (
-    <div className="h-full flex bg-slate-50">
+    <div className="h-full flex bg-pink-50">
       {/* Desktop sidebar */}
       <Sidebar />
 

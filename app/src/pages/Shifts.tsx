@@ -51,7 +51,7 @@ export function Shifts() {
   const [showCustomSubjob, setShowCustomSubjob] = useState(false)
   const [customLocation, setCustomLocation] = useState('')
   const [showCustomLocation, setShowCustomLocation] = useState(false)
-  const [customLocations, setCustomLocations] = useState<string[]>([])
+  const [customLocations, setCustomLocations] = useState<string[]>(getCustomLocations)
   const [editingRate, setEditingRate] = useState(false)
   const [manualRegRate, setManualRegRate] = useState<number | null>(null)
   const [showTemplates, setShowTemplates] = useState(false)
@@ -62,11 +62,6 @@ export function Shifts() {
 
   // Derive "last shift" from the shifts array (most recent by date)
   const lastShift: Shift | null = shifts.length > 0 ? shifts[0] : null
-
-  // Load custom locations on mount
-  useEffect(() => {
-    setCustomLocations(getCustomLocations())
-  }, [])
 
   // Auto-dismiss toast after 3 seconds
   useEffect(() => {

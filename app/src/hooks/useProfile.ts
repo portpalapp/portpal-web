@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/useAuth';
 
 export interface Profile {
   id: string;
@@ -9,6 +9,17 @@ export interface Profile {
   board: string;
   pensionGoal: number;
   union_local: string;
+  home_terminal: string | null;
+}
+
+/** DB row shape (snake_case) for profiles table */
+interface ProfileRow {
+  id: string;
+  name: string | null;
+  seniority: number | null;
+  board: string | null;
+  pension_goal: number | null;
+  union_local: string | null;
   home_terminal: string | null;
 }
 
@@ -48,7 +59,7 @@ export function useProfile() {
         }
 
         if (data) {
-          const row = data as any;
+          const row = data as ProfileRow;
           return {
             id: row.id,
             name: row.name || user.user_metadata?.name || 'Longshoreman',
@@ -82,7 +93,7 @@ export function useProfile() {
     mutationFn: async (updates: Partial<Omit<Profile, 'id'>>) => {
       if (!user) throw new Error('Not authenticated');
 
-      const dbUpdates: Record<string, any> = {};
+      const dbUpdates: Record<string, string | number | boolean | null> = {};
       if (updates.name !== undefined) dbUpdates.name = updates.name;
       if (updates.seniority !== undefined) dbUpdates.seniority = updates.seniority;
       if (updates.board !== undefined) dbUpdates.board = updates.board;
@@ -90,14 +101,18 @@ export function useProfile() {
       if (updates.union_local !== undefined) dbUpdates.union_local = updates.union_local;
       if (updates.home_terminal !== undefined) dbUpdates.home_terminal = updates.home_terminal;
 
-      const { data, error } = await (supabase
-        .from('profiles') as any)
+      // Supabase generated types may not include 'profiles' table — cast result
+      const result = await supabase
+        .from('profiles')
         .update(dbUpdates)
         .eq('id', user.id)
         .select()
         .single();
+      const { error } = result;
+      const data = result.data as ProfileRow | null;
 
       if (error) throw error;
+      if (!data) throw new Error('No data returned from profile update');
       return {
         id: data.id,
         name: data.name || 'Longshoreman',

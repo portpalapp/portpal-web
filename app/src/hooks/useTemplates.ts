@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../lib/useAuth';
 
 export interface TemplateRecord {
   id: string;
@@ -53,7 +53,7 @@ export function useTemplates() {
       if (!user) throw new Error('Not authenticated');
       const { data, error } = await supabase
         .from('templates')
-        .insert({ ...template, user_id: user.id } as any)
+        .insert({ ...template, user_id: user.id })
         .select()
         .single();
 
