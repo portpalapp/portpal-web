@@ -20,9 +20,18 @@ const { Client } = require('pg');
 
 // ── Configuration ────────────────────────────────────────────────────────────
 
-const BUBBLE_API = 'https://portpal.app/version-test/api/1.1/obj';
-const BUBBLE_KEY = '6c87dd86e8db22ad01cc5c05300a4aad';
-const DB_URL = 'postgresql://postgres.qcnozghkxbnlofahaqig:Vdsrjspq92$123@aws-0-us-west-2.pooler.supabase.com:5432/postgres';
+const BUBBLE_API = process.env.PORTPAL_BUBBLE_API_URL || 'https://portpal.app/api/1.1/obj';
+const BUBBLE_KEY = process.env.PORTPAL_BUBBLE_API_KEY;
+const DB_URL = process.env.PORTPAL_DB_URL;
+
+if (!BUBBLE_KEY) {
+  console.error('❌ PORTPAL_BUBBLE_API_KEY env var is required');
+  process.exit(1);
+}
+if (!DB_URL) {
+  console.error('❌ PORTPAL_DB_URL env var is required');
+  process.exit(1);
+}
 
 const BATCH_SIZE = 100; // Bubble API max per request
 const CURSOR_LIMIT = 9900; // Bubble's cursor caps around 10K; reset before hitting it
@@ -435,8 +444,9 @@ async function syncPayDiffs(client, maxRecords) {
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 async function run() {
-  const mode = process.argv[2] || 'all';
-  const maxRecords = process.argv[3] ? parseInt(process.argv[3]) : Infinity;
+  const args = process.argv.slice(2).filter(a => !a.startsWith('--'));
+  const mode = args[0] || 'all';
+  const maxRecords = args[1] ? parseInt(args[1]) : Infinity;
 
   console.log('🔄 PORTPAL Bubble → Supabase Sync');
   console.log(`   Mode: ${mode}${maxRecords < Infinity ? ` (limit: ${maxRecords})` : ''}`);
